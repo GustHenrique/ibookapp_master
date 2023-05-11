@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorSecondary"
+    tools:context=".telas.telalogin">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="136dp"
+        android:orientation="horizontal"
+        android:padding="@dimen/_10sdp"
+        android:gravity="center_horizontal">
+
+        <ImageView
+            android:id="@+id/profileIv"
+            android:layout_width="62dp"
+            android:layout_height="60dp"
+            android:scaleType="fitXY"
+            android:src="@mipmap/ibooklogo" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="iBook"
+            android:layout_marginLeft="20dp"
+            android:textSize="45dp"
+            android:textColor="@color/white" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="162dp"
+        android:orientation="vertical"
+        android:padding="@dimen/_10sdp">
+        <!--        editText for email input-->
+        <EditText
+            android:id="@+id/txtEmailLogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:background="@drawable/background_input_field"
+            android:drawableStart="@drawable/ic_baseline_email_24"
+            android:drawablePadding="@dimen/_5sdp"
+            android:hint="Email"
+            android:inputType="textEmailAddress"
+            android:padding="@dimen/_10sdp"
+            android:textColor="@color/colorTextSecondary"
+            android:textColorHint="@color/white"
+            android:textSize="@dimen/_14sdp" />
+
+        <!--        editText for note input-->
+        <EditText
+            android:id="@+id/txtSenhaLogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:background="@drawable/background_input_field"
+            android:drawableStart="@drawable/baseline_password_24"
+            android:drawablePadding="@dimen/_5sdp"
+            android:hint="Senha"
+            android:inputType="textWebPassword"
+            android:padding="@dimen/_10sdp"
+            android:textColor="@color/colorTextSecondary"
+            android:textColorHint="@color/white"
+            android:textSize="@dimen/_14sdp" />
+
+        <TextView
+            android:id="@+id/txtRecuperarSenha"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/_2sdp"
+            android:text="Recuperar Senha"
+            android:textColor="@color/colorTextPrimary" />
+
+        <Button
+            android:id="@+id/btnAcessar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/background_button"
+            android:drawablePadding="@dimen/_5sdp"
+            android:hint="Acessar"
+            android:inputType="textLongMessage"
+            android:padding="@dimen/_5sdp"
+            android:textColor="@color/colorTextSecondary"
+            android:textColorHint="@color/white"
+            android:textSize="@dimen/_14sdp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="-389dp"
+        android:orientation="vertical"
+        android:layout_marginBottom="-3dp">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorTextPrimary" />
+
+        <TextView
+            android:id="@+id/txtCriarConta"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/_2sdp"
+            android:layout_margin="@dimen/_10ssp"
+            android:text="Não tenho uma conta. Toque aqui para criar uma agora"
+            android:textColor="@color/colorTextPrimary" />
+    </LinearLayout>
+
+</RelativeLayout>
