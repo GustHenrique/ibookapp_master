@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">ContactApp</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string-array name="stringCategorias">
+        <item>Hint...</item>
+        <item>Item1</item>
+        <item>Item2</item>
+        <item>Item3</item>
+    </string-array>
 </resources>

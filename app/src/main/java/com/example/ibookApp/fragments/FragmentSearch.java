@@ -1,5 +1,6 @@
 package com.example.ibookApp.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -9,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.ibookApp.R;
+import com.example.ibookApp.functions.Utils;
+import com.example.ibookApp.telas.telalogin;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -59,5 +62,11 @@ public class FragmentSearch extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_search, container, false);
+    }
+
+    public void logout(){
+        Utils.logout();
+        Intent acessar = new Intent(getActivity(), telalogin.class);
+        startActivity(acessar);
     }
 }

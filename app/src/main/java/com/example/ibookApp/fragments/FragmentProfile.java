@@ -1,5 +1,7 @@
 package com.example.ibookApp.fragments;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -7,8 +9,15 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.example.ibookApp.DTOs.UsuarioDTO;
 import com.example.ibookApp.R;
+import com.example.ibookApp.functions.UserSingleton;
+import com.example.ibookApp.functions.Utils;
+import com.example.ibookApp.telas.telalogin;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -53,11 +62,37 @@ public class FragmentProfile extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
-
+    Button btnLogout;
+    ImageView imgTeste;
+    TextView txtNome;
+    private Uri imageUri;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
+        btnLogout = (Button)rootView.findViewById(R.id.btnLogoutHome);
+        txtNome = (TextView) rootView.findViewById(R.id.txtNomeUsuarioProfile);
+        imgTeste = rootView.findViewById(R.id.imgProfile);
+        UsuarioDTO userLogado = UserSingleton.getInstance().getUser();
+        txtNome.setText("Olá " + userLogado.getUsunome() + "!");
+        imageUri = Uri.parse(userLogado.getUsuimagem());
+        if (!imageUri.equals(null) || !imageUri.equals("")){
+            imgTeste.setImageURI(imageUri);
+        }
+        btnLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                logout();
+            }
+        });
+        // Inflate the layout for this fragment
+        return rootView;
+    }
+
+    public void logout(){
+        Utils.logout();
+        Intent acessar = new Intent(getActivity(), telalogin.class);
+        startActivity(acessar);
     }
 }

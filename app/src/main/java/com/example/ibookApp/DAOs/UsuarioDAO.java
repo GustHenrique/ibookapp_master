@@ -79,6 +79,10 @@ public class UsuarioDAO {
         }
     }
 
+    public UsuarioDTO loadData(UsuarioDTO usuario){
+        return usuario;
+    }
+
     public UsuarioDTO autenticarUsuario(String usuemail, String ususenha) throws NoSuchPaddingException, UnsupportedEncodingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException, InvalidKeySpecException {
         SecretKey secret = generateKey();
         byte[] encryptSenha = encryptMsg(ususenha, secret);

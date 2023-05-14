@@ -1,6 +1,7 @@
 package com.example.ibookApp.telas;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,9 +9,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.ibookApp.AdapterContact;
 import com.example.ibookApp.DAOs.UsuarioDAO;
 import com.example.ibookApp.DTOs.UsuarioDTO;
 import com.example.ibookApp.R;
+import com.example.ibookApp.functions.UserSingleton;
 
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
@@ -26,6 +30,8 @@ public class telalogin extends AppCompatActivity {
     TextView tvNaoTemCadastro, tvUsuEmail, tvUsuSenha, tvRecuperarSenha;
     String email, senha;
     Button btnAcessar;
+    private AdapterContact adapterContact;
+    private RecyclerView ibookRv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +90,10 @@ public class telalogin extends AppCompatActivity {
             UsuarioDAO UsuarioDAO = new UsuarioDAO(this);
             UsuarioDTO usuario = UsuarioDAO.autenticarUsuario(email, senha);
             if (usuario.getUsuid() != null){
+                tvUsuEmail.setText("");
+                tvUsuSenha.setText("");
                 Toast.makeText(this,"Autenticado com sucesso!", Toast.LENGTH_LONG).show();
+                UserSingleton.getInstance().setUser(usuario);
                 Intent Acessar = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(Acessar);
             }
@@ -96,8 +105,4 @@ public class telalogin extends AppCompatActivity {
             Toast.makeText(this,"Todos os campos são obrigatórios!", Toast.LENGTH_LONG).show();
         }
     }
-
-
-
-
 }

@@ -1,5 +1,7 @@
 package com.example.ibookApp.fragments;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -7,8 +9,19 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
 
+import com.example.ibookApp.DTOs.UsuarioDTO;
 import com.example.ibookApp.R;
+import com.example.ibookApp.databinding.ActivityMainBinding;
+import com.example.ibookApp.functions.UserSingleton;
+import com.example.ibookApp.functions.Utils;
+import com.example.ibookApp.telas.MainActivity;
+import com.example.ibookApp.telas.telacadastro;
+import com.example.ibookApp.telas.telalogin;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -53,11 +66,28 @@ public class FragmentHome extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
-
+    Button btnLogout;
+    ImageView imgTeste;
+    private Uri imageUri;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_home, container, false);
+        btnLogout = (Button)rootView.findViewById(R.id.btnLogoutHome);
+        UsuarioDTO userLogado = UserSingleton.getInstance().getUser();
+        btnLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                logout();
+            }
+        });
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        return rootView;
+    }
+
+    public void logout(){
+        Utils.logout();
+        Intent acessar = new Intent(getActivity(), telalogin.class);
+        startActivity(acessar);
     }
 }
