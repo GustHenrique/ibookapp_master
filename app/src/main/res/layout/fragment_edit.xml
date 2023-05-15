@@ -55,143 +55,161 @@
         android:background="@color/colorTextPrimary"
         tools:layout_editor_absoluteX="0dp" />
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:orientation="vertical"
-        android:padding="@dimen/_10sdp"
+        android:layout_height="match_parent"
         android:layout_marginTop="60dp">
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/imgCadastroObra"
-            android:layout_width="@dimen/_70sdp"
-            android:layout_height="@dimen/_70sdp"
-            android:layout_gravity="center"
-            android:src="@drawable/ic_book_foreground"
-            app:civ_border_color="@color/colorTextPrimary"
-            app:civ_border_width="@dimen/_1sdp" />
-
-        <!--         editText for name input-->
-        <EditText
-            android:id="@+id/txtCadastroObraISBN"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/background_input_field"
-            android:drawableEnd="@drawable/baseline_edit_24"
-            android:drawablePadding="@dimen/_5sdp"
-            android:layout_marginTop="@dimen/_10sdp"
-            android:hint="ISBN"
-            android:inputType="text"
-            android:padding="@dimen/_10sdp"
-            android:textColor="@color/colorTextSecondary"
-            android:textColorHint="@color/white"
-            android:textSize="@dimen/_14sdp" />
+            android:orientation="vertical"
+            android:padding="@dimen/_10sdp">
 
-        <!--        editText for email input-->
-        <EditText
-            android:id="@+id/txtCadastroObraTitulo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_10sdp"
-            android:background="@drawable/background_input_field"
-            android:drawableEnd="@drawable/baseline_edit_24"
-            android:drawablePadding="@dimen/_5sdp"
-            android:hint="Título"
-            android:inputType="text"
-            android:padding="@dimen/_10sdp"
-            android:textColor="@color/colorTextSecondary"
-            android:textColorHint="@color/white"
-            android:textSize="@dimen/_14sdp" />
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/imgCadastroObra"
+                android:layout_width="@dimen/_70sdp"
+                android:layout_height="@dimen/_70sdp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_book_foreground"
+                app:civ_border_color="@color/colorTextPrimary"
+                app:civ_border_width="@dimen/_1sdp" />
 
-        <!--        editText for note input-->
-        <EditText
-            android:id="@+id/txtCadastroObraAutor"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_10sdp"
-            android:background="@drawable/background_input_field"
-            android:drawableEnd="@drawable/baseline_edit_24"
-            android:drawablePadding="@dimen/_5sdp"
-            android:hint="Autor"
-            android:inputType="textPersonName"
-            android:padding="@dimen/_10sdp"
-            android:textColor="@color/colorTextSecondary"
-            android:textColorHint="@color/white"
-            android:textSize="@dimen/_14sdp" />
+            <!--         editText for name input-->
+            <EditText
+                android:id="@+id/txtCadastroObraISBN"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:background="@drawable/background_input_field"
+                android:drawableEnd="@drawable/baseline_edit_24"
+                android:drawablePadding="@dimen/_5sdp"
+                android:hint="ISBN"
+                android:inputType="text"
+                android:padding="@dimen/_10sdp"
+                android:textColor="@color/colorTextSecondary"
+                android:textColorHint="@color/white"
+                android:textSize="@dimen/_14sdp" />
 
-        <EditText
-            android:id="@+id/txtCadastroObraCategorias"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_10sdp"
-            android:background="@drawable/background_input_field"
-            android:drawableEnd="@drawable/baseline_edit_24"
-            android:drawablePadding="@dimen/_5sdp"
-            android:hint="Categorias"
-            android:inputType="none"
-            android:padding="@dimen/_10sdp"
-            android:textColor="@color/colorTextSecondary"
-            android:textColorHint="@color/white"
-            android:textSize="@dimen/_14sdp" />
+            <!--        editText for email input-->
+            <EditText
+                android:id="@+id/txtCadastroObraTitulo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:background="@drawable/background_input_field"
+                android:drawableEnd="@drawable/baseline_edit_24"
+                android:drawablePadding="@dimen/_5sdp"
+                android:hint="Título"
+                android:inputType="text"
+                android:padding="@dimen/_10sdp"
+                android:textColor="@color/colorTextSecondary"
+                android:textColorHint="@color/white"
+                android:textSize="@dimen/_14sdp" />
 
+            <EditText
+                android:id="@+id/txtCadastroObraEditora"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:background="@drawable/background_input_field"
+                android:drawableEnd="@drawable/baseline_edit_24"
+                android:drawablePadding="@dimen/_5sdp"
+                android:hint="Editora"
+                android:inputType="text"
+                android:padding="@dimen/_10sdp"
+                android:textColor="@color/colorTextSecondary"
+                android:textColorHint="@color/white"
+                android:textSize="@dimen/_14sdp" />
 
+            <!--        editText for note input-->
+            <EditText
+                android:id="@+id/txtCadastroObraAutor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:background="@drawable/background_input_field"
+                android:drawableEnd="@drawable/baseline_edit_24"
+                android:drawablePadding="@dimen/_5sdp"
+                android:hint="Autor"
+                android:inputType="textPersonName"
+                android:padding="@dimen/_10sdp"
+                android:textColor="@color/colorTextSecondary"
+                android:textColorHint="@color/white"
+                android:textSize="@dimen/_14sdp" />
 
-        <EditText
-            android:id="@+id/txtCadastroObraComentario"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_10sdp"
-            android:background="@drawable/background_input_field"
-            android:drawableStart="@drawable/baseline_password_24"
-            android:drawablePadding="@dimen/_5sdp"
-            android:hint="Comentário"
-            android:inputType="text"
-            android:padding="@dimen/_10sdp"
-            android:textColor="@color/colorTextSecondary"
-            android:textColorHint="@color/white"
-            android:textSize="@dimen/_14sdp" />
-
-        <EditText
-            android:id="@+id/txtCadastroObraSinopse"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_10sdp"
-            android:background="@drawable/background_input_field"
-            android:drawableStart="@drawable/baseline_password_24"
-            android:drawablePadding="@dimen/_5sdp"
-            android:hint="Sinopse"
-            android:inputType="textWebPassword"
-            android:padding="@dimen/_10sdp"
-            android:textColor="@color/colorTextSecondary"
-            android:textColorHint="@color/white"
-            android:textSize="@dimen/_14sdp" />
-
-        <RatingBar
-            android:id="@+id/rbCadastroObraAvaliacao"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/_10sdp"
-            android:progressTint="@color/colorTextPrimary"
-            android:backgroundTint="@color/colorSecondary"
-            android:secondaryProgressTint="@color/colorSecondary"
-            android:progressBackgroundTint="@color/ofuscateblack"
-            android:rating="2.5"/>
-
-        <Button
-            android:id="@+id/btnCadastroObraCadastrar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/background_button"
-            android:drawablePadding="@dimen/_5sdp"
-            android:hint="Cadastrar"
-            android:padding="@dimen/_5sdp"
-            android:textColor="@color/colorTextSecondary"
-            android:textColorHint="@color/white"
-            android:textSize="@dimen/_14sdp" />
+            <EditText
+                android:id="@+id/txtCadastroObraCategorias"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:background="@drawable/background_input_field"
+                android:drawableEnd="@drawable/baseline_edit_24"
+                android:drawablePadding="@dimen/_5sdp"
+                android:hint="Categorias"
+                android:inputType="none"
+                android:padding="@dimen/_10sdp"
+                android:textColor="@color/colorTextSecondary"
+                android:textColorHint="@color/white"
+                android:textSize="@dimen/_14sdp" />
 
 
-    </LinearLayout>
+            <EditText
+                android:id="@+id/txtCadastroObraComentario"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:background="@drawable/background_input_field"
+                android:drawableStart="@drawable/baseline_password_24"
+                android:drawableEnd="@drawable/baseline_edit_24"
+                android:drawablePadding="@dimen/_5sdp"
+                android:hint="Comentário"
+                android:inputType="text"
+                android:padding="@dimen/_10sdp"
+                android:textColor="@color/colorTextSecondary"
+                android:textColorHint="@color/white"
+                android:textSize="@dimen/_14sdp" />
+
+            <EditText
+                android:id="@+id/txtCadastroObraSinopse"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:background="@drawable/background_input_field"
+                android:drawableStart="@drawable/baseline_password_24"
+                android:drawableEnd="@drawable/baseline_edit_24"
+                android:drawablePadding="@dimen/_5sdp"
+                android:hint="Sinopse"
+                android:inputType="text"
+                android:padding="@dimen/_10sdp"
+                android:textColor="@color/colorTextSecondary"
+                android:textColorHint="@color/white"
+                android:textSize="@dimen/_14sdp" />
+
+            <RatingBar
+                android:id="@+id/rbCadastroObraAvaliacao"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:backgroundTint="@color/colorSecondary"
+                android:progressBackgroundTint="@color/ofuscateblack"
+                android:progressTint="@color/colorTextPrimary"
+                android:rating="2.5"
+                android:secondaryProgressTint="@color/colorSecondary" />
+
+            <Button
+                android:id="@+id/btnCadastroObraCadastrar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/background_button"
+                android:drawablePadding="@dimen/_5sdp"
+                android:hint="Cadastrar"
+                android:padding="@dimen/_5sdp"
+                android:textColor="@color/colorTextSecondary"
+                android:textColorHint="@color/white"
+                android:textSize="@dimen/_14sdp" />
+        </LinearLayout>
+    </ScrollView>
 
 </FrameLayout>

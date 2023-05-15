@@ -2,8 +2,8 @@ package com.example.ibookApp.DTOs;
 
 public class UsuarioDTO {
     private String usuid;
-    private  String usunome;
-    private  String usuemail;
+    private String usunome;
+    private String usuemail;
     private String ususenha;
     private String usuimagem;
 

@@ -22,7 +22,8 @@ public class DbHelper extends SQLiteOpenHelper {
 
         //create table on database
         db.execSQL(Constants.CREATE_TABLE);
-
+        db.execSQL(Constants.CREATE_TABLE_OBRAS);
+        db.execSQL(Constants.CREATE_TABLE_COMENTARIOS);
     }
 
     @Override
@@ -32,6 +33,8 @@ public class DbHelper extends SQLiteOpenHelper {
 
         // drop table if exists
         db.execSQL("DROP TABLE IF EXISTS "+Constants.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS "+Constants.TABLE_NAME_OBRAS);
+        db.execSQL("DROP TABLE IF EXISTS "+Constants.TABLE_NAME_COMENTARIOS);
 
         // create table again
         onCreate(db);
@@ -39,7 +42,7 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     // Insert Function to insert data in database
-    public long insertContact(String image,String name,String phone,String email,String note,String addedTime,String updatedTime){
+/*    public long insertContact(String image,String name,String phone,String email,String note,String addedTime,String updatedTime){
 
         //get writable database to write data on db
         SQLiteDatabase db = this.getWritableDatabase();
@@ -61,9 +64,10 @@ public class DbHelper extends SQLiteOpenHelper {
         //return id
         return id;
 
-    }
+    }*/
 
     // Update Function to update data in database
+/*
     public void updateContact(String id,String image,String name,String phone,String email,String note,String addedTime,String updatedTime){
 
         //get writable database to write data on db
@@ -104,6 +108,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL("DELETE FROM "+Constants.TABLE_NAME);
         db.close();
     }
+*/
 
 
     // get data

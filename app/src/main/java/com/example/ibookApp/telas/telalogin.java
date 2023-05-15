@@ -10,7 +10,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.ibookApp.AdapterContact;
 import com.example.ibookApp.DAOs.UsuarioDAO;
 import com.example.ibookApp.DTOs.UsuarioDTO;
 import com.example.ibookApp.R;
@@ -30,7 +29,6 @@ public class telalogin extends AppCompatActivity {
     TextView tvNaoTemCadastro, tvUsuEmail, tvUsuSenha, tvRecuperarSenha;
     String email, senha;
     Button btnAcessar;
-    private AdapterContact adapterContact;
     private RecyclerView ibookRv;
 
     @Override

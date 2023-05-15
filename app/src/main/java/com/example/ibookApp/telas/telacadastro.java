@@ -146,7 +146,7 @@ public class telacadastro extends AppCompatActivity {
     private void showImagePickerDialog() {
 
         //option for dialog
-        String options[] = {"Camera","Gallery"};
+        String options[] = {"Camera","Galeria"};
 
         // Alert dialog builder
         AlertDialog.Builder builder  = new AlertDialog.Builder(this);

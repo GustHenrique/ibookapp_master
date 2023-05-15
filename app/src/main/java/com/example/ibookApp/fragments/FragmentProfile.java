@@ -63,7 +63,7 @@ public class FragmentProfile extends Fragment {
         }
     }
     Button btnLogout;
-    ImageView imgTeste;
+    ImageView imgProfile;
     TextView txtNome;
     private Uri imageUri;
     @Override
@@ -73,12 +73,12 @@ public class FragmentProfile extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
         btnLogout = (Button)rootView.findViewById(R.id.btnLogoutHome);
         txtNome = (TextView) rootView.findViewById(R.id.txtNomeUsuarioProfile);
-        imgTeste = rootView.findViewById(R.id.imgProfile);
+        imgProfile = rootView.findViewById(R.id.imgProfile);
         UsuarioDTO userLogado = UserSingleton.getInstance().getUser();
         txtNome.setText("Olá " + userLogado.getUsunome() + "!");
         imageUri = Uri.parse(userLogado.getUsuimagem());
         if (!imageUri.equals(null) || !imageUri.equals("")){
-            imgTeste.setImageURI(imageUri);
+            imgProfile.setImageURI(imageUri);
         }
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override

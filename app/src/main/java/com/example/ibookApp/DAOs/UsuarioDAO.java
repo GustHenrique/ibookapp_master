@@ -36,7 +36,7 @@ public class UsuarioDAO {
         contentValues.put(Constants.C_EMAIL, usuario.getUsuemail());
         contentValues.put(Constants.C_PASS, usuario.getUsusenha());
         contentValues.put(Constants.C_NAME, usuario.getUsunome());
-        db.insert("USUARIO", null, contentValues);
+        db.insert(Constants.TABLE_NAME, null, contentValues);
     }
 
     public void recuperarSenha(UsuarioDTO usuario, String novaSenha) throws NoSuchAlgorithmException, InvalidKeySpecException, NoSuchPaddingException, UnsupportedEncodingException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
@@ -78,11 +78,6 @@ public class UsuarioDAO {
             return false;
         }
     }
-
-    public UsuarioDTO loadData(UsuarioDTO usuario){
-        return usuario;
-    }
-
     public UsuarioDTO autenticarUsuario(String usuemail, String ususenha) throws NoSuchPaddingException, UnsupportedEncodingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException, InvalidKeySpecException {
         SecretKey secret = generateKey();
         byte[] encryptSenha = encryptMsg(ususenha, secret);
