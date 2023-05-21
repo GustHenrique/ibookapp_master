@@ -14,11 +14,16 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.example.ibookApp.APIs.GoogleBooksApi;
+import com.example.ibookApp.APIs.KitsuApiManager;
 import com.example.ibookApp.Adapters.ObraMaisComentadasAdapter;
 import com.example.ibookApp.DAOs.ObrasDAO;
+import com.example.ibookApp.DTOs.BookApiGoogleDTO;
+import com.example.ibookApp.DTOs.MangaApiKitsuDTO;
 import com.example.ibookApp.DTOs.ObraDTO;
 import com.example.ibookApp.DTOs.UsuarioDTO;
 import com.example.ibookApp.Adapters.ObraAdapter;
+import com.example.ibookApp.DTOs.obrasDTO;
 import com.example.ibookApp.R;
 import com.example.ibookApp.functions.UserSingleton;
 import com.example.ibookApp.functions.Utils;
@@ -83,16 +88,26 @@ public class FragmentHome extends Fragment {
         rvibook = (RecyclerView)rootView.findViewById(R.id.rviBook);
         rvibookmaiscomentados = (RecyclerView)rootView.findViewById(R.id.recycler_view_horizontal);
         UsuarioDTO userLogado = UserSingleton.getInstance().getUser();
-
         rvibook.setLayoutManager(new LinearLayoutManager(getContext()));
-
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 logout();
             }
         });
+        /*KitsuApiManager.getMangaList(new KitsuApiManager.MangaListListener() {
+            @Override
+            public void onMangaListReceived(List<obrasDTO> mangaList) {
+                // Faça o que quiser com a lista de mangás recebida, como exibi-la em uma RecyclerView.
+            }
+        });*/
 
+        GoogleBooksApi.getBookList(new GoogleBooksApi.BookListListener() {
+            @Override
+            public void onBookListReceived(List<obrasDTO> bookList) {
+
+            }
+        });
         loadData();
         // Inflate the layout for this fragment
         return rootView;
@@ -108,13 +123,17 @@ public class FragmentHome extends Fragment {
         ObrasDAO obrasDAO = new ObrasDAO(getContext());
         ArrayList<ObraDTO> obrasList = new ArrayList<>();
         List<ObraDTO> obras = obrasDAO.carregarObras();
-        for (ObraDTO obra : obras) {
+        int limite = Math.min(obras.size(), 15);
+        for (int i = 0; i < limite; i++) {
+            ObraDTO obra = obras.get(i);
             obrasList.add(obra);
         }
 
         ArrayList<ObraDTO> obrasMaisComentadasList = new ArrayList<>();
         List<ObraDTO> obrasMaisComentadas = obrasDAO.carregarObrasMaisComentadas();
-        for (ObraDTO obraMaisComentadas : obrasMaisComentadas) {
+        int limiteMaisComentado = Math.min(obrasMaisComentadas.size(), 10);
+        for (int i = 0; i < limiteMaisComentado; i++) {
+            ObraDTO obraMaisComentadas = obrasMaisComentadas.get(i);
             obrasMaisComentadasList.add(obraMaisComentadas);
         }
 
@@ -124,4 +143,5 @@ public class FragmentHome extends Fragment {
         adapterContact = new ObraAdapter(obrasList);
         rvibook.setAdapter(adapterContact);
     }
+
 }

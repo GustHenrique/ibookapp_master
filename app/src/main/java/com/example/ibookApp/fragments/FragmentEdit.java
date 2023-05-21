@@ -211,6 +211,17 @@ public class FragmentEdit extends Fragment {
             ObrasDAO obrasDAO = new ObrasDAO(getContext());
             ObraDTO obrasDTO = new ObraDTO(null, titulo, editora, raiting.toString(),autor,""+imageUri,categorias,null,sinopse,isbn);
             obrasDAO.inserirObra(obrasDTO);
+            Toast.makeText(getContext(),"Obra cadastrada com Suceesso!", Toast.LENGTH_LONG).show();
+            tvIsbn.setText("");
+            tvTitulo.setText("");
+            tvAutor.setText("");
+            tvCategorias.setText("");
+            tvComentario.setText("");
+            tvSinopse.setText("");
+            tvEditora.setText("");
+            rbAvaliacao.setRating(3);
+            civImageCad.setImageDrawable(null);
+            civImageCad.setImageResource(R.drawable.ic_book_foreground);
         }
         else{
             Toast.makeText(getContext(),"Todos os campos são obrigatórios!", Toast.LENGTH_LONG).show();
