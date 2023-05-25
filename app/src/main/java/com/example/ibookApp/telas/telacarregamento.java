@@ -8,7 +8,13 @@ import android.os.Handler;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import com.example.ibookApp.APIs.ibookApi;
+import com.example.ibookApp.DTOs.obrasDTO;
 import com.example.ibookApp.R;
+import com.example.ibookApp.functions.ObrasListSingleton;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class telacarregamento extends AppCompatActivity {
     private static int SPLASH_TIME_OUT = 1500;
@@ -20,6 +26,15 @@ public class telacarregamento extends AppCompatActivity {
 
         mLoadingSpinner = (ProgressBar) findViewById(R.id.loading_spinner);
         mLoadingSpinner.setVisibility(View.VISIBLE);
+        ibookApi.getBookList(new ibookApi.BookListListener() {
+            @Override
+            public void onBookListReceived(List<obrasDTO> bookList) {
+                ObrasListSingleton obrasSingleton = ObrasListSingleton.getInstance();
+                for (obrasDTO obra : bookList) {
+                    obrasSingleton.adicionarObra(obra);
+                }
+            }
+        });
 
         new Handler().postDelayed(new Runnable() {
 

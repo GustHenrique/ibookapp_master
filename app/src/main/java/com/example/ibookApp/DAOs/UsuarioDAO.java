@@ -32,10 +32,10 @@ public class UsuarioDAO {
 
     public void inserirUsuario(UsuarioDTO usuario){
         ContentValues contentValues = new ContentValues();
-        contentValues.put(Constants.C_IMAGE, usuario.getUsuimagem());
-        contentValues.put(Constants.C_EMAIL, usuario.getUsuemail());
-        contentValues.put(Constants.C_PASS, usuario.getUsusenha());
-        contentValues.put(Constants.C_NAME, usuario.getUsunome());
+        contentValues.put(Constants.C_IMAGE, usuario.getImagem());
+        contentValues.put(Constants.C_EMAIL, usuario.getEmail());
+        contentValues.put(Constants.C_PASS, usuario.getSenha());
+        contentValues.put(Constants.C_NAME, usuario.getNome());
         db.insert(Constants.TABLE_NAME, null, contentValues);
     }
 
@@ -46,11 +46,11 @@ public class UsuarioDAO {
         novaSenha = bytesToString(encryptSenha);
         contentValues.put(Constants.C_PASS, novaSenha);
         //update data in row, It will return id of record
-        db.update(Constants.TABLE_NAME,contentValues,Constants.C_ID+" =? ",new String[]{usuario.getUsuid()} );
+        db.update(Constants.TABLE_NAME,contentValues,Constants.C_ID+" =? ",new String[]{usuario.getId()} );
     }
 
     public boolean existeEmailCadastrado(String usuemail){
-        UsuarioDTO usuario = new UsuarioDTO(null,null,null,null,null);
+        UsuarioDTO usuario = null;
         String selectQuery =  "SELECT * FROM "+ Constants.TABLE_NAME + " WHERE " + Constants.C_EMAIL + " =\"" + usuemail + "\"";
         try{
             Cursor cursor = db.rawQuery(selectQuery,null);
@@ -63,15 +63,15 @@ public class UsuarioDAO {
                     String email = ""+cursor.getString(cursor.getColumnIndexOrThrow(Constants.C_EMAIL));
                     String id = ""+cursor.getString(cursor.getColumnIndexOrThrow(Constants.C_ID));
                     //set data
-                    usuario = new UsuarioDTO(email,pass,name,id,image);
+                    usuario = new UsuarioDTO(email,pass,name,id,image, true);
 
                 }while (cursor.moveToNext());
             }
         }
         catch (Exception e){
-            usuario = new UsuarioDTO(null,null,null,null,null);
+            usuario = null;
         }
-        if (usuario.getUsuid() == "" || usuario.getUsuid() == null){
+        if (usuario.getId() == "" || usuario.getId() == null){
             return true;
         }
         else{
@@ -82,7 +82,7 @@ public class UsuarioDAO {
         SecretKey secret = generateKey();
         byte[] encryptSenha = encryptMsg(ususenha, secret);
         ususenha = bytesToString(encryptSenha);
-        UsuarioDTO usuario = new UsuarioDTO(null,null,null,null,null);
+        UsuarioDTO usuario = null;
         String selectQuery =  "SELECT * FROM "+ Constants.TABLE_NAME + " WHERE " + Constants.C_EMAIL + " =\"" + usuemail + "\"" + " AND " + Constants.C_PASS + " =\"" + ususenha + "\"";
         try{
             Cursor cursor = db.rawQuery(selectQuery,null);
@@ -95,19 +95,19 @@ public class UsuarioDAO {
                     String email = ""+cursor.getString(cursor.getColumnIndexOrThrow(Constants.C_EMAIL));
                     String id = ""+cursor.getString(cursor.getColumnIndexOrThrow(Constants.C_ID));
                     //set data
-                    usuario = new UsuarioDTO(email,pass,name,id,image);
+                    usuario = new UsuarioDTO(email,pass,name,id,image, true);
 
                 }while (cursor.moveToNext());
             }
         }
         catch (Exception e){
-            usuario = new UsuarioDTO(null,null,null,null,null);
+            usuario = null;
         }
         return usuario;
     }
 
     public UsuarioDTO retornarUsuarioEmail(String usuemail) throws NoSuchPaddingException, UnsupportedEncodingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException, InvalidKeySpecException {
-        UsuarioDTO usuario = new UsuarioDTO(null,null,null,null,null);
+        UsuarioDTO usuario = null;
         String selectQuery =  "SELECT * FROM "+ Constants.TABLE_NAME + " WHERE " + Constants.C_EMAIL + " =\"" + usuemail + "\"";
         try{
             Cursor cursor = db.rawQuery(selectQuery,null);
@@ -120,13 +120,13 @@ public class UsuarioDAO {
                     String email = ""+cursor.getString(cursor.getColumnIndexOrThrow(Constants.C_EMAIL));
                     String id = ""+cursor.getString(cursor.getColumnIndexOrThrow(Constants.C_ID));
                     //set data
-                    usuario = new UsuarioDTO(email,pass,name,id,image);
+                    usuario = new UsuarioDTO(email,pass,name,id,image, true);
 
                 }while (cursor.moveToNext());
             }
         }
         catch (Exception e){
-            usuario = new UsuarioDTO(null,null,null,null,null);
+            usuario = null;
         }
         return usuario;
     }

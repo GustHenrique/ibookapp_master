@@ -8,7 +8,8 @@ package com.example.ibookApp.Adapters;
 
         import androidx.recyclerview.widget.RecyclerView;
 
-        import com.example.ibookApp.DTOs.ObraDTO;
+        import com.bumptech.glide.Glide;
+        import com.example.ibookApp.DTOs.obrasDTO;
         import com.example.ibookApp.R;
 
         import java.util.ArrayList;
@@ -16,9 +17,9 @@ package com.example.ibookApp.Adapters;
         import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ObraMaisComentadasAdapter extends RecyclerView.Adapter<ObraMaisComentadasAdapter.ObraMaisViewHolder> {
-    private ArrayList<ObraDTO> obrasList;
+    private ArrayList<obrasDTO> obrasList;
 
-    public ObraMaisComentadasAdapter(ArrayList<ObraDTO> obrasList) {
+    public ObraMaisComentadasAdapter(ArrayList<obrasDTO> obrasList) {
         this.obrasList = obrasList;
     }
 
@@ -32,11 +33,13 @@ public class ObraMaisComentadasAdapter extends RecyclerView.Adapter<ObraMaisCome
 
     @Override
     public void onBindViewHolder(ObraMaisViewHolder holder, int position) {
-        ObraDTO obra = obrasList.get(position);
-        String imagePath = obra.getObimage(); // obtém o caminho da imagem como string
-        Uri imageUri = Uri.parse("file://" + imagePath); // converte para URI
-        holder.txtImage.setImageURI(imageUri);
-        holder.txtTitulo.setText(obra.getObtitulo());
+        obrasDTO obra = obrasList.get(position);
+        String imagePath = obra.getImage(); // obtém o caminho da imagem como string
+        Uri imageUri = Uri.parse(imagePath); // converte para URI
+        Glide.with(holder.itemView.getContext())
+                .load(imagePath)
+                .into(holder.txtImage);
+        holder.txtTitulo.setText(obra.getTitle());
     }
 
     @Override

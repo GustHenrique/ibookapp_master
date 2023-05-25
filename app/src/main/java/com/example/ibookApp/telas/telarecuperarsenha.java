@@ -78,7 +78,7 @@ public class telarecuperarsenha extends AppCompatActivity {
         if (!email.isEmpty()){
             if (Patterns.EMAIL_ADDRESS.matcher(email).matches() && !UsuarioDAO.existeEmailCadastrado(email)){
                 UsuarioDTO usuario = UsuarioDAO.retornarUsuarioEmail(email);
-                if (usuario.getUsuid() != null){
+                if (usuario.getId() != null){
                     String novaSenha = gerarSenha();
                     UsuarioDAO.recuperarSenha(usuario, novaSenha);
                     /*Utils.enviarEmail(email, novaSenha);*/

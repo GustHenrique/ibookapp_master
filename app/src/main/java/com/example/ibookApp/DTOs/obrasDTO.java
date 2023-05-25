@@ -9,7 +9,6 @@ public class obrasDTO {
     private String editora;
     private String dataPublicacao;
     private String dataFinalizacao;
-    private String descricao;
     private String isbn;
     private String paginas;
     private String image;
@@ -20,7 +19,7 @@ public class obrasDTO {
     private String categorias;
 
 
-    public obrasDTO(String id, String title, String subtitle, String synopsis, String author, String editora, String dataPublicacao, String dataFinalizacao, String descricao, String isbn, String paginas, String image, String traducao, String type, String avarageRating, String status, String categorias) {
+    public obrasDTO(String id, String title, String subtitle, String synopsis, String author, String editora, String dataPublicacao, String dataFinalizacao, String isbn, String paginas, String image, String traducao, String type, String avarageRating, String status, String categorias) {
         this.id = id;
         this.title = title;
         this.subtitle = subtitle;
@@ -29,7 +28,6 @@ public class obrasDTO {
         this.editora = editora;
         this.dataPublicacao = dataPublicacao;
         this.dataFinalizacao = dataFinalizacao;
-        this.descricao = descricao;
         this.isbn = isbn;
         this.paginas = paginas;
         this.image = image;
@@ -104,14 +102,6 @@ public class obrasDTO {
 
     public void setDataFinalizacao(String dataFinalizacao) {
         this.dataFinalizacao = dataFinalizacao;
-    }
-
-    public String getDescricao() {
-        return descricao;
-    }
-
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
     }
 
     public String getIsbn() {

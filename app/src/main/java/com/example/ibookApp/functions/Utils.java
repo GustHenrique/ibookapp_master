@@ -1,22 +1,14 @@
 package com.example.ibookApp.functions;
-import android.content.Intent;
 import android.util.Base64;
-import com.example.ibookApp.DTOs.EmailDTO;
+
 import com.example.ibookApp.DTOs.UsuarioDTO;
-import com.example.ibookApp.DTOs.obrasDTO;
-import com.example.ibookApp.telas.MainActivity;
 
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-import java.util.List;
-import java.util.Properties;
 import java.util.Random;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
@@ -87,7 +79,7 @@ public class Utils {
         return senha.toString();
     }
     public static void logout(){
-        UsuarioDTO usuario = new UsuarioDTO(null,null,null,null,null);
+        UsuarioDTO usuario = null;
         UserSingleton.getInstance().setUser(usuario);
     }
     public static UsuarioDTO getUser(){

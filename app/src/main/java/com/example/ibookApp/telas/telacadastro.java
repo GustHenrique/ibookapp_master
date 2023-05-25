@@ -118,7 +118,7 @@ public class telacadastro extends AppCompatActivity {
                 SecretKey secret = Utils.generateKey();
                 byte[] encryptSenha = Utils.encryptMsg(senha, secret);
                 senha = bytesToString(encryptSenha);
-                UsuarioDTO usuario = new UsuarioDTO(email, senha, nome, null, ""+imageUri);
+                UsuarioDTO usuario = new UsuarioDTO(email, senha, nome, null, ""+imageUri, true);
                 UsuarioDAO UsuarioDAO = new UsuarioDAO(this);
                 if (Patterns.EMAIL_ADDRESS.matcher(email).matches()){
                     if (UsuarioDAO.existeEmailCadastrado(email)){

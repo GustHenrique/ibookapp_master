@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.ibookApp.DTOs.UsuarioDTO;
 import com.example.ibookApp.R;
 import com.example.ibookApp.functions.UserSingleton;
@@ -75,10 +76,16 @@ public class FragmentProfile extends Fragment {
         txtNome = (TextView) rootView.findViewById(R.id.txtNomeUsuarioProfile);
         imgProfile = rootView.findViewById(R.id.imgProfile);
         UsuarioDTO userLogado = UserSingleton.getInstance().getUser();
-        txtNome.setText("Olá " + userLogado.getUsunome() + "!");
-        imageUri = Uri.parse(userLogado.getUsuimagem());
+        txtNome.setText("Olá " + userLogado.getNome() + "!");
+        imageUri = Uri.parse(userLogado.getImagem());
         if (!imageUri.equals(null) || !imageUri.equals("")){
-            imgProfile.setImageURI(imageUri);
+            //imgProfile.setImageURI(imageUri);
+            Glide.with(getContext())
+                    .load(imageUri)
+                    .into(imgProfile);
+        }else{
+            imgProfile.setImageDrawable(null);
+            imgProfile.setImageResource(R.drawable.ic_person_foreground);
         }
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override

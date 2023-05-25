@@ -8,12 +8,18 @@ import android.database.sqlite.SQLiteDatabase;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.ibookApp.APIs.ibookApi;
 import com.example.ibookApp.DTOs.ObraDTO;
 import com.example.ibookApp.DTOs.UsuarioDTO;
+import com.example.ibookApp.DTOs.obrasDTO;
 import com.example.ibookApp.DbHelper;
 import com.example.ibookApp.functions.Constants;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Type;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
@@ -26,6 +32,10 @@ import java.util.ListIterator;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class ObrasDAO {
     private DbHelper con;
@@ -50,59 +60,14 @@ public class ObrasDAO {
         contentValues.put(Constants.O_ISBN, obras.getObisbn());
         db.insert(Constants.TABLE_NAME_OBRAS, null, contentValues);
     }
-    public ArrayList<ObraDTO> carregarObras(){
-        //create arrayList
-        ArrayList<ObraDTO> arrayList = new ArrayList<>();
-        //sql command query
-        String selectQuery = "SELECT * FROM "+Constants.TABLE_NAME_OBRAS;
-        Cursor cursor = dbReader.rawQuery(selectQuery,null);
 
-        // looping through all record and add to list
-        if (cursor.moveToFirst()){
-            do {
-                ObraDTO obra = new ObraDTO(
-                        ""+cursor.getString(cursor.getColumnIndexOrThrow(Constants.O_ID)),
-                        ""+cursor.getString(cursor.getColumnIndexOrThrow(Constants.O_TITULO)),
-                        ""+cursor.getString(cursor.getColumnIndexOrThrow(Constants.O_EDITORA)),
-                        ""+cursor.getString(cursor.getColumnIndexOrThrow(Constants.O_AVALIACAO)),
-                        ""+cursor.getString(cursor.getColumnIndexOrThrow(Constants.O_AUTOR)),
-                        ""+cursor.getString(cursor.getColumnIndexOrThrow(Constants.O_IMAGE)),
-                        ""+cursor.getString(cursor.getColumnIndexOrThrow(Constants.O_CATEGORIAS)),
-                        ""+cursor.getString(cursor.getColumnIndexOrThrow(Constants.O_STATUS)),
-                        ""+cursor.getString(cursor.getColumnIndexOrThrow(Constants.O_SINOPSE)),
-                        ""+cursor.getString(cursor.getColumnIndexOrThrow(Constants.O_ISBN))
-                );
-                arrayList.add(obra);
-            }while (cursor.moveToNext());
-        }
-        return arrayList;
+    public void carregarObras()  {
+
     }
-
-    public ArrayList<ObraDTO> carregarObrasMaisComentadas(){
+    public ArrayList<obrasDTO> carregarObrasMaisComentadas(){
         //create arrayList
-        ArrayList<ObraDTO> arrayList = new ArrayList<>();
-        //sql command query
-        String selectQuery = "SELECT * FROM "+Constants.TABLE_NAME_OBRAS;
-        Cursor cursor = dbReader.rawQuery(selectQuery,null);
+        ArrayList<obrasDTO> arrayList = new ArrayList<>();
 
-        // looping through all record and add to list
-        if (cursor.moveToFirst()){
-            do {
-                ObraDTO obra = new ObraDTO(
-                        ""+cursor.getString(cursor.getColumnIndexOrThrow(Constants.O_ID)),
-                        ""+cursor.getString(cursor.getColumnIndexOrThrow(Constants.O_TITULO)),
-                        ""+cursor.getString(cursor.getColumnIndexOrThrow(Constants.O_EDITORA)),
-                        ""+cursor.getString(cursor.getColumnIndexOrThrow(Constants.O_AVALIACAO)),
-                        ""+cursor.getString(cursor.getColumnIndexOrThrow(Constants.O_AUTOR)),
-                        ""+cursor.getString(cursor.getColumnIndexOrThrow(Constants.O_IMAGE)),
-                        ""+cursor.getString(cursor.getColumnIndexOrThrow(Constants.O_CATEGORIAS)),
-                        ""+cursor.getString(cursor.getColumnIndexOrThrow(Constants.O_STATUS)),
-                        ""+cursor.getString(cursor.getColumnIndexOrThrow(Constants.O_SINOPSE)),
-                        ""+cursor.getString(cursor.getColumnIndexOrThrow(Constants.O_ISBN))
-                );
-                arrayList.add(obra);
-            }while (cursor.moveToNext());
-        }
         return arrayList;
     }
 

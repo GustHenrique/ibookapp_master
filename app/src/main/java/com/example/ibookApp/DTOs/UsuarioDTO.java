@@ -1,57 +1,67 @@
 package com.example.ibookApp.DTOs;
 
 public class UsuarioDTO {
-    private String usuid;
-    private String usunome;
-    private String usuemail;
-    private String ususenha;
-    private String usuimagem;
+    private String id;
+    private String nome;
+    private String email;
+    private String senha;
+    private String imagem;
+    private Boolean administrador;
 
-    public UsuarioDTO(String usuemail, String ususenha, String usunome, String usuid, String usuimagem) {
-        this.usuid = usuid;
-        this.usunome = usunome;
-        this.usuemail = usuemail;
-        this.ususenha = ususenha;
-        this.usuimagem = usuimagem;
+    public UsuarioDTO(String email, String senha, String nome, String id, String imagem, Boolean administrador) {
+        this.id = id;
+        this.nome = nome;
+        this.email = email;
+        this.senha = senha;
+        this.imagem = imagem;
+        this.administrador = administrador;
     }
 
-    public String getUsuimagem() {
-        return usuimagem;
+
+    public Boolean getAdministrador() {
+        return administrador;
     }
 
-    public void setUsuimagem(String usuimagem) {
-        this.usuimagem = usuimagem;
+    public void setAdministrador(Boolean administrador) {
+        this.administrador = administrador;
     }
-    public String getUsuemail() {
-        return usuemail;
-    }
-
-    public void setUsuemail(String usuemail) {
-        this.usuemail = usuemail;
+    public String getImagem() {
+        return imagem;
     }
 
-    public String getUsusenha() {
-        return ususenha;
+    public void setImagem(String imagem) {
+        this.imagem = imagem;
+    }
+    public String getEmail() {
+        return email;
     }
 
-    public void setUsusenha(String ususenha) {
-        this.ususenha = ususenha;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public String getUsunome() {
-        return usunome;
+    public String getSenha() {
+        return senha;
     }
 
-    public void setUsunome(String usunome) {
-        this.usunome = usunome;
+    public void setSenha(String senha) {
+        this.senha = senha;
     }
 
-    public String getUsuid() {
-        return usuid;
+    public String getNome() {
+        return nome;
     }
 
-    public void setUsuid(String usuid) {
-        this.usuid = usuid;
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
 }

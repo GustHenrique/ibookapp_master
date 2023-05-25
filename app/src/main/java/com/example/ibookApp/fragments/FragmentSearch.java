@@ -4,14 +4,26 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
+import com.example.ibookApp.Adapters.ObraAdapter;
+import com.example.ibookApp.Adapters.ObraMaisComentadasAdapter;
+import com.example.ibookApp.DAOs.ObrasDAO;
+import com.example.ibookApp.DTOs.UsuarioDTO;
+import com.example.ibookApp.DTOs.obrasDTO;
 import com.example.ibookApp.R;
+import com.example.ibookApp.functions.ObrasListSingleton;
+import com.example.ibookApp.functions.UserSingleton;
 import com.example.ibookApp.functions.Utils;
 import com.example.ibookApp.telas.telalogin;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -56,12 +68,38 @@ public class FragmentSearch extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
-
+    private RecyclerView rviBookSearch;
+    private ObraAdapter adapterContact;
+    private Button btnLogout;
+    ArrayList<obrasDTO> obrasList = ObrasListSingleton.getInstance().getObrasList();
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_search, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_search, container, false);
+        rviBookSearch = (RecyclerView)rootView.findViewById(R.id.rviBookSearch);
+        btnLogout = (Button)rootView.findViewById(R.id.btnLogoutSearch);
+        rviBookSearch.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        btnLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                logout();
+            }
+        });
+
+        loadData();
+        return rootView;
+    }
+
+    private void loadData() {
+        ObrasDAO obrasDAO = new ObrasDAO(getContext());
+        ArrayList<obrasDTO> obrasFeedList = new ArrayList<>();
+        for (int i = 0; i < obrasList.size(); i++) {
+            obrasDTO obra = obrasList.get(i);
+            obrasFeedList.add(obra);
+        }
+        adapterContact = new ObraAdapter(obrasFeedList);
+        rviBookSearch.setAdapter(adapterContact);
     }
 
     public void logout(){
