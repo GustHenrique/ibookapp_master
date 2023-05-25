@@ -95,19 +95,7 @@ public class FragmentHome extends Fragment {
                 logout();
             }
         });
-        /*KitsuApiManager.getMangaList(new KitsuApiManager.MangaListListener() {
-            @Override
-            public void onMangaListReceived(List<obrasDTO> mangaList) {
-                // Faça o que quiser com a lista de mangás recebida, como exibi-la em uma RecyclerView.
-            }
-        });*/
 
-        GoogleBooksApi.getBookList(new GoogleBooksApi.BookListListener() {
-            @Override
-            public void onBookListReceived(List<obrasDTO> bookList) {
-
-            }
-        });
         loadData();
         // Inflate the layout for this fragment
         return rootView;
