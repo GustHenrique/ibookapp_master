@@ -17,6 +17,7 @@ import com.example.ibookApp.DTOs.UsuarioDTO;
 import com.example.ibookApp.R;
 import com.example.ibookApp.functions.UserSingleton;
 import com.example.ibookApp.functions.Utils;
+import com.example.ibookApp.telas.editarDadosConta;
 import com.example.ibookApp.telas.telalogin;
 
 /**
@@ -66,6 +67,7 @@ public class FragmentProfile extends Fragment {
     ImageView imgProfile;
     TextView txtNome;
     private Uri imageUri;
+    Button btneditdadosconta;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -77,6 +79,7 @@ public class FragmentProfile extends Fragment {
         UsuarioDTO userLogado = UserSingleton.getInstance().getUser();
         txtNome.setText("Olá " + userLogado.getUsunome() + "!");
         imageUri = Uri.parse(userLogado.getUsuimagem());
+        btneditdadosconta = (Button)rootView.findViewById(R.id.btneditdadosconta);
         if (imageUri == null && !imageUri.equals("")) {
             imgProfile.setImageURI(imageUri);
         }
@@ -87,12 +90,26 @@ public class FragmentProfile extends Fragment {
             }
         });
         // Inflate the layout for this fragment
+
+        btneditdadosconta.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent editarConta = new Intent(getActivity(), editarDadosConta.class);
+                startActivity(editarConta);
+            }
+        });
+
         return rootView;
+
     }
 
     public void logout(){
         Utils.logout();
         Intent acessar = new Intent(getActivity(), telalogin.class);
         startActivity(acessar);
+    }
+    public void setBtneditdadosconta(){
+        Intent editarConta = new Intent(getActivity(), editarDadosConta.class);
+        startActivity(editarConta);
     }
 }
