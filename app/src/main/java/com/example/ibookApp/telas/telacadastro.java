@@ -115,6 +115,14 @@ public class telacadastro extends AppCompatActivity {
         confirmaSenha = tvUsuConfirmarSenha.getText().toString();
         if (!email.isEmpty() && !nome.isEmpty() && !senha.isEmpty() && !confirmaSenha.isEmpty()){
             if (senha.contentEquals(confirmaSenha)){
+                if (validarSenha(senha)) {
+                    // Senhas coincidem e atendem aos critérios de validação
+                    // Continuar com o cadastro
+                    // ...
+                } else {
+                    Toast.makeText(this, "A senha deve ter pelo menos 8 caracteres e conter letras maiúsculas, minúsculas e números!", Toast.LENGTH_LONG).show();
+                    return;
+                }
                 SecretKey secret = Utils.generateKey();
                 byte[] encryptSenha = Utils.encryptMsg(senha, secret);
                 senha = bytesToString(encryptSenha);
@@ -143,6 +151,34 @@ public class telacadastro extends AppCompatActivity {
             Toast.makeText(this,"Todos os campos são obrigatórios!", Toast.LENGTH_LONG).show();
         }
     }
+
+    public boolean validarSenha(String senha) {
+        // Defina as regras da validação da senha aqui
+        // Por exemplo, a senha deve ter pelo menos 8 caracteres e conter letras maiúsculas, minúsculas e números
+
+        if (senha.length() < 8) {
+            return false; // A senha é muito curta
+        }
+
+        boolean temLetraMaiuscula = false;
+        boolean temLetraMinuscula = false;
+        boolean temNumero = false;
+
+        for (int i = 0; i < senha.length(); i++) {
+            char c = senha.charAt(i);
+
+            if (Character.isUpperCase(c)) {
+                temLetraMaiuscula = true;
+            } else if (Character.isLowerCase(c)) {
+                temLetraMinuscula = true;
+            } else if (Character.isDigit(c)) {
+                temNumero = true;
+            }
+        }
+
+        return temLetraMaiuscula && temLetraMinuscula && temNumero;
+    }
+
 
     private void showImagePickerDialog() {
 
