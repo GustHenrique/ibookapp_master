@@ -77,7 +77,7 @@ public class FragmentProfile extends Fragment {
         UsuarioDTO userLogado = UserSingleton.getInstance().getUser();
         txtNome.setText("Olá " + userLogado.getUsunome() + "!");
         imageUri = Uri.parse(userLogado.getUsuimagem());
-        if (!imageUri.equals(null) || !imageUri.equals("")){
+        if (imageUri == null && !imageUri.equals("")) {
             imgProfile.setImageURI(imageUri);
         }
         btnLogout.setOnClickListener(new View.OnClickListener() {

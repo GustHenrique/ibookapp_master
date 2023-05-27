@@ -28,6 +28,7 @@ android {
     viewBinding{
         enabled = true
     }
+    namespace 'com.example.ibookApp'
 }
 
 dependencies {

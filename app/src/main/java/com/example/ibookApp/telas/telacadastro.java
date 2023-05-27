@@ -2,13 +2,8 @@ package com.example.ibookApp.telas;
 
 import static com.example.ibookApp.functions.Utils.bytesToString;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -23,14 +18,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
 import com.example.ibookApp.DAOs.UsuarioDAO;
 import com.example.ibookApp.DTOs.UsuarioDTO;
 import com.example.ibookApp.R;
 import com.example.ibookApp.functions.Utils;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
-
 
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
@@ -115,6 +113,13 @@ public class telacadastro extends AppCompatActivity {
         confirmaSenha = tvUsuConfirmarSenha.getText().toString();
         if (!email.isEmpty() && !nome.isEmpty() && !senha.isEmpty() && !confirmaSenha.isEmpty()){
             if (senha.contentEquals(confirmaSenha)){
+                if (validarSenha(senha)) {
+                    // Senhas coincidem e atendem aos critérios de validação
+                    // Continuar com o cadastro
+                    // ...
+                } else {
+                    Toast.makeText(this, "A senha deve ter pelo menos 8 caracteres e conter letras maiúsculas, minúsculas e números!", Toast.LENGTH_LONG).show();
+                }
                 SecretKey secret = Utils.generateKey();
                 byte[] encryptSenha = Utils.encryptMsg(senha, secret);
                 senha = bytesToString(encryptSenha);
@@ -143,6 +148,34 @@ public class telacadastro extends AppCompatActivity {
             Toast.makeText(this,"Todos os campos são obrigatórios!", Toast.LENGTH_LONG).show();
         }
     }
+
+    public boolean validarSenha(String senha) {
+        // Defina as regras da validação da senha aqui
+        // Por exemplo, a senha deve ter pelo menos 8 caracteres e conter letras maiúsculas, minúsculas e números
+
+        if (senha.length() < 8) {
+            return false; // A senha é muito curta
+        }
+
+        boolean temLetraMaiuscula = false;
+        boolean temLetraMinuscula = false;
+        boolean temNumero = false;
+
+        for (int i = 0; i < senha.length(); i++) {
+            char c = senha.charAt(i);
+
+            if (Character.isUpperCase(c)) {
+                temLetraMaiuscula = true;
+            } else if (Character.isLowerCase(c)) {
+                temLetraMinuscula = true;
+            } else if (Character.isDigit(c)) {
+                temNumero = true;
+            }
+        }
+
+        return temLetraMaiuscula && temLetraMinuscula && temNumero;
+    }
+
 
     private void showImagePickerDialog() {
 
