@@ -1,5 +1,8 @@
 package com.example.ibookApp.APIs;
 
+import static com.example.ibookApp.functions.Constants.BASE_URL_API;
+import static com.example.ibookApp.functions.Utils.bytesToString;
+
 import android.os.AsyncTask;
 
 import com.example.ibookApp.DTOs.UsuarioDTO;
@@ -9,7 +12,10 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import com.example.ibookApp.functions.Constants;
+import com.example.ibookApp.functions.Utils;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -19,11 +25,19 @@ import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import okhttp3.FormBody;
 
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SecretKey;
+
 public class AuthApiClient {
-    private static final String BASE_URL = "http://15.228.241.26/api/";
+    private static final String BASE_URL = BASE_URL_API;
 
     public interface AuthApiListener {
         void onAuthApiReceived(UsuarioDTO usuario);
@@ -44,6 +58,34 @@ public class AuthApiClient {
         protected UsuarioDTO doInBackground(Void... voids) {
             OkHttpClient client = new OkHttpClient();
             UsuarioDTO usuario = null;
+            SecretKey secret = null;
+            try {
+                secret = Utils.generateKey();
+            } catch (NoSuchAlgorithmException e) {
+                throw new RuntimeException(e);
+            } catch (InvalidKeySpecException e) {
+                throw new RuntimeException(e);
+            }
+            byte[] encryptSenha = new byte[0];
+            try {
+                encryptSenha = Utils.encryptMsg(senha, secret);
+            } catch (NoSuchPaddingException e) {
+                throw new RuntimeException(e);
+            } catch (NoSuchAlgorithmException e) {
+                throw new RuntimeException(e);
+            } catch (UnsupportedEncodingException e) {
+                throw new RuntimeException(e);
+            } catch (IllegalBlockSizeException e) {
+                throw new RuntimeException(e);
+            } catch (BadPaddingException e) {
+                throw new RuntimeException(e);
+            } catch (InvalidKeyException e) {
+                throw new RuntimeException(e);
+            } catch (InvalidKeySpecException e) {
+                throw new RuntimeException(e);
+            }
+
+            senha = bytesToString(encryptSenha);
 
             HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + "Usuario/Autenticar").newBuilder();
             urlBuilder.addQueryParameter("email", email);

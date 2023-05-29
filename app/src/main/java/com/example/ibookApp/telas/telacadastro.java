@@ -14,6 +14,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Patterns;
@@ -23,19 +24,31 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.amazonaws.HttpMethod;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.regions.Region;
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
+import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.example.ibookApp.APIs.InsertUsuarioApi;
 import com.example.ibookApp.DAOs.UsuarioDAO;
 import com.example.ibookApp.DTOs.UsuarioDTO;
 import com.example.ibookApp.R;
 import com.example.ibookApp.functions.Utils;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
+import java.net.URL;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.util.Date;
+import java.util.UUID;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -54,6 +67,7 @@ public class telacadastro extends AppCompatActivity {
     TextView tvTemConta, tvUsuEmail, tvUsuSenha, tvUsuConfirmarSenha, tvUsuNome;
     String nome, email, senha, confirmaSenha, image;
     Button fabCadastrarUsuario;
+    public String finalImagePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,41 +122,124 @@ public class telacadastro extends AppCompatActivity {
             }
         });
     }
+
+    public void inserirUsuario(String email, String senha, String nome, String imagem) {
+        InsertUsuarioApi.InsertUsuarioAsyncTask task = new InsertUsuarioApi.InsertUsuarioAsyncTask(email, senha, nome, imagem, new InsertUsuarioApi.InsertUsuarioListener() {
+            @Override
+            public void onInsertBookReceived(boolean success) {
+                // Resultado recebido do AsyncTask
+                if (success) {
+                    Toast.makeText(telacadastro.this,"Usuário cadastrado com sucesso!", Toast.LENGTH_LONG).show();
+                    Intent temConta = new Intent(getApplicationContext(), telalogin.class);
+                    startActivity(temConta);
+                } else {
+                    Toast.makeText(telacadastro.this,"Ops! Algo deu errado!", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+        task.execute();
+    }
+
     public void cadastrarUsuario(View view) throws NoSuchPaddingException, UnsupportedEncodingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException, InvalidKeySpecException {
         nome =  tvUsuNome.getText().toString();
         email = tvUsuEmail.getText().toString();
         senha = tvUsuSenha.getText().toString();
         confirmaSenha = tvUsuConfirmarSenha.getText().toString();
-        if (!email.isEmpty() && !nome.isEmpty() && !senha.isEmpty() && !confirmaSenha.isEmpty()){
-            if (senha.contentEquals(confirmaSenha)){
-                SecretKey secret = Utils.generateKey();
-                byte[] encryptSenha = Utils.encryptMsg(senha, secret);
-                senha = bytesToString(encryptSenha);
-                UsuarioDTO usuario = new UsuarioDTO(email, senha, nome, null, ""+imageUri, true);
-                UsuarioDAO UsuarioDAO = new UsuarioDAO(this);
-                if (Patterns.EMAIL_ADDRESS.matcher(email).matches()){
-                    if (UsuarioDAO.existeEmailCadastrado(email)){
-                        UsuarioDAO.inserirUsuario(usuario);
-                        Toast.makeText(this,"Usuário cadastrado com sucesso!", Toast.LENGTH_LONG).show();
-                        Intent temConta = new Intent(getApplicationContext(), telalogin.class);
-                        startActivity(temConta);
+
+        if (!email.isEmpty() && !nome.isEmpty() && !senha.isEmpty() && !confirmaSenha.isEmpty()) {
+            if (senha.contentEquals(confirmaSenha)) {
+                if (validarSenha(senha)) {
+                    if (Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                        SecretKey secret = Utils.generateKey();
+                        byte[] encryptSenha = Utils.encryptMsg(senha, secret);
+                        senha = bytesToString(encryptSenha);
+                        String imageFilePath = imageUri.getPath();
+                        UploadImageTask uploadTask = new UploadImageTask(imageFilePath);
+                        uploadTask.execute();
+                        Toast.makeText(telacadastro.this, "Usuário Cadastrado com Sucesso!", Toast.LENGTH_LONG);
+                    } else {
+                        Toast.makeText(this, "Formato do E-mail incorreto!", Toast.LENGTH_LONG).show();
                     }
-                    else{
-                        Toast.makeText(this,"E-mail já cadastrado!", Toast.LENGTH_LONG).show();
-                    }
+                } else {
+                    Toast.makeText(this, "Senha fraca! Minímo 8 digitos entre letras e números!", Toast.LENGTH_LONG).show();
+                    return;
                 }
-                else{
-                    Toast.makeText(this,"Formato do E-mail incorreto!", Toast.LENGTH_LONG).show();
-                }
+            } else {
+                Toast.makeText(this, "As senhas não coincidem!", Toast.LENGTH_LONG).show();
             }
-            else{
-                Toast.makeText(this,"As senhas não coincidem!", Toast.LENGTH_LONG).show();
-            }
-        }
-        else{
-            Toast.makeText(this,"Todos os campos são obrigatórios!", Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(this, "Todos os campos são obrigatórios!", Toast.LENGTH_LONG).show();
         }
     }
+
+    private class UploadImageTask extends AsyncTask<Void, Void, String> {
+        private String imageFilePath;
+
+        public UploadImageTask(String imageFilePath) {
+            this.imageFilePath = imageFilePath;
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+            String accessKey = "AKIAXDEVVEMABWJ6Z4XT";
+            String secretKey = "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";
+            String bucketName = "ibookimageusuarios";
+            String objectKey = UUID.randomUUID().toString() + ".jpg";
+            BasicAWSCredentials credentials = new BasicAWSCredentials(accessKey, secretKey);
+            AmazonS3 s3client = new AmazonS3Client(credentials);
+            s3client.setRegion(Region.getRegion(Regions.SA_EAST_1)); // Substitua pela sua região
+            if (imageFilePath != null){
+                File imageFile = new File(imageFilePath); // Escolha um nome adequado para a imagem
+                s3client.putObject(new PutObjectRequest(bucketName, objectKey, imageFile));
+                Date expiration = new Date(System.currentTimeMillis() + 3600000);
+                URL imageUrl = s3client.generatePresignedUrl(new GeneratePresignedUrlRequest(bucketName, objectKey)
+                        .withMethod(HttpMethod.GET)
+                        .withExpiration(expiration));
+
+                String finalPath = imageUrl.toString();
+                return finalPath;
+            }
+            else{
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String finalPath) {
+                inserirUsuario(email, senha, nome, finalPath);
+                Intent temConta = new Intent(getApplicationContext(), telalogin.class);
+                startActivity(temConta);
+        }
+    }
+
+
+    public boolean validarSenha(String senha) {
+        // Defina as regras da validação da senha aqui
+        // Por exemplo, a senha deve ter pelo menos 8 caracteres e conter letras maiúsculas, minúsculas e números
+
+        if (senha.length() < 8) {
+            return false; // A senha é muito curta
+        }
+
+        boolean temLetraMaiuscula = false;
+        boolean temLetraMinuscula = false;
+        boolean temNumero = false;
+
+        for (int i = 0; i < senha.length(); i++) {
+            char c = senha.charAt(i);
+
+            if (Character.isUpperCase(c)) {
+                temLetraMaiuscula = true;
+            } else if (Character.isLowerCase(c)) {
+                temLetraMinuscula = true;
+            } else if (Character.isDigit(c)) {
+                temNumero = true;
+            }
+        }
+
+        return temLetraMaiuscula && temLetraMinuscula && temNumero;
+    }
+
 
     private void showImagePickerDialog() {
 
@@ -185,7 +282,6 @@ public class telacadastro extends AppCompatActivity {
         //intent for taking image from gallery
         Intent galleryIntent = new Intent(Intent.ACTION_PICK);
         galleryIntent.setType("image/*"); // only Image
-
         startActivityForResult(galleryIntent,IMAGE_FROM_GALLERY_CODE);
     }
     private void pickFromCamera() {

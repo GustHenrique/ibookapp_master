@@ -3,6 +3,7 @@ package com.example.ibookApp.functions;
 public class Constants {
 
     // database or db name
+    public static final String BASE_URL_API = "http://15.228.241.26/api/";
     public static final String DATABASE_NAME = "IBOOK_DB";
     //database version
     public static final int DATABASE_VERSION = 4;

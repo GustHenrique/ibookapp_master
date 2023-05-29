@@ -78,14 +78,14 @@ public class FragmentProfile extends Fragment {
         UsuarioDTO userLogado = UserSingleton.getInstance().getUser();
         txtNome.setText("Olá " + userLogado.getNome() + "!");
         imageUri = Uri.parse(userLogado.getImagem());
-        if (!imageUri.equals(null) || !imageUri.equals("")){
-            //imgProfile.setImageURI(imageUri);
+        String teste = imageUri.toString();
+        if (!imageUri.equals(null) && !imageUri.toString().isEmpty()){
             Glide.with(getContext())
                     .load(imageUri)
                     .into(imgProfile);
         }else{
             imgProfile.setImageDrawable(null);
-            imgProfile.setImageResource(R.drawable.ic_person_foreground);
+            imgProfile.setImageResource(R.drawable.ic_baseline_person_24);
         }
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override

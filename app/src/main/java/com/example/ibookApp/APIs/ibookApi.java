@@ -3,7 +3,7 @@ package com.example.ibookApp.APIs;
 import android.os.AsyncTask;
 
 import com.example.ibookApp.DTOs.obrasDTO;
-
+import static com.example.ibookApp.functions.Constants.BASE_URL_API;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -16,7 +16,7 @@ import okhttp3.Response;
 import okhttp3.ResponseBody;
 
 public class ibookApi {
-    private static final String API_ENDPOINT = "http://15.228.241.26/api/Obras/TodasObras";
+    private static final String API_ENDPOINT = BASE_URL_API + "Obras/TodasObras";
 
     public interface BookListListener {
         void onBookListReceived(List<obrasDTO> bookList);
