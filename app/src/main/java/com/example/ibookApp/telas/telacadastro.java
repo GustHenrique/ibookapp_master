@@ -32,10 +32,13 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.example.ibookApp.APIs.AuthApiClient;
+import com.example.ibookApp.APIs.EmailExistenteApiClient;
 import com.example.ibookApp.APIs.InsertUsuarioApi;
 import com.example.ibookApp.DAOs.UsuarioDAO;
 import com.example.ibookApp.DTOs.UsuarioDTO;
 import com.example.ibookApp.R;
+import com.example.ibookApp.functions.UserSingleton;
 import com.example.ibookApp.functions.Utils;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
@@ -68,7 +71,7 @@ public class telacadastro extends AppCompatActivity {
     String nome, email, senha, confirmaSenha, image;
     Button fabCadastrarUsuario;
     public String finalImagePath;
-
+    public Boolean temEmailValidate = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -150,13 +153,21 @@ public class telacadastro extends AppCompatActivity {
             if (senha.contentEquals(confirmaSenha)) {
                 if (validarSenha(senha)) {
                     if (Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                        SecretKey secret = Utils.generateKey();
-                        byte[] encryptSenha = Utils.encryptMsg(senha, secret);
-                        senha = bytesToString(encryptSenha);
-                        String imageFilePath = imageUri.getPath();
-                        UploadImageTask uploadTask = new UploadImageTask(imageFilePath);
-                        uploadTask.execute();
-                        Toast.makeText(telacadastro.this, "Usuário Cadastrado com Sucesso!", Toast.LENGTH_LONG);
+                        if (true){
+                            SecretKey secret = Utils.generateKey();
+                            byte[] encryptSenha = Utils.encryptMsg(senha, secret);
+                            senha = bytesToString(encryptSenha);
+                            String imageFilePath = null;
+                            if (imageUri != null){
+                                imageFilePath = imageUri.getPath();
+                            }
+                            UploadImageTask uploadTask = new UploadImageTask(imageFilePath);
+                            uploadTask.execute();
+                            Toast.makeText(telacadastro.this, "Usuário Cadastrado com Sucesso!", Toast.LENGTH_LONG);
+                        }
+                        else{
+                            Toast.makeText(telacadastro.this, "Email já cadastrado!", Toast.LENGTH_SHORT).show();
+                        }
                     } else {
                         Toast.makeText(this, "Formato do E-mail incorreto!", Toast.LENGTH_LONG).show();
                     }
@@ -206,17 +217,16 @@ public class telacadastro extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String finalPath) {
+                if (finalPath == null || finalPath == ""){
+                    finalPath = null;
+                }
                 inserirUsuario(email, senha, nome, finalPath);
                 Intent temConta = new Intent(getApplicationContext(), telalogin.class);
                 startActivity(temConta);
         }
     }
 
-
     public boolean validarSenha(String senha) {
-        // Defina as regras da validação da senha aqui
-        // Por exemplo, a senha deve ter pelo menos 8 caracteres e conter letras maiúsculas, minúsculas e números
-
         if (senha.length() < 8) {
             return false; // A senha é muito curta
         }

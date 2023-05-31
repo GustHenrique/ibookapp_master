@@ -4,6 +4,7 @@ import static android.app.Activity.RESULT_OK;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -23,6 +24,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.Spinner;
@@ -41,6 +44,7 @@ import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 
 /**
@@ -87,12 +91,21 @@ public class FragmentEdit extends Fragment {
         }
     }
     TextView tvCadastroObraCategorias;
-    boolean[] selectedCategorias;
+    boolean[] selectedCategorias,selectedTipo,selectedStatus ;
     ArrayList<Integer> categoriasList = new ArrayList<>();
+    ArrayList<Integer> tipoList = new ArrayList<>();
+    ArrayList<Integer> statusList = new ArrayList<>();
     String[] categoriaArray = {
-            "Ficção", "Não-ficção", "Biografia", "Autoajuda", "Negócios", "Romance", "Suspense", "Mistério", "Fantasia", "Histórico",
-            "Clássico", "Ciência", "Tecnologia", "Medicina", "Arte", "Culinária", "Viagem", "Esportes", "Infantil", "Jovem Adulto",
-            "Hentai"
+            "Ficção", "Biografia", "Autoajuda", "Negócios", "Romance", "Suspense", "Mistério", "Fantasia", "Histórico",
+            "Clássico", "Ciência", "Tecnologia", "Medicina", "Culinária", "Esportes", "Infantil", "Adulto"
+    };
+
+    String[] statusArray = {
+            "Atualizando", "Finalizado", "Sem informação"
+    };
+
+    String[] tipoArray = {
+            "Manga", "Livro"
     };
     private Uri imageUri;
     private String[] cameraPermission;
@@ -103,8 +116,10 @@ public class FragmentEdit extends Fragment {
     private static final int IMAGE_FROM_CAMERA_CODE = 400;
     private ImageView civImageCad;
 
-    TextView tvIsbn, tvTitulo, tvAutor, tvCategorias, tvComentario,tvSinopse, tvEditora;
-    String isbn, titulo, autor, categorias, comentario, sinopse, editora;
+    private EditText etdPublicacao, etdFinalizacao;
+
+    TextView tvIsbn, tvTitulo, tvAutor, tvCategorias, tvTipo, tvStatus,tvSinopse, tvEditora;
+    String isbn, titulo, autor, categorias, sinopse, editora;
     Float raiting;
     private RatingBar rbAvaliacao;
     private Button btnCadastrarObra;
@@ -117,15 +132,143 @@ public class FragmentEdit extends Fragment {
         tvIsbn = (TextView)rootView.findViewById(R.id.txtCadastroObraISBN);
         tvEditora = (TextView)rootView.findViewById(R.id.txtCadastroObraEditora);
         tvTitulo = (TextView)rootView.findViewById(R.id.txtCadastroObraTitulo);
-        tvCategorias = (TextView)rootView.findViewById(R.id.txtCadastroObraCategorias);
+        //tvCategorias = (TextView)rootView.findViewById(R.id.txtCadastroObraCategorias);
         tvAutor = (TextView)rootView.findViewById(R.id.txtCadastroObraAutor);
-        tvComentario = (TextView)rootView.findViewById(R.id.txtCadastroObraComentario);
         tvSinopse = (TextView)rootView.findViewById(R.id.txtCadastroObraSinopse);
+        tvTipo = (TextView)rootView.findViewById(R.id.txtCadastroObraTipo);
+        tvStatus = (TextView)rootView.findViewById(R.id.txtCadastroObraStatus);
         rbAvaliacao = (RatingBar)rootView.findViewById(R.id.rbCadastroObraAvaliacao);
         civImageCad = (ImageView)rootView.findViewById(R.id.imgCadastroObra);
         btnCadastrarObra = (Button)rootView.findViewById(R.id.btnCadastroObraCadastrar);
+        etdPublicacao = (EditText)rootView.findViewById(R.id.txtCadastroObraDataPublic);
+        etdFinalizacao = (EditText)rootView.findViewById(R.id.txtCadastroObraDataFinal);
         tvCadastroObraCategorias.setKeyListener(null);
         selectedCategorias = new boolean[categoriaArray.length];
+        tvTipo.setKeyListener(null);
+        selectedTipo = new boolean[tipoArray.length];
+        tvStatus.setKeyListener(null);
+        selectedStatus = new boolean[statusArray.length];
+
+        etdFinalizacao.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDatePicker("final");
+            }
+        });
+        etdPublicacao.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDatePicker("public");
+            }
+        });
+        tvTipo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("Categoria Selecionada");
+                builder.setCancelable(false);
+                builder.setMultiChoiceItems(tipoArray, selectedTipo, new DialogInterface.OnMultiChoiceClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int i, boolean b) {
+                        if (b){
+                            tipoList.add(i);
+                            Collections.sort(tipoList);
+                        }
+                        else{
+                            tipoList.remove(i);
+                        }
+                    }
+                });
+
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int i) {
+                        StringBuilder stringBuilder = new StringBuilder();
+                        for (int j=0; j<tipoList.size(); j++){
+                            stringBuilder.append(tipoArray[tipoList.get(j)]);
+
+                            if (j != tipoList.size()-1){
+                                stringBuilder.append(", ");
+                            }
+                        }
+                        tvTipo.setText(stringBuilder.toString());
+                    }
+                });
+
+                builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int i) {
+                        dialog.dismiss();
+                    }
+                });
+
+                builder.setNeutralButton("Limpar Todos", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int i) {
+                        for (int j=0; j< selectedTipo.length; j++){
+                            selectedTipo[j] = false;
+                            tipoList.clear();
+                            tvTipo.setText("");
+                        }
+                    }
+                });
+                builder.show();
+            }
+        });
+        tvStatus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("Status Selecionado");
+                builder.setCancelable(false);
+                builder.setMultiChoiceItems(statusArray, selectedStatus, new DialogInterface.OnMultiChoiceClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int i, boolean b) {
+                        if (b){
+                            statusList.add(i);
+                            Collections.sort(statusList);
+                        }
+                        else{
+                            statusList.remove(i);
+                        }
+                    }
+                });
+
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int i) {
+                        StringBuilder stringBuilder = new StringBuilder();
+                        for (int j=0; j<statusList.size(); j++){
+                            stringBuilder.append(statusArray[statusList.get(j)]);
+
+                            if (j != statusList.size()-1){
+                                stringBuilder.append(", ");
+                            }
+                        }
+                        tvStatus.setText(stringBuilder.toString());
+                    }
+                });
+
+                builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int i) {
+                        dialog.dismiss();
+                    }
+                });
+
+                builder.setNeutralButton("Limpar Todos", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int i) {
+                        for (int j=0; j< selectedStatus.length; j++){
+                            selectedStatus[j] = false;
+                            statusList.clear();
+                            tvStatus.setText("");
+                        }
+                    }
+                });
+                builder.show();
+            }
+        });
         tvCadastroObraCategorias.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -197,34 +340,42 @@ public class FragmentEdit extends Fragment {
         return rootView;
     }
 
+    private void showDatePicker(String tipoData) {
+        final Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(),
+                new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                        String selectedDate = dayOfMonth + "/" + (monthOfYear + 1) + "/" + year;
+                        if (tipoData == "public"){
+                            etdPublicacao.setText(selectedDate);
+                        }else{
+                            etdFinalizacao.setText(selectedDate);
+                        }
+                    }
+                }, year, month, day);
+
+        datePickerDialog.show();
+    }
+
     public void cadastrarObra(){
         isbn = tvIsbn.getText().toString();
         titulo = tvTitulo.getText().toString();
         autor = tvAutor.getText().toString();
         categorias = tvCategorias.getText().toString();
-        comentario = tvComentario.getText().toString();
         sinopse = tvSinopse.getText().toString();
         editora = tvEditora.getText().toString();
         raiting = rbAvaliacao.getRating();
 
         if(!titulo.isEmpty() &&!autor.isEmpty() &&!categorias.isEmpty() &&!sinopse.isEmpty()){
-            ObrasDAO obrasDAO = new ObrasDAO(getContext());
-            ObraDTO obrasDTO = new ObraDTO(null, titulo, editora, raiting.toString(),autor,""+imageUri,categorias,null,sinopse,isbn);
-            obrasDAO.inserirObra(obrasDTO);
-            Toast.makeText(getContext(),"Obra cadastrada com Suceesso!", Toast.LENGTH_LONG).show();
-            tvIsbn.setText("");
-            tvTitulo.setText("");
-            tvAutor.setText("");
-            tvCategorias.setText("");
-            tvComentario.setText("");
-            tvSinopse.setText("");
-            tvEditora.setText("");
-            rbAvaliacao.setRating(3);
-            civImageCad.setImageDrawable(null);
-            civImageCad.setImageResource(R.drawable.ic_book_foreground);
+
         }
         else{
-            Toast.makeText(getContext(),"Todos os campos são obrigatórios!", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(),"", Toast.LENGTH_LONG).show();
         }
 
     }

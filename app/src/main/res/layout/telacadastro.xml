@@ -38,6 +38,15 @@
         android:orientation="vertical"
         android:padding="@dimen/_10sdp">
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:padding="8px"
+            android:text="Selecione uma foto de perfil!"
+            android:textSize="20dp"
+            android:textColor="@color/white" />
+
         <!--        circle image for profile image-->
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/imgCadastro"

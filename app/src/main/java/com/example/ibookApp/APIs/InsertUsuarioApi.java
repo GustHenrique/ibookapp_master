@@ -55,7 +55,12 @@ public class InsertUsuarioApi {
                     throw new RuntimeException(e);
                 }
                 try {
-                    jsonBody.put("imagem", imagem);
+                    if (imagem != null && imagem != ""){
+                        jsonBody.put("imagem", imagem);
+                    }
+                    else{
+                        jsonBody.put("imagem", "");
+                    }
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
                 }

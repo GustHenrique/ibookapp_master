@@ -8,14 +8,18 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.example.ibookApp.APIs.ibookApi;
 import com.example.ibookApp.Adapters.ObraMaisComentadasAdapter;
+import com.example.ibookApp.Adapters.SearchAdapter;
 import com.example.ibookApp.DAOs.ObrasDAO;
 import com.example.ibookApp.DTOs.ObraDTO;
 import com.example.ibookApp.DTOs.UsuarioDTO;
@@ -75,9 +79,12 @@ public class FragmentHome extends Fragment {
     Button btnLogout;
     ImageView imgTeste;
     private Uri imageUri;
+    private EditText searchEditText;
     private RecyclerView rvibook, rvibookmaiscomentados;
     private ObraAdapter adapterContact;
     private ObraMaisComentadasAdapter adapterContacts;
+    private ArrayList<obrasDTO> filteredObrasList;
+    private SearchAdapter searchAdapter;
     ArrayList<obrasDTO> obrasList = ObrasListSingleton.getInstance().getObrasList();
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -88,6 +95,51 @@ public class FragmentHome extends Fragment {
         rvibookmaiscomentados = (RecyclerView)rootView.findViewById(R.id.recycler_view_horizontal);
         UsuarioDTO userLogado = UserSingleton.getInstance().getUser();
         rvibook.setLayoutManager(new LinearLayoutManager(getContext()));
+        filteredObrasList = new ArrayList<>(obrasList);
+        searchEditText = (EditText) rootView.findViewById(R.id.txtEmailLogin);
+        searchEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // Não é necessário implementar este método
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // Chamado quando o texto na barra de pesquisa é alterado
+                String searchText = s.toString();
+                // Chame a função de pesquisa passando o texto digitado
+                filterData(searchText);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // Não é necessário implementar este método
+            }
+        });
+
+        if (obrasList.size() == 0) {
+            ibookApi.getBookList(new ibookApi.BookListListener() {
+                @Override
+                public void onBookListReceived(List<obrasDTO> bookList) {
+                    ObrasListSingleton obrasSingleton = ObrasListSingleton.getInstance();
+                    for (obrasDTO obra : bookList) {
+                        obrasSingleton.adicionarObra(obra);
+                    }
+                }
+            });
+        }
+
+        if (obrasList.size() == 0){
+            ibookApi.getBookList(new ibookApi.BookListListener() {
+                @Override
+                public void onBookListReceived(List<obrasDTO> bookList) {
+                    ObrasListSingleton obrasSingleton = ObrasListSingleton.getInstance();
+                    for (obrasDTO obra : bookList) {
+                        obrasSingleton.adicionarObra(obra);
+                    }
+                }
+            });
+        }
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -96,6 +148,18 @@ public class FragmentHome extends Fragment {
         });
         loadData();
         return rootView;
+    }
+
+    private void filterData(String searchText) {
+        filteredObrasList.clear();
+
+        for (obrasDTO item : obrasList) {
+            if (item.getTitle().toLowerCase().contains(searchText.toLowerCase())) {
+                filteredObrasList.add(item);
+            }
+        }
+        searchAdapter = new SearchAdapter(filteredObrasList);
+        rvibook.setAdapter(searchAdapter);
     }
 
     public void logout(){
@@ -110,6 +174,14 @@ public class FragmentHome extends Fragment {
         int limite = Math.min(obrasList.size(), 10);
         for (int i = 0; i < limite; i++) {
             obrasDTO obra = obrasList.get(i);
+            if (obra.getType() == "MANGA"){
+                String novoTitulo = obra.getTitle().replace("-", " ");
+                obra.setTitle(novoTitulo);
+            }
+            if (obra.getAuthor().endsWith(",")) {
+                String novoAuthor = obra.getAuthor().substring(0, obra.getAuthor().length() - 1).trim();
+                obra.setAuthor(novoAuthor);
+            }
             obrasFeedList.add(obra);
         }
 
@@ -118,6 +190,14 @@ public class FragmentHome extends Fragment {
         int limiteMaisComentado = Math.min(obrasList.size(), 5);
         for (int i = 0; i < limiteMaisComentado; i++) {
             obrasDTO obraMaisComentadas = obrasList.get(i);
+            if (obraMaisComentadas.getType() == "MANGA"){
+                String novoTitulo = obraMaisComentadas.getTitle().replace("-", " ");
+                obraMaisComentadas.setTitle(novoTitulo);
+            }
+            if (obraMaisComentadas.getAuthor().endsWith(",")) {
+                String novoAuthor = obraMaisComentadas.getAuthor().substring(0, obraMaisComentadas.getAuthor().length() - 1).trim();
+                obraMaisComentadas.setAuthor(novoAuthor);
+            }
             obrasMaisComentadasList.add(obraMaisComentadas);
         }
 

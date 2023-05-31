@@ -7,13 +7,18 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 
+import com.example.ibookApp.APIs.ibookApi;
 import com.example.ibookApp.Adapters.ObraAdapter;
 import com.example.ibookApp.Adapters.ObraMaisComentadasAdapter;
+import com.example.ibookApp.Adapters.SearchAdapter;
 import com.example.ibookApp.DAOs.ObrasDAO;
 import com.example.ibookApp.DTOs.UsuarioDTO;
 import com.example.ibookApp.DTOs.obrasDTO;
@@ -24,6 +29,7 @@ import com.example.ibookApp.functions.Utils;
 import com.example.ibookApp.telas.telalogin;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -68,10 +74,13 @@ public class FragmentSearch extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
+    private EditText searchEditText;
     private RecyclerView rviBookSearch;
     private ObraAdapter adapterContact;
     private Button btnLogout;
     ArrayList<obrasDTO> obrasList = ObrasListSingleton.getInstance().getObrasList();
+    private ArrayList<obrasDTO> filteredObrasList;
+    private SearchAdapter searchAdapter;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -79,7 +88,40 @@ public class FragmentSearch extends Fragment {
         rviBookSearch = (RecyclerView)rootView.findViewById(R.id.rviBookSearch);
         btnLogout = (Button)rootView.findViewById(R.id.btnLogoutSearch);
         rviBookSearch.setLayoutManager(new LinearLayoutManager(getContext()));
+        filteredObrasList = new ArrayList<>(obrasList);
+        searchEditText = (EditText) rootView.findViewById(R.id.edtSearchObra);
 
+        searchEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // Não é necessário implementar este método
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // Chamado quando o texto na barra de pesquisa é alterado
+                String searchText = s.toString();
+                // Chame a função de pesquisa passando o texto digitado
+                filterData(searchText);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // Não é necessário implementar este método
+            }
+        });
+
+        if (obrasList.size() == 0) {
+            ibookApi.getBookList(new ibookApi.BookListListener() {
+                @Override
+                public void onBookListReceived(List<obrasDTO> bookList) {
+                    ObrasListSingleton obrasSingleton = ObrasListSingleton.getInstance();
+                    for (obrasDTO obra : bookList) {
+                        obrasSingleton.adicionarObra(obra);
+                    }
+                }
+            });
+        }
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -91,11 +133,31 @@ public class FragmentSearch extends Fragment {
         return rootView;
     }
 
+    private void filterData(String searchText) {
+        filteredObrasList.clear();
+
+        for (obrasDTO item : obrasList) {
+            if (item.getTitle().toLowerCase().contains(searchText.toLowerCase())) {
+                filteredObrasList.add(item);
+            }
+        }
+        searchAdapter = new SearchAdapter(filteredObrasList);
+        rviBookSearch.setAdapter(searchAdapter);
+    }
+
     private void loadData() {
         ObrasDAO obrasDAO = new ObrasDAO(getContext());
         ArrayList<obrasDTO> obrasFeedList = new ArrayList<>();
         for (int i = 0; i < obrasList.size(); i++) {
             obrasDTO obra = obrasList.get(i);
+            if (obra.getType() == "MANGA"){
+                String novoTitulo = obra.getTitle().replace("-", " ");
+                obra.setTitle(novoTitulo);
+            }
+            if (obra.getAuthor().endsWith(",")) {
+                String novoAuthor = obra.getAuthor().substring(0, obra.getAuthor().length() - 1).trim();
+                obra.setAuthor(novoAuthor);
+            }
             obrasFeedList.add(obra);
         }
         adapterContact = new ObraAdapter(obrasFeedList);
