@@ -35,7 +35,6 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.example.ibookApp.APIs.AuthApiClient;
 import com.example.ibookApp.APIs.EmailExistenteApiClient;
 import com.example.ibookApp.APIs.InsertUsuarioApi;
-import com.example.ibookApp.DAOs.UsuarioDAO;
 import com.example.ibookApp.DTOs.UsuarioDTO;
 import com.example.ibookApp.R;
 import com.example.ibookApp.functions.UserSingleton;

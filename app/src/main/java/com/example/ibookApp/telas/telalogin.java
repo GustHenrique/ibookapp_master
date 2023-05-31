@@ -12,7 +12,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ibookApp.APIs.AuthApiClient;
-import com.example.ibookApp.DAOs.UsuarioDAO;
 import com.example.ibookApp.DTOs.UsuarioDTO;
 import com.example.ibookApp.R;
 import com.example.ibookApp.functions.UserSingleton;

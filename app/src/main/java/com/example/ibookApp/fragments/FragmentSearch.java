@@ -17,14 +17,10 @@ import android.widget.EditText;
 
 import com.example.ibookApp.APIs.ibookApi;
 import com.example.ibookApp.Adapters.ObraAdapter;
-import com.example.ibookApp.Adapters.ObraMaisComentadasAdapter;
 import com.example.ibookApp.Adapters.SearchAdapter;
-import com.example.ibookApp.DAOs.ObrasDAO;
-import com.example.ibookApp.DTOs.UsuarioDTO;
 import com.example.ibookApp.DTOs.obrasDTO;
 import com.example.ibookApp.R;
 import com.example.ibookApp.functions.ObrasListSingleton;
-import com.example.ibookApp.functions.UserSingleton;
 import com.example.ibookApp.functions.Utils;
 import com.example.ibookApp.telas.telalogin;
 
@@ -146,7 +142,6 @@ public class FragmentSearch extends Fragment {
     }
 
     private void loadData() {
-        ObrasDAO obrasDAO = new ObrasDAO(getContext());
         ArrayList<obrasDTO> obrasFeedList = new ArrayList<>();
         for (int i = 0; i < obrasList.size(); i++) {
             obrasDTO obra = obrasList.get(i);

@@ -9,11 +9,9 @@ import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 
-import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -22,24 +20,17 @@ import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RatingBar;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.ibookApp.DAOs.ObrasDAO;
-import com.example.ibookApp.DTOs.ObraDTO;
 import com.example.ibookApp.R;
 import com.example.ibookApp.functions.Utils;
-import com.example.ibookApp.telas.MainActivity;
-import com.example.ibookApp.telas.telacadastro;
 import com.example.ibookApp.telas.telalogin;
-import com.soundcloud.android.crop.Crop;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 

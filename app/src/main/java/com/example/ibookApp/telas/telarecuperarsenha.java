@@ -12,7 +12,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.ibookApp.DAOs.UsuarioDAO;
 import com.example.ibookApp.DTOs.UsuarioDTO;
 import com.example.ibookApp.R;
 
@@ -51,28 +50,12 @@ public class telarecuperarsenha extends AppCompatActivity {
         btnRecuperarEmail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {
-                    recuperarSenha(view);
-                } catch (NoSuchPaddingException e) {
-                    throw new RuntimeException(e);
-                } catch (UnsupportedEncodingException e) {
-                    throw new RuntimeException(e);
-                } catch (IllegalBlockSizeException e) {
-                    throw new RuntimeException(e);
-                } catch (NoSuchAlgorithmException e) {
-                    throw new RuntimeException(e);
-                } catch (BadPaddingException e) {
-                    throw new RuntimeException(e);
-                } catch (InvalidKeySpecException e) {
-                    throw new RuntimeException(e);
-                } catch (InvalidKeyException e) {
-                    throw new RuntimeException(e);
-                }
+
             }
         });
     }
 
-    public void recuperarSenha(View view) throws NoSuchPaddingException, UnsupportedEncodingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeySpecException, InvalidKeyException {
+    /*public void recuperarSenha(View view) throws NoSuchPaddingException, UnsupportedEncodingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeySpecException, InvalidKeyException {
         UsuarioDAO UsuarioDAO = new UsuarioDAO(this);
         email = tvEmailRecuperarEmail.getText().toString();
         if (!email.isEmpty()){
@@ -81,7 +64,7 @@ public class telarecuperarsenha extends AppCompatActivity {
                 if (usuario.getId() != null){
                     String novaSenha = gerarSenha();
                     UsuarioDAO.recuperarSenha(usuario, novaSenha);
-                    /*Utils.enviarEmail(email, novaSenha);*/
+                    *//*Utils.enviarEmail(email, novaSenha);*//*
                 }
             }
             else{
@@ -91,7 +74,7 @@ public class telarecuperarsenha extends AppCompatActivity {
         else{
             Toast.makeText(this,"Todos os campos são obrigatórios!", Toast.LENGTH_LONG).show();
         }
-    }
+    }*/
 
 
 }

@@ -20,8 +20,6 @@ import android.widget.ImageView;
 import com.example.ibookApp.APIs.ibookApi;
 import com.example.ibookApp.Adapters.ObraMaisComentadasAdapter;
 import com.example.ibookApp.Adapters.SearchAdapter;
-import com.example.ibookApp.DAOs.ObrasDAO;
-import com.example.ibookApp.DTOs.ObraDTO;
 import com.example.ibookApp.DTOs.UsuarioDTO;
 import com.example.ibookApp.Adapters.ObraAdapter;
 import com.example.ibookApp.DTOs.obrasDTO;
@@ -169,7 +167,6 @@ public class FragmentHome extends Fragment {
     }
 
     private void loadData() {
-        ObrasDAO obrasDAO = new ObrasDAO(getContext());
         ArrayList<obrasDTO> obrasFeedList = new ArrayList<>();
         int limite = Math.min(obrasList.size(), 10);
         for (int i = 0; i < limite; i++) {
