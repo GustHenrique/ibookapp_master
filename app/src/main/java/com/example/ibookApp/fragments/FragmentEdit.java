@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.core.app.ActivityCompat;
@@ -28,15 +29,34 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.amazonaws.HttpMethod;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.regions.Region;
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
+import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.example.ibookApp.APIs.InsertObrasApi;
+import com.example.ibookApp.APIs.InsertUsuarioApi;
+import com.example.ibookApp.APIs.ibookApi;
+import com.example.ibookApp.DTOs.obrasDTO;
 import com.example.ibookApp.R;
+import com.example.ibookApp.functions.ObrasListSingleton;
 import com.example.ibookApp.functions.Utils;
+import com.example.ibookApp.telas.telacadastro;
 import com.example.ibookApp.telas.telalogin;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
+import java.io.File;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -82,7 +102,8 @@ public class FragmentEdit extends Fragment {
         }
     }
     TextView tvCadastroObraCategorias;
-    boolean[] selectedCategorias,selectedTipo,selectedStatus ;
+    boolean[] selectedCategorias;
+    private int selectedTipo, selectedStatus;
     ArrayList<Integer> categoriasList = new ArrayList<>();
     ArrayList<Integer> tipoList = new ArrayList<>();
     ArrayList<Integer> statusList = new ArrayList<>();
@@ -109,8 +130,10 @@ public class FragmentEdit extends Fragment {
 
     private EditText etdPublicacao, etdFinalizacao;
 
-    TextView tvIsbn, tvTitulo, tvAutor, tvCategorias, tvTipo, tvStatus,tvSinopse, tvEditora;
-    String isbn, titulo, autor, categorias, sinopse, editora;
+    TextView tvIsbn, tvTitulo, tvAutor, tvCategorias, tvTipo, tvStatus,tvSinopse, tvEditora
+            ,tvSubitulo,tvPaginas, tvTraducao;
+    String  titulo, subtitulo, sinopse, autor, editora, dataPublicacao, dataFinalizacao, isbn
+            ,paginas, traducao, tipo, status, categorias;
     Float raiting;
     private RatingBar rbAvaliacao;
     private Button btnCadastrarObra;
@@ -119,26 +142,26 @@ public class FragmentEdit extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_edit, container, false);
-        tvCadastroObraCategorias = (TextView)rootView.findViewById(R.id.txtCadastroObraCategorias);
-        tvIsbn = (TextView)rootView.findViewById(R.id.txtCadastroObraISBN);
-        tvEditora = (TextView)rootView.findViewById(R.id.txtCadastroObraEditora);
-        tvTitulo = (TextView)rootView.findViewById(R.id.txtCadastroObraTitulo);
-        //tvCategorias = (TextView)rootView.findViewById(R.id.txtCadastroObraCategorias);
-        tvAutor = (TextView)rootView.findViewById(R.id.txtCadastroObraAutor);
-        tvSinopse = (TextView)rootView.findViewById(R.id.txtCadastroObraSinopse);
-        tvTipo = (TextView)rootView.findViewById(R.id.txtCadastroObraTipo);
-        tvStatus = (TextView)rootView.findViewById(R.id.txtCadastroObraStatus);
-        rbAvaliacao = (RatingBar)rootView.findViewById(R.id.rbCadastroObraAvaliacao);
         civImageCad = (ImageView)rootView.findViewById(R.id.imgCadastroObra);
-        btnCadastrarObra = (Button)rootView.findViewById(R.id.btnCadastroObraCadastrar);
+        tvTitulo = (TextView)rootView.findViewById(R.id.txtCadastroObraTitulo);
+        tvSubitulo = (TextView)rootView.findViewById(R.id.txtCadastroObraSubTitulo);
+        tvSinopse = (TextView)rootView.findViewById(R.id.txtCadastroObraSinopse);
+        tvAutor = (TextView)rootView.findViewById(R.id.txtCadastroObraAutor);
+        tvEditora = (TextView)rootView.findViewById(R.id.txtCadastroObraEditora);
         etdPublicacao = (EditText)rootView.findViewById(R.id.txtCadastroObraDataPublic);
         etdFinalizacao = (EditText)rootView.findViewById(R.id.txtCadastroObraDataFinal);
+        tvIsbn = (TextView)rootView.findViewById(R.id.txtCadastroObraISBN);
+        tvPaginas = (TextView)rootView.findViewById(R.id.txtCadastroObraPaginas);
+        tvTraducao = (TextView)rootView.findViewById(R.id.txtCadastroObraTraducao);
+        tvTipo = (TextView)rootView.findViewById(R.id.txtCadastroObraTipo);
+        tvStatus = (TextView)rootView.findViewById(R.id.txtCadastroObraStatus);
+        tvCadastroObraCategorias = (TextView)rootView.findViewById(R.id.txtCadastroObraCategorias);
+        rbAvaliacao = (RatingBar)rootView.findViewById(R.id.rbCadastroObraAvaliacao);
+        btnCadastrarObra = (Button)rootView.findViewById(R.id.btnCadastroObraCadastrar);
         tvCadastroObraCategorias.setKeyListener(null);
         selectedCategorias = new boolean[categoriaArray.length];
         tvTipo.setKeyListener(null);
-        selectedTipo = new boolean[tipoArray.length];
         tvStatus.setKeyListener(null);
-        selectedStatus = new boolean[statusArray.length];
 
         etdFinalizacao.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -158,31 +181,19 @@ public class FragmentEdit extends Fragment {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setTitle("Categoria Selecionada");
                 builder.setCancelable(false);
-                builder.setMultiChoiceItems(tipoArray, selectedTipo, new DialogInterface.OnMultiChoiceClickListener() {
+                builder.setSingleChoiceItems(tipoArray, selectedTipo, new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int i, boolean b) {
-                        if (b){
-                            tipoList.add(i);
-                            Collections.sort(tipoList);
-                        }
-                        else{
-                            tipoList.remove(i);
-                        }
+                    public void onClick(DialogInterface dialog, int i) {
+                        // Atualizar a seleção do item
+                        selectedTipo = i;
                     }
                 });
 
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int i) {
-                        StringBuilder stringBuilder = new StringBuilder();
-                        for (int j=0; j<tipoList.size(); j++){
-                            stringBuilder.append(tipoArray[tipoList.get(j)]);
-
-                            if (j != tipoList.size()-1){
-                                stringBuilder.append(", ");
-                            }
-                        }
-                        tvTipo.setText(stringBuilder.toString());
+                        // Atualizar o TextView com o item selecionado
+                        tvTipo.setText(tipoArray[selectedTipo]);
                     }
                 });
 
@@ -193,50 +204,29 @@ public class FragmentEdit extends Fragment {
                     }
                 });
 
-                builder.setNeutralButton("Limpar Todos", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int i) {
-                        for (int j=0; j< selectedTipo.length; j++){
-                            selectedTipo[j] = false;
-                            tipoList.clear();
-                            tvTipo.setText("");
-                        }
-                    }
-                });
                 builder.show();
             }
         });
+
         tvStatus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setTitle("Status Selecionado");
                 builder.setCancelable(false);
-                builder.setMultiChoiceItems(statusArray, selectedStatus, new DialogInterface.OnMultiChoiceClickListener() {
+                builder.setSingleChoiceItems(statusArray, selectedStatus, new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int i, boolean b) {
-                        if (b){
-                            statusList.add(i);
-                            Collections.sort(statusList);
-                        }
-                        else{
-                            statusList.remove(i);
-                        }
+                    public void onClick(DialogInterface dialog, int i) {
+                        // Atualizar a seleção do item
+                        selectedStatus = i;
                     }
                 });
 
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int i) {
-                        StringBuilder stringBuilder = new StringBuilder();
-                        for (int j=0; j<statusList.size(); j++){
-                            stringBuilder.append(statusArray[statusList.get(j)]);
-
-                            if (j != statusList.size()-1){
-                                stringBuilder.append(", ");
-                            }
-                        }
-                        tvStatus.setText(stringBuilder.toString());
+                        // Atualizar o TextView com o item selecionado
+                        tvStatus.setText(statusArray[selectedStatus]);
                     }
                 });
 
@@ -247,19 +237,10 @@ public class FragmentEdit extends Fragment {
                     }
                 });
 
-                builder.setNeutralButton("Limpar Todos", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int i) {
-                        for (int j=0; j< selectedStatus.length; j++){
-                            selectedStatus[j] = false;
-                            statusList.clear();
-                            tvStatus.setText("");
-                        }
-                    }
-                });
                 builder.show();
             }
         });
+
         tvCadastroObraCategorias.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -353,23 +334,132 @@ public class FragmentEdit extends Fragment {
         datePickerDialog.show();
     }
 
+
     public void cadastrarObra(){
-        isbn = tvIsbn.getText().toString();
         titulo = tvTitulo.getText().toString();
-        autor = tvAutor.getText().toString();
-        categorias = tvCategorias.getText().toString();
+        subtitulo = tvSubitulo.getText().toString();
         sinopse = tvSinopse.getText().toString();
+        autor = tvAutor.getText().toString();
         editora = tvEditora.getText().toString();
+        dataPublicacao = etdPublicacao.getText().toString();
+        dataFinalizacao = etdFinalizacao.getText().toString();
+        isbn = tvIsbn.getText().toString();
+        paginas = tvPaginas.getText().toString();
+        traducao = tvTraducao.getText().toString();
+        tipo = tvTipo.getText().toString();
+        status = tvStatus.getText().toString();
+        categorias = tvCadastroObraCategorias.getText().toString();
+
         raiting = rbAvaliacao.getRating();
 
-        if(!titulo.isEmpty() &&!autor.isEmpty() &&!categorias.isEmpty() &&!sinopse.isEmpty()){
-
+        if(titulo.isEmpty()){
+            Toast.makeText(getContext(),"Título é um campo obrigatório!", Toast.LENGTH_LONG).show();
+        }else if (autor.isEmpty()){
+            Toast.makeText(getContext(),"Autor é um campo obrigatório!", Toast.LENGTH_LONG).show();
+        }else if (sinopse.isEmpty()){
+            Toast.makeText(getContext(),"Sinopse é um campo obrigatório!", Toast.LENGTH_LONG).show();
+        }else if (tipo.isEmpty()){
+            Toast.makeText(getContext(),"Tipo é um campo obrigatório!", Toast.LENGTH_LONG).show();
+        }else if (status.isEmpty()){
+            Toast.makeText(getContext(),"Status é um campo obrigatório!", Toast.LENGTH_LONG).show();
+        }else if (categorias.isEmpty()){
+            Toast.makeText(getContext(),"Categorias é um campo obrigatório!", Toast.LENGTH_LONG).show();
+        }else{
+            String imageFilePath = null;
+            if (imageUri != null){
+                imageFilePath = imageUri.getPath();
+            }
+            UploadImageTask uploadTask = new UploadImageTask(imageFilePath);
+            uploadTask.execute();
         }
-        else{
-            Toast.makeText(getContext(),"", Toast.LENGTH_LONG).show();
-        }
-
     }
+    public void inserirObra(String title, String subtitle, String synopsis, String author, String editora, String dataPublicacao, String dataFinalizacao, String isbn, String paginas, String image, String traducao, String tipo, String avarageRating, String statusObra, String categorias) {
+        InsertObrasApi.InsertUsuarioAsyncTask task = new InsertObrasApi.InsertUsuarioAsyncTask(
+                title, subtitle, synopsis, author, editora, dataPublicacao, dataFinalizacao, isbn,
+                paginas, image, traducao, tipo, avarageRating, statusObra, categorias,
+                new InsertObrasApi.InsertUsuarioListener() {
+                    @Override
+                    public void onInsertBookReceived(boolean success) {
+                        if (success) {
+                        } else {
+                            Toast.makeText(getContext(),"Ops! Algo deu errado!", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                }
+        );
+        task.execute();
+
+        ObrasListSingleton obrasSingleton = ObrasListSingleton.getInstance();
+        tvTitulo.setText("");
+        tvSubitulo.setText("");
+        tvSinopse.setText("");
+        tvAutor.setText("");
+        tvEditora.setText("");
+        etdPublicacao.setText("");
+        etdFinalizacao.setText("");
+        tvIsbn.setText("");
+        tvPaginas.setText("");
+        tvTraducao.setText("");
+        tvTipo.setText("");
+        tvStatus.setText("");
+        tvCadastroObraCategorias.setText("");
+        rbAvaliacao.setRating(2.5f);
+        ibookApi.getBookList(new ibookApi.BookListListener() {
+            @Override
+            public void onBookListReceived(List<obrasDTO> bookList) {
+                ObrasListSingleton obrasSingleton = ObrasListSingleton.getInstance();
+                for (obrasDTO obra : bookList) {
+                    obrasSingleton.adicionarObra(obra);
+                }
+            }
+        });
+
+        Toast.makeText(getContext(),"Obra cadastrada com sucesso!", Toast.LENGTH_LONG).show();
+    }
+
+
+    private class UploadImageTask extends AsyncTask<Void, Void, String> {
+        private String imageFilePath;
+
+        public UploadImageTask(String imageFilePath) {
+            this.imageFilePath = imageFilePath;
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+            String accessKey = "AKIAXDEVVEMABWJ6Z4XT";
+            String secretKey = "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";
+            String bucketName = "ibookimageusuarios";
+            String objectKey = UUID.randomUUID().toString() + ".jpg";
+            BasicAWSCredentials credentials = new BasicAWSCredentials(accessKey, secretKey);
+            AmazonS3 s3client = new AmazonS3Client(credentials);
+            s3client.setRegion(Region.getRegion(Regions.SA_EAST_1)); // Substitua pela sua região
+            if (imageFilePath != null){
+                File imageFile = new File(imageFilePath); // Escolha um nome adequado para a imagem
+                s3client.putObject(new PutObjectRequest(bucketName, objectKey, imageFile));
+                Date expiration = new Date(System.currentTimeMillis() + 3600000);
+                URL imageUrl = s3client.generatePresignedUrl(new GeneratePresignedUrlRequest(bucketName, objectKey)
+                        .withMethod(HttpMethod.GET)
+                        .withExpiration(expiration));
+
+                String finalPath = imageUrl.toString();
+                return finalPath;
+            }
+            else{
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String finalPath) {
+            if (finalPath == null || finalPath == ""){
+                finalPath = null;
+            }
+            inserirObra(titulo, subtitulo, sinopse, autor, editora, dataPublicacao, dataFinalizacao,
+                    isbn,paginas,finalPath,traducao,tipo,raiting.toString(),status,categorias);
+        }
+    }
+
     public void logout(){
         Utils.logout();
         Intent acessar = new Intent(getActivity(), telalogin.class);
