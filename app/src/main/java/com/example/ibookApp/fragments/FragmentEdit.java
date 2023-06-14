@@ -136,7 +136,7 @@ public class FragmentEdit extends Fragment {
             ,paginas, traducao, tipo, status, categorias;
     Float raiting;
     private RatingBar rbAvaliacao;
-    private Button btnCadastrarObra;
+    private Button btnCadastrarObra, btnLogout;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -158,11 +158,18 @@ public class FragmentEdit extends Fragment {
         tvCadastroObraCategorias = (TextView)rootView.findViewById(R.id.txtCadastroObraCategorias);
         rbAvaliacao = (RatingBar)rootView.findViewById(R.id.rbCadastroObraAvaliacao);
         btnCadastrarObra = (Button)rootView.findViewById(R.id.btnCadastroObraCadastrar);
+        btnLogout = (Button)rootView.findViewById(R.id.btnLogoutEdit);
         tvCadastroObraCategorias.setKeyListener(null);
         selectedCategorias = new boolean[categoriaArray.length];
         tvTipo.setKeyListener(null);
         tvStatus.setKeyListener(null);
 
+        btnLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                logout();
+            }
+        });
         etdFinalizacao.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

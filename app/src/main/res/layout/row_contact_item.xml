@@ -31,14 +31,16 @@
         android:textColor="@color/colorTextPrimary"
         android:textSize="@dimen/_16sdp" />
 
-    <ImageView
+    <Button
         android:id="@+id/favoritebook"
         android:layout_width="35dp"
         android:layout_height="35dp"
-        android:src="@drawable/ic_unsave_foreground"
         android:layout_alignParentEnd="true"
         android:layout_centerInParent="true"
+        android:layout_gravity="left|center_vertical"
         android:layout_marginEnd="@dimen/_10sdp"
-        app:tint="@color/colorTextPrimary" />
+        android:background="@drawable/ic_unsave_foreground"
+        android:textColor="@color/colorTextSecondary"
+        android:textColorHint="@color/white" />
 
 </RelativeLayout>

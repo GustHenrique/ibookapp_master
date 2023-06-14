@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -22,10 +23,14 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
 
     private List<obrasDTO> originalItemList; // Lista original
     private List<obrasDTO> filteredItemList; // Lista filtrada (resultados da pesquisa)
-
+    private OnItemClickListener listener;
     public SearchAdapter(ArrayList<obrasDTO> itemList) {
         this.originalItemList = itemList;
         this.filteredItemList = new ArrayList<>(originalItemList);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
     }
 
     @NonNull
@@ -45,6 +50,14 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         Glide.with(holder.itemView.getContext())
                 .load(imagePath)
                 .into(holder.imageView);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (listener != null) {
+                    listener.onItemClick(holder.getAdapterPosition());
+                }
+            }
+        });
     }
 
     @Override
@@ -71,12 +84,18 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView textView;
         CircleImageView imageView;
+        public Button imgFavorite;
 
         public ViewHolder(View itemView) {
             super(itemView);
             textView = itemView.findViewById(R.id.bookName);
             imageView = itemView.findViewById(R.id.bookImage);
+            imgFavorite = itemView.findViewById(R.id.favoritebook);
         }
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(int position);
     }
 }
 

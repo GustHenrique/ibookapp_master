@@ -72,7 +72,7 @@ public class FragmentProfile extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
-        btnLogout = (Button)rootView.findViewById(R.id.btnLogoutHome);
+        btnLogout = (Button)rootView.findViewById(R.id.btnLogoutProfile);
         txtNome = (TextView) rootView.findViewById(R.id.txtNomeUsuarioProfile);
         imgProfile = rootView.findViewById(R.id.imgProfile);
         UsuarioDTO userLogado = UserSingleton.getInstance().getUser();

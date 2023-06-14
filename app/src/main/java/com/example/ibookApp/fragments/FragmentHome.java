@@ -27,6 +27,7 @@ import com.example.ibookApp.R;
 import com.example.ibookApp.functions.ObrasListSingleton;
 import com.example.ibookApp.functions.UserSingleton;
 import com.example.ibookApp.functions.Utils;
+import com.example.ibookApp.telas.telaDetalhesObra;
 import com.example.ibookApp.telas.telalogin;
 
 import java.util.ArrayList;
@@ -84,6 +85,8 @@ public class FragmentHome extends Fragment {
     private ArrayList<obrasDTO> filteredObrasList;
     private SearchAdapter searchAdapter;
     ArrayList<obrasDTO> obrasList = ObrasListSingleton.getInstance().getObrasList();
+    ArrayList<obrasDTO> obrasMaisComentadasList = new ArrayList<>();
+    ArrayList<obrasDTO> obrasFeedList = new ArrayList<>();
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -95,6 +98,57 @@ public class FragmentHome extends Fragment {
         rvibook.setLayoutManager(new LinearLayoutManager(getContext()));
         filteredObrasList = new ArrayList<>(obrasList);
         searchEditText = (EditText) rootView.findViewById(R.id.txtEmailLogin);
+        adapterContact = new ObraAdapter(obrasFeedList);
+        searchAdapter = new SearchAdapter(filteredObrasList);
+        loadData();
+        adapterContacts.setOnItemClickListener(new ObraAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                obrasDTO obra = obrasFeedList.get(position);
+                Intent intent = new Intent(getContext(), telaDetalhesObra.class);
+
+                intent.putExtra("obid", obra.getId());
+                intent.putExtra("title", obra.getTitle());
+                intent.putExtra("subtitle", obra.getSubtitle());
+                intent.putExtra("synopsis", obra.getSynopsis());
+                intent.putExtra("author", obra.getAuthor());
+                intent.putExtra("editora", obra.getEditora());
+                intent.putExtra("dataPublicacao", obra.getDataPublicacao());
+                intent.putExtra("dataFinalizacao", obra.getDataFinalizacao());
+                intent.putExtra("isbn", obra.getIsbn());
+                intent.putExtra("paginas", obra.getPaginas());
+                intent.putExtra("image", obra.getImage());
+                intent.putExtra("tipo", obra.getType());
+                intent.putExtra("avarageRating", obra.getAvarageRating());
+                intent.putExtra("statusObra", obra.getStatus());
+                intent.putExtra("categorias", obra.getCategorias());
+                startActivity(intent);
+            }
+        });
+        adapterContact.setOnItemClickListener(new ObraAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                obrasDTO obra = obrasFeedList.get(position);
+                Intent intent = new Intent(getContext(), telaDetalhesObra.class);
+
+                intent.putExtra("obid", obra.getId());
+                intent.putExtra("title", obra.getTitle());
+                intent.putExtra("subtitle", obra.getSubtitle());
+                intent.putExtra("synopsis", obra.getSynopsis());
+                intent.putExtra("author", obra.getAuthor());
+                intent.putExtra("editora", obra.getEditora());
+                intent.putExtra("dataPublicacao", obra.getDataPublicacao());
+                intent.putExtra("dataFinalizacao", obra.getDataFinalizacao());
+                intent.putExtra("isbn", obra.getIsbn());
+                intent.putExtra("paginas", obra.getPaginas());
+                intent.putExtra("image", obra.getImage());
+                intent.putExtra("tipo", obra.getType());
+                intent.putExtra("avarageRating", obra.getAvarageRating());
+                intent.putExtra("statusObra", obra.getStatus());
+                intent.putExtra("categorias", obra.getCategorias());
+                startActivity(intent);
+            }
+        });
         searchEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -144,7 +198,6 @@ public class FragmentHome extends Fragment {
                 logout();
             }
         });
-        loadData();
         return rootView;
     }
 
@@ -158,6 +211,30 @@ public class FragmentHome extends Fragment {
         }
         searchAdapter = new SearchAdapter(filteredObrasList);
         rvibook.setAdapter(searchAdapter);
+        searchAdapter.setOnItemClickListener(new SearchAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                obrasDTO obra = filteredObrasList.get(position);
+                Intent intent = new Intent(getContext(), telaDetalhesObra.class);
+
+                intent.putExtra("obid", obra.getId());
+                intent.putExtra("title", obra.getTitle());
+                intent.putExtra("subtitle", obra.getSubtitle());
+                intent.putExtra("synopsis", obra.getSynopsis());
+                intent.putExtra("author", obra.getAuthor());
+                intent.putExtra("editora", obra.getEditora());
+                intent.putExtra("dataPublicacao", obra.getDataPublicacao());
+                intent.putExtra("dataFinalizacao", obra.getDataFinalizacao());
+                intent.putExtra("isbn", obra.getIsbn());
+                intent.putExtra("paginas", obra.getPaginas());
+                intent.putExtra("image", obra.getImage());
+                intent.putExtra("tipo", obra.getType());
+                intent.putExtra("avarageRating", obra.getAvarageRating());
+                intent.putExtra("statusObra", obra.getStatus());
+                intent.putExtra("categorias", obra.getCategorias());
+                startActivity(intent);
+            }
+        });
     }
 
     public void logout(){
@@ -167,7 +244,7 @@ public class FragmentHome extends Fragment {
     }
 
     private void loadData() {
-        ArrayList<obrasDTO> obrasFeedList = new ArrayList<>();
+        obrasFeedList = new ArrayList<>();
         int limite = Math.min(obrasList.size(), 10);
         for (int i = 0; i < limite; i++) {
             obrasDTO obra = obrasList.get(i);
@@ -182,7 +259,7 @@ public class FragmentHome extends Fragment {
             obrasFeedList.add(obra);
         }
 
-        ArrayList<obrasDTO> obrasMaisComentadasList = new ArrayList<>();
+        obrasMaisComentadasList = new ArrayList<>();
         //List<obrasDTO> obrasMaisComentadas = obrasDAO.carregarObrasMaisComentadas();
         int limiteMaisComentado = Math.min(obrasList.size(), 5);
         for (int i = 0; i < limiteMaisComentado; i++) {

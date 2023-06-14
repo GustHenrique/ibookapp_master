@@ -37,7 +37,7 @@
             android:foregroundGravity="center_horizontal"/>
 
         <Button
-            android:id="@+id/btnLogoutHome"
+            android:id="@+id/btnLogoutProfile"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:background="@drawable/ic_logut_foreground"

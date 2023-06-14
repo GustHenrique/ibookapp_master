@@ -18,9 +18,12 @@ package com.example.ibookApp.Adapters;
 
 public class ObraMaisComentadasAdapter extends RecyclerView.Adapter<ObraMaisComentadasAdapter.ObraMaisViewHolder> {
     private ArrayList<obrasDTO> obrasList;
-
+    private ObraAdapter.OnItemClickListener listener;
     public ObraMaisComentadasAdapter(ArrayList<obrasDTO> obrasList) {
         this.obrasList = obrasList;
+    }
+    public void setOnItemClickListener(ObraAdapter.OnItemClickListener listener) {
+        this.listener = listener;
     }
 
     @Override
@@ -40,6 +43,15 @@ public class ObraMaisComentadasAdapter extends RecyclerView.Adapter<ObraMaisCome
                 .load(imagePath)
                 .into(holder.txtImage);
         holder.txtTitulo.setText(obra.getTitle());
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (listener != null) {
+                    listener.onItemClick(holder.getAdapterPosition());
+                }
+            }
+        });
     }
 
     @Override
@@ -56,6 +68,10 @@ public class ObraMaisComentadasAdapter extends RecyclerView.Adapter<ObraMaisCome
             txtTitulo = itemView.findViewById(R.id.bookName);
             txtImage = itemView.findViewById(R.id.bookImage);
         }
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(int position);
     }
 }
 

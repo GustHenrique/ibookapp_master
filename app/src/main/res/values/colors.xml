@@ -14,5 +14,7 @@
     <color name="colorTextPrimary">#C7B9D9</color>
     <color name="colorTextSecondary">#CBD5ED</color>
     <color name="colorThemeExtra">#FF5252</color>
+    <color name="dourada">#FFD700</color>
+    <color name="amarela">#FFFF00</color>
 
 </resources>
