@@ -152,7 +152,8 @@ public class telacadastro extends AppCompatActivity {
             if (senha.contentEquals(confirmaSenha)) {
                 if (validarSenha(senha)) {
                     if (Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                        if (true){
+                        //verificarExistenciaEmail(email);
+                        if (!temEmailValidate){
                             SecretKey secret = Utils.generateKey();
                             byte[] encryptSenha = Utils.encryptMsg(senha, secret);
                             senha = bytesToString(encryptSenha);
@@ -182,6 +183,22 @@ public class telacadastro extends AppCompatActivity {
         }
     }
 
+    /*private void verificarExistenciaEmail(String email) {
+        EmailExistenteApiClient.EmailExistenteAsyncTask task = new EmailExistenteApiClient.EmailExistenteAsyncTask(email, new EmailExistenteApiClient.EmailExistenteListener() {
+            @Override
+            public void onEmailExistenteReceived(UsuarioDTO usuario) {
+                // Faça algo com o resultado recebido do serviço da API
+                if (usuario != null) {
+                    temEmailValidate = true;
+                } else {
+                    // Email não existe
+                }
+            }
+        });
+
+        task.execute();
+    }
+*/
     private class UploadImageTask extends AsyncTask<Void, Void, String> {
         private String imageFilePath;
 

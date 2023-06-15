@@ -63,8 +63,7 @@
         android:background="@color/colorTextPrimary"
         tools:layout_editor_absoluteX="0dp" />
 
-    <LinearLayout
-        android:id="@+id/ll0DetalheObra"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/viewDetalheObra"
@@ -72,179 +71,202 @@
         android:layout_marginTop="@dimen/_10sdp"
         android:layout_marginEnd="@dimen/_10sdp"
         android:layout_marginBottom="@dimen/_10sdp"
-        android:background="@drawable/background_search_field"
-        android:orientation="vertical"
-        android:padding="@dimen/_5sdp">
-
+        android:background="@drawable/background_search_field">
         <LinearLayout
-            android:id="@+id/ll1DetalheObra"
+            android:id="@+id/ll0DetalheObra"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:id="@+id/imgDetalheObra"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_marginBottom="@dimen/_5sdp"
-                android:layout_marginLeft="@dimen/_5sdp"
-                android:layout_marginRight="@dimen/_5sdp"
-                android:background="@drawable/imageview_border"
-                android:src="@drawable/ic_book_foreground"
-                app:civ_border_color="@color/colorTextPrimary"
-                app:civ_border_width="@dimen/_1sdp" />
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="@dimen/_5sdp">
 
             <LinearLayout
-                android:id="@+id/ll2DetalheObra"
+                android:id="@+id/ll1DetalheObra"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/imgDetalheObra"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginBottom="@dimen/_5sdp"
+                    android:layout_marginLeft="@dimen/_5sdp"
+                    android:layout_marginRight="@dimen/_5sdp"
+                    android:background="@drawable/imageview_border"
+                    android:src="@drawable/ic_book_foreground"
+                    app:civ_border_color="@color/colorTextPrimary"
+                    app:civ_border_width="@dimen/_1sdp" />
+
+                <LinearLayout
+                    android:id="@+id/ll2DetalheObra"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/txtTitleDetalheObra"
+                        style="@style/TextAppearance.AppCompat.Large"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/_5sdp"
+                        android:text="Nome da obra!"
+                        android:textSize="@dimen/_12sdp"
+                        android:textColor="@color/colorPrimary" />
+
+                    <TextView
+                        android:id="@+id/txtAutorDetalheObra"
+                        style="@style/TextAppearance.AppCompat.Large"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/_12sdp"
+                        android:layout_margin="@dimen/_5sdp"
+                        android:text="Autor da obra!"
+                        android:textColor="@color/colorPrimary" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll3DetalheObra"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/txtAvarageRatingDetalheObra"
+                        style="@style/TextAppearance.AppCompat.Large"
+                        android:layout_width="41dp"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/background_button"
+                        android:padding="5dp"
+                        android:text="9.4"
+                        android:textColor="@color/white" />
+
+                    <RatingBar
+                        android:id="@+id/rbCadastroObraAvaliacaoDetalheObra"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/dourada"
+                        android:progressBackgroundTint="@color/colorSecondary"
+                        android:progressTint="@color/dourada"
+                        android:rating="2.5"
+                        android:secondaryProgressTint="@color/dourada" />
+                </LinearLayout>
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <Button
+                    android:id="@+id/favoritebookDetalheObra"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginEnd="@dimen/_5sdp"
+                    android:background="@drawable/ic_unsave_foreground"
+                    android:textColor="@color/colorTextSecondary"
+                    android:textColorHint="@color/white" />
+
+            </LinearLayout>
+
+
+
+            <TextView
+                android:id="@+id/lblSinopseDetalheObra"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="0dp"
+                android:text="Sinopse"
+                android:textColor="@color/colorPrimary" />
+
+            <TextView
+                android:id="@+id/txtSinopseDetalheObra"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/lblSinopseDetalheObra"
+                android:layout_marginTop="0dp"
+                android:text="Aqui fica a sinopse!"
+                android:textColor="@color/colorPrimary"
+                android:textAlignment="viewStart" />
+
+            <LinearLayout
+                android:id="@+id/ll4DetalheObra"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/lblComentariosDetalheObra"
+                    style="@style/TextAppearance.AppCompat.Large"
+                    android:layout_width="wrap_content"
+                    android:layout_height="35dp"
+                    android:layout_marginRight="@dimen/_1sdp"
+                    android:padding="5dp"
+                    android:textSize="@dimen/_14sdp"
+                    android:background="@drawable/background_button_no_right"
+                    android:text="COMENTARIOS"
+                    android:textColor="@color/white" />
+                <TextView
+                    android:id="@+id/lblEditDetalheObra"
+                    style="@style/TextAppearance.AppCompat.Large"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:background="@drawable/background_button_no_left"
+                    android:padding="5dp"
+                    android:textSize="@dimen/_14sdp"
+                    android:drawableLeft="@drawable/baseline_edit_24"
+                    android:drawablePadding="8dp"
+                    android:textColor="@color/colorTextPrimary" />
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/txtComentarDetalheObra"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_2sdp"
+                android:background="@drawable/background_input_field_comment"
+                android:hint="Deixe seu comentário..."
+                android:inputType="textMultiLine"
+                android:padding="@dimen/_10sdp"
+                android:textColor="@color/colorSecondary"
+                android:textColorHint="@color/colorSecondary"
+                android:textSize="@dimen/_12sdp"
+                android:gravity="start|top"
+                android:scrollbars="vertical" />
+
+            <LinearLayout
+                android:id="@+id/secondLinearLayoutDetalheObra"
+                android:layout_below="@+id/firstLinearLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_gravity="top"
+                android:layout_marginTop="@dimen/_4sdp"
                 android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/txtTitleDetalheObra"
-                    style="@style/TextAppearance.AppCompat.Large"
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rviComents"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/_5sdp"
-                    android:text="Nome da obra!"
-                    android:textColor="@color/colorPrimary" />
-
-                <TextView
-                    android:id="@+id/txtAutorDetalheObra"
-                    style="@style/TextAppearance.AppCompat.Large"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/_5sdp"
-                    android:text="Autor da obra!"
-                    android:textColor="@color/colorPrimary" />
+                    android:layout_height="match_parent"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:listitem="@layout/row_comment_item" />
             </LinearLayout>
         </LinearLayout>
+    </ScrollView>
 
-        <LinearLayout
-            android:id="@+id/ll3DetalheObra"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
-
-            <TextView
-                android:id="@+id/txtAvarageRatingDetalheObra"
-                style="@style/TextAppearance.AppCompat.Large"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/_10sdp"
-                android:background="@drawable/background_button"
-                android:padding="5dp"
-                android:text="9.45"
-                android:textColor="@color/white" />
-
-            <RatingBar
-                android:id="@+id/rbCadastroObraAvaliacaoDetalheObra"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/_10sdp"
-                android:backgroundTint="@color/dourada"
-                android:progressBackgroundTint="@color/colorSecondary"
-                android:progressTint="@color/dourada"
-                android:rating="2.5"
-                android:secondaryProgressTint="@color/dourada" />
-
-            <Button
-                android:id="@+id/favoritebookDetalheObra"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginEnd="@dimen/_5sdp"
-                android:background="@drawable/ic_unsave_foreground"
-                android:textColor="@color/colorTextSecondary"
-                android:textColorHint="@color/white" />
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/lblSinopseDetalheObra"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="0dp"
-            android:text="Sinopse"
-            android:textColor="@color/colorPrimary" />
-
-        <TextView
-            android:id="@+id/txtSinopseDetalheObra"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/lblSinopseDetalheObra"
-            android:layout_marginTop="0dp"
-            android:text="Aqui fica a sinopse!"
-            android:textColor="@color/colorPrimary"
-            android:textAlignment="viewStart" />
-
-        <LinearLayout
-            android:id="@+id/ll4DetalheObra"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/lblComentariosDetalheObra"
-                style="@style/TextAppearance.AppCompat.Large"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/_1sdp"
-                android:padding="5dp"
-                android:textSize="@dimen/_14sdp"
-                android:background="@drawable/background_button_no_right"
-                android:text="COMENTARIOS"
-                android:textColor="@color/white" />
-            <TextView
-                android:id="@+id/lblEditDetalheObra"
-                style="@style/TextAppearance.AppCompat.Large"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/background_button_no_left"
-                android:padding="5dp"
-                android:textSize="@dimen/_14sdp"
-                android:drawableLeft="@drawable/baseline_edit_24"
-                android:drawablePadding="8dp"
-                android:textColor="@color/colorTextPrimary" />
-        </LinearLayout>
-
-        <EditText
-            android:id="@+id/txtComentarDetalheObra"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_2sdp"
-            android:background="@drawable/background_input_field_comment"
-            android:hint="Deixe seu comentário..."
-            android:inputType="textMultiLine"
-            android:padding="@dimen/_10sdp"
-            android:textColor="@color/colorSecondary"
-            android:textColorHint="@color/colorSecondary"
-            android:textSize="@dimen/_12sdp"
-            android:gravity="start|top"
-            android:scrollbars="vertical" />
-
-        <LinearLayout
-            android:id="@+id/secondLinearLayoutDetalheObra"
-            android:layout_below="@+id/firstLinearLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_gravity="top"
-            android:layout_marginTop="@dimen/_4sdp"
-            android:orientation="vertical">
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rviBook"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:listitem="@layout/row_comment_item"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
-        </LinearLayout>
-    </LinearLayout>
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
+        android:layout_marginTop="@dimen/_10sdp"
         android:layout_marginEnd="@dimen/_15sdp"
         android:layout_marginBottom="@dimen/_20sdp"
         android:src="@drawable/ic_baseline_add_24"

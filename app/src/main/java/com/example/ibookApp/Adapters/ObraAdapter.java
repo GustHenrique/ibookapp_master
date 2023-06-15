@@ -52,6 +52,20 @@ public class ObraAdapter extends RecyclerView.Adapter<ObraAdapter.ObraViewHolder
                 .into(holder.txtImage);
 
         holder.txtTitulo.setText(obra.getTitle());
+
+        holder.imgFavorite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (holder.imgFavorite.isSelected()) {
+                    holder.imgFavorite.setSelected(false);
+                    holder.imgFavorite.setBackgroundResource(R.drawable.ic_unsave_foreground);
+                } else {
+                    holder.imgFavorite.setSelected(true);
+                    holder.imgFavorite.setBackgroundResource(R.drawable.ic_save_foreground);
+                }
+            }
+        });
+
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

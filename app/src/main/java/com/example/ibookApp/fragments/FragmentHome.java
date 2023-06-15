@@ -75,7 +75,7 @@ public class FragmentHome extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
-    Button btnLogout;
+    Button btnLogout, btnFavorite;
     ImageView imgTeste;
     private Uri imageUri;
     private EditText searchEditText;

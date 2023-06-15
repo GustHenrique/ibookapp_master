@@ -1,16 +1,29 @@
 package com.example.ibookApp.DTOs;
 
+import java.sql.Date;
+
 public class ComentarioDTO {
     private String cobid;
     private String cobcomentario;
     private String usuid;
     private String obid;
 
-    public ComentarioDTO(String cobid, String cobcomentario, String usuid, String obid) {
+    public Date getDataComentario() {
+        return dataComentario;
+    }
+
+    public void setDataComentario(Date dataComentario) {
+        this.dataComentario = dataComentario;
+    }
+
+    private Date dataComentario;
+
+    public ComentarioDTO(String cobid, String cobcomentario, String usuid, String obid, Date dataComentario) {
         this.cobid = cobid;
         this.cobcomentario = cobcomentario;
         this.usuid = usuid;
         this.obid = obid;
+        this.dataComentario = dataComentario;
     }
 
     public String getCobid() {
