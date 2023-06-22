@@ -17,13 +17,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.example.ibookApp.APIs.favoritosPorUsuario;
 import com.example.ibookApp.APIs.ibookApi;
 import com.example.ibookApp.Adapters.ObraMaisComentadasAdapter;
 import com.example.ibookApp.Adapters.SearchAdapter;
 import com.example.ibookApp.DTOs.UsuarioDTO;
 import com.example.ibookApp.Adapters.ObraAdapter;
+import com.example.ibookApp.DTOs.favoritosDTO;
 import com.example.ibookApp.DTOs.obrasDTO;
 import com.example.ibookApp.R;
+import com.example.ibookApp.functions.FavoritosListSingleton;
 import com.example.ibookApp.functions.ObrasListSingleton;
 import com.example.ibookApp.functions.UserSingleton;
 import com.example.ibookApp.functions.Utils;
@@ -86,7 +89,10 @@ public class FragmentHome extends Fragment {
     private SearchAdapter searchAdapter;
     ArrayList<obrasDTO> obrasList = ObrasListSingleton.getInstance().getObrasList();
     ArrayList<obrasDTO> obrasMaisComentadasList = new ArrayList<>();
+    UsuarioDTO userLogado = UserSingleton.getInstance().getUser();
     ArrayList<obrasDTO> obrasFeedList = new ArrayList<>();
+    ArrayList<favoritosDTO> favLists = FavoritosListSingleton.getInstance().getFavList();
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -94,110 +100,126 @@ public class FragmentHome extends Fragment {
         btnLogout = (Button)rootView.findViewById(R.id.btnLogoutHome);
         rvibook = (RecyclerView)rootView.findViewById(R.id.rviBook);
         rvibookmaiscomentados = (RecyclerView)rootView.findViewById(R.id.recycler_view_horizontal);
-        UsuarioDTO userLogado = UserSingleton.getInstance().getUser();
         rvibook.setLayoutManager(new LinearLayoutManager(getContext()));
         filteredObrasList = new ArrayList<>(obrasList);
         searchEditText = (EditText) rootView.findViewById(R.id.txtEmailLogin);
-        adapterContact = new ObraAdapter(obrasFeedList);
-        searchAdapter = new SearchAdapter(filteredObrasList);
-        loadData();
-        adapterContacts.setOnItemClickListener(new ObraAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(int position) {
-                obrasDTO obra = obrasFeedList.get(position);
-                Intent intent = new Intent(getContext(), telaDetalhesObra.class);
+        adapterContact = new ObraAdapter(obrasFeedList,favLists);
+        searchAdapter = new SearchAdapter(filteredObrasList,favLists);
 
-                intent.putExtra("obid", obra.getId());
-                intent.putExtra("title", obra.getTitle());
-                intent.putExtra("subtitle", obra.getSubtitle());
-                intent.putExtra("synopsis", obra.getSynopsis());
-                intent.putExtra("author", obra.getAuthor());
-                intent.putExtra("editora", obra.getEditora());
-                intent.putExtra("dataPublicacao", obra.getDataPublicacao());
-                intent.putExtra("dataFinalizacao", obra.getDataFinalizacao());
-                intent.putExtra("isbn", obra.getIsbn());
-                intent.putExtra("paginas", obra.getPaginas());
-                intent.putExtra("image", obra.getImage());
-                intent.putExtra("tipo", obra.getType());
-                intent.putExtra("avarageRating", obra.getAvarageRating());
-                intent.putExtra("statusObra", obra.getStatus());
-                intent.putExtra("categorias", obra.getCategorias());
-                startActivity(intent);
-            }
-        });
-        adapterContact.setOnItemClickListener(new ObraAdapter.OnItemClickListener() {
+        favoritosPorUsuario.getfavoritosPorUsuario(userLogado.getId(), new favoritosPorUsuario.favoritosPorUsuarioListener() {
             @Override
-            public void onItemClick(int position) {
-                obrasDTO obra = obrasFeedList.get(position);
-                Intent intent = new Intent(getContext(), telaDetalhesObra.class);
-
-                intent.putExtra("obid", obra.getId());
-                intent.putExtra("title", obra.getTitle());
-                intent.putExtra("subtitle", obra.getSubtitle());
-                intent.putExtra("synopsis", obra.getSynopsis());
-                intent.putExtra("author", obra.getAuthor());
-                intent.putExtra("editora", obra.getEditora());
-                intent.putExtra("dataPublicacao", obra.getDataPublicacao());
-                intent.putExtra("dataFinalizacao", obra.getDataFinalizacao());
-                intent.putExtra("isbn", obra.getIsbn());
-                intent.putExtra("paginas", obra.getPaginas());
-                intent.putExtra("image", obra.getImage());
-                intent.putExtra("tipo", obra.getType());
-                intent.putExtra("avarageRating", obra.getAvarageRating());
-                intent.putExtra("statusObra", obra.getStatus());
-                intent.putExtra("categorias", obra.getCategorias());
-                startActivity(intent);
-            }
-        });
-        searchEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // Não é necessário implementar este método
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // Chamado quando o texto na barra de pesquisa é alterado
-                String searchText = s.toString();
-                // Chame a função de pesquisa passando o texto digitado
-                filterData(searchText);
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                // Não é necessário implementar este método
-            }
-        });
-
-        if (obrasList.size() == 0) {
-            ibookApi.getBookList(new ibookApi.BookListListener() {
-                @Override
-                public void onBookListReceived(List<obrasDTO> bookList) {
-                    ObrasListSingleton obrasSingleton = ObrasListSingleton.getInstance();
-                    for (obrasDTO obra : bookList) {
-                        obrasSingleton.adicionarObra(obra);
-                    }
+            public void onfavoritosPorUsuarioReceived(List<favoritosDTO> favoritosPorUsuario) {
+                FavoritosListSingleton favoritosListSingleton = FavoritosListSingleton.getInstance();
+                for (favoritosDTO fav : favoritosPorUsuario) {
+                    favoritosListSingleton.adicionarObra(fav);
                 }
-            });
-        }
+                favLists = favoritosListSingleton.getInstance().getFavList();
+                loadData();
+                adapterContacts.setOnItemClickListener(new ObraAdapter.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(int position) {
+                        obrasDTO obra = obrasFeedList.get(position);
+                        Intent intent = new Intent(getContext(), telaDetalhesObra.class);
 
-        if (obrasList.size() == 0){
-            ibookApi.getBookList(new ibookApi.BookListListener() {
-                @Override
-                public void onBookListReceived(List<obrasDTO> bookList) {
-                    ObrasListSingleton obrasSingleton = ObrasListSingleton.getInstance();
-                    for (obrasDTO obra : bookList) {
-                        obrasSingleton.adicionarObra(obra);
+                        intent.putExtra("obid", obra.getId());
+                        intent.putExtra("title", obra.getTitle());
+                        intent.putExtra("subtitle", obra.getSubtitle());
+                        intent.putExtra("synopsis", obra.getSynopsis());
+                        intent.putExtra("author", obra.getAuthor());
+                        intent.putExtra("editora", obra.getEditora());
+                        intent.putExtra("dataPublicacao", obra.getDataPublicacao());
+                        intent.putExtra("dataFinalizacao", obra.getDataFinalizacao());
+                        intent.putExtra("isbn", obra.getIsbn());
+                        intent.putExtra("paginas", obra.getPaginas());
+                        intent.putExtra("image", obra.getImage());
+                        intent.putExtra("tipo", obra.getType());
+                        intent.putExtra("avarageRating", obra.getAvarageRating());
+                        intent.putExtra("statusObra", obra.getStatus());
+                        intent.putExtra("categorias", obra.getCategorias());
+                        startActivity(intent);
                     }
+                });
+                adapterContact.setOnItemClickListener(new ObraAdapter.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(int position) {
+                        obrasDTO obra = obrasFeedList.get(position);
+                        Intent intent = new Intent(getContext(), telaDetalhesObra.class);
+
+                        intent.putExtra("obid", obra.getId());
+                        intent.putExtra("title", obra.getTitle());
+                        intent.putExtra("subtitle", obra.getSubtitle());
+                        intent.putExtra("synopsis", obra.getSynopsis());
+                        intent.putExtra("author", obra.getAuthor());
+                        intent.putExtra("editora", obra.getEditora());
+                        intent.putExtra("dataPublicacao", obra.getDataPublicacao());
+                        intent.putExtra("dataFinalizacao", obra.getDataFinalizacao());
+                        intent.putExtra("isbn", obra.getIsbn());
+                        intent.putExtra("paginas", obra.getPaginas());
+                        intent.putExtra("image", obra.getImage());
+                        intent.putExtra("tipo", obra.getType());
+                        intent.putExtra("avarageRating", obra.getAvarageRating());
+                        intent.putExtra("statusObra", obra.getStatus());
+                        intent.putExtra("categorias", obra.getCategorias());
+                        startActivity(intent);
+                    }
+                });
+                searchEditText.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                        // Não é necessário implementar este método
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        // Chamado quando o texto na barra de pesquisa é alterado
+                        String searchText = s.toString();
+                        // Chame a função de pesquisa passando o texto digitado
+                        filterData(searchText);
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        // Não é necessário implementar este método
+                    }
+                });
+
+                if (obrasList.size() == 0) {
+                    obrasList.clear();
+                    ibookApi.getBookList(new ibookApi.BookListListener() {
+                        @Override
+                        public void onBookListReceived(List<obrasDTO> bookList) {
+                            ObrasListSingleton obrasSingleton = ObrasListSingleton.getInstance();
+                            for (obrasDTO obra : bookList) {
+                                obrasSingleton.adicionarObra(obra);
+                            }
+                        }
+                    });
                 }
-            });
-        }
-        btnLogout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                logout();
+
+                if (obrasList.size() == 0){
+                    ibookApi.getBookList(new ibookApi.BookListListener() {
+                        @Override
+                        public void onBookListReceived(List<obrasDTO> bookList) {
+                            ObrasListSingleton obrasSingleton = ObrasListSingleton.getInstance();
+                            for (obrasDTO obra : bookList) {
+                                obrasSingleton.adicionarObra(obra);
+                            }
+                        }
+                    });
+                }
+
+                if (favLists.size() == 0){
+
+                }
+                btnLogout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        logout();
+                    }
+                });
             }
         });
+
         return rootView;
     }
 
@@ -209,7 +231,7 @@ public class FragmentHome extends Fragment {
                 filteredObrasList.add(item);
             }
         }
-        searchAdapter = new SearchAdapter(filteredObrasList);
+        searchAdapter = new SearchAdapter(filteredObrasList,favLists);
         rvibook.setAdapter(searchAdapter);
         searchAdapter.setOnItemClickListener(new SearchAdapter.OnItemClickListener() {
             @Override
@@ -242,8 +264,8 @@ public class FragmentHome extends Fragment {
         Intent acessar = new Intent(getActivity(), telalogin.class);
         startActivity(acessar);
     }
-
     private void loadData() {
+
         obrasFeedList = new ArrayList<>();
         int limite = Math.min(obrasList.size(), 10);
         for (int i = 0; i < limite; i++) {
@@ -278,8 +300,9 @@ public class FragmentHome extends Fragment {
         adapterContacts = new ObraMaisComentadasAdapter(obrasMaisComentadasList);
         rvibookmaiscomentados.setAdapter(adapterContacts);
 
-        adapterContact = new ObraAdapter(obrasFeedList);
+        adapterContact = new ObraAdapter(obrasFeedList, favLists);
         rvibook.setAdapter(adapterContact);
+
     }
 
 }

@@ -25,7 +25,6 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
 public class telarecuperarsenha extends AppCompatActivity {
-
     TextView tvEmailRecuperarEmail, tvLembrarSenha;
     Button btnRecuperarEmail;
 
@@ -54,27 +53,4 @@ public class telarecuperarsenha extends AppCompatActivity {
             }
         });
     }
-
-    /*public void recuperarSenha(View view) throws NoSuchPaddingException, UnsupportedEncodingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeySpecException, InvalidKeyException {
-        UsuarioDAO UsuarioDAO = new UsuarioDAO(this);
-        email = tvEmailRecuperarEmail.getText().toString();
-        if (!email.isEmpty()){
-            if (Patterns.EMAIL_ADDRESS.matcher(email).matches() && !UsuarioDAO.existeEmailCadastrado(email)){
-                UsuarioDTO usuario = UsuarioDAO.retornarUsuarioEmail(email);
-                if (usuario.getId() != null){
-                    String novaSenha = gerarSenha();
-                    UsuarioDAO.recuperarSenha(usuario, novaSenha);
-                    *//*Utils.enviarEmail(email, novaSenha);*//*
-                }
-            }
-            else{
-                Toast.makeText(this,"E-mail inválido ou não cadastrado!", Toast.LENGTH_LONG).show();
-            }
-        }
-        else{
-            Toast.makeText(this,"Todos os campos são obrigatórios!", Toast.LENGTH_LONG).show();
-        }
-    }*/
-
-
 }

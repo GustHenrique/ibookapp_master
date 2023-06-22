@@ -1,22 +1,22 @@
 package com.example.ibookApp.DTOs;
 
 public class favoritosDTO {
-    private String favid;
+    private String id;
     private String usuid;
     private String obid;
 
-    public favoritosDTO(String favid, String usuid, String obid) {
-        this.favid = favid;
+    public favoritosDTO(String id, String usuid, String obid) {
+        this.id = id;
         this.usuid = usuid;
         this.obid = obid;
     }
 
-    public String getFavid() {
-        return favid;
+    public String getId() {
+        return id;
     }
 
-    public void setFavid(String favid) {
-        this.favid = favid;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getUsuid() {

@@ -156,6 +156,7 @@
                         android:progressTint="@color/dourada"
                         android:rating="2.5"
                         android:secondaryProgressTint="@color/dourada" />
+
                 </LinearLayout>
 
                 <Space
@@ -261,7 +262,7 @@
     </ScrollView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
+        android:id="@+id/fabDetalheObra"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
@@ -273,4 +274,5 @@
         app:backgroundTint="@color/colorPrimary"
         app:pressedTranslationZ="@dimen/_10sdp"
         app:tint="@color/white" />
+
 </RelativeLayout>

@@ -85,7 +85,6 @@ public class ComentarioAdapter extends RecyclerView.Adapter<ComentarioAdapter.Co
                 txtDataComentario.setText(comentario.getDataComentario().toString());
             }
 
-
             UsuarioPorIdApiClient.UsuarioPorIdAsyncTask task = new UsuarioPorIdApiClient.UsuarioPorIdAsyncTask(comentario.getUsuid(), new UsuarioPorIdApiClient.UsuarioPorIdApiListener() {
 
                 @Override

@@ -15,13 +15,19 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.example.ibookApp.APIs.favoritosPorUsuario;
 import com.example.ibookApp.APIs.ibookApi;
 import com.example.ibookApp.Adapters.ObraAdapter;
 import com.example.ibookApp.Adapters.SearchAdapter;
+import com.example.ibookApp.DTOs.UsuarioDTO;
+import com.example.ibookApp.DTOs.favoritosDTO;
 import com.example.ibookApp.DTOs.obrasDTO;
 import com.example.ibookApp.R;
+import com.example.ibookApp.functions.FavoritosListSingleton;
 import com.example.ibookApp.functions.ObrasListSingleton;
+import com.example.ibookApp.functions.UserSingleton;
 import com.example.ibookApp.functions.Utils;
+import com.example.ibookApp.telas.telaDetalhesObra;
 import com.example.ibookApp.telas.telalogin;
 
 import java.util.ArrayList;
@@ -75,6 +81,8 @@ public class FragmentSearch extends Fragment {
     private ObraAdapter adapterContact;
     private Button btnLogout;
     ArrayList<obrasDTO> obrasList = ObrasListSingleton.getInstance().getObrasList();
+    UsuarioDTO userLogado = UserSingleton.getInstance().getUser();
+    ArrayList<favoritosDTO> favLists = FavoritosListSingleton.getInstance().getFavList();
     private ArrayList<obrasDTO> filteredObrasList;
     private SearchAdapter searchAdapter;
     @Override
@@ -86,6 +94,35 @@ public class FragmentSearch extends Fragment {
         rviBookSearch.setLayoutManager(new LinearLayoutManager(getContext()));
         filteredObrasList = new ArrayList<>(obrasList);
         searchEditText = (EditText) rootView.findViewById(R.id.edtSearchObra);
+        adapterContact = new ObraAdapter(obrasList, favLists);
+        searchAdapter = new SearchAdapter(filteredObrasList,favLists);
+
+        loadData();
+
+        adapterContact.setOnItemClickListener(new ObraAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                obrasDTO obra = obrasList.get(position);
+                Intent intent = new Intent(getContext(), telaDetalhesObra.class);
+
+                intent.putExtra("obid", obra.getId());
+                intent.putExtra("title", obra.getTitle());
+                intent.putExtra("subtitle", obra.getSubtitle());
+                intent.putExtra("synopsis", obra.getSynopsis());
+                intent.putExtra("author", obra.getAuthor());
+                intent.putExtra("editora", obra.getEditora());
+                intent.putExtra("dataPublicacao", obra.getDataPublicacao());
+                intent.putExtra("dataFinalizacao", obra.getDataFinalizacao());
+                intent.putExtra("isbn", obra.getIsbn());
+                intent.putExtra("paginas", obra.getPaginas());
+                intent.putExtra("image", obra.getImage());
+                intent.putExtra("tipo", obra.getType());
+                intent.putExtra("avarageRating", obra.getAvarageRating());
+                intent.putExtra("statusObra", obra.getStatus());
+                intent.putExtra("categorias", obra.getCategorias());
+                startActivity(intent);
+            }
+        });
 
         searchEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -124,8 +161,6 @@ public class FragmentSearch extends Fragment {
                 logout();
             }
         });
-
-        loadData();
         return rootView;
     }
 
@@ -137,11 +172,45 @@ public class FragmentSearch extends Fragment {
                 filteredObrasList.add(item);
             }
         }
-        searchAdapter = new SearchAdapter(filteredObrasList);
+        searchAdapter = new SearchAdapter(filteredObrasList,favLists);
         rviBookSearch.setAdapter(searchAdapter);
+
+        searchAdapter.setOnItemClickListener(new SearchAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                obrasDTO obra = filteredObrasList.get(position);
+                Intent intent = new Intent(getContext(), telaDetalhesObra.class);
+
+                intent.putExtra("obid", obra.getId());
+                intent.putExtra("title", obra.getTitle());
+                intent.putExtra("subtitle", obra.getSubtitle());
+                intent.putExtra("synopsis", obra.getSynopsis());
+                intent.putExtra("author", obra.getAuthor());
+                intent.putExtra("editora", obra.getEditora());
+                intent.putExtra("dataPublicacao", obra.getDataPublicacao());
+                intent.putExtra("dataFinalizacao", obra.getDataFinalizacao());
+                intent.putExtra("isbn", obra.getIsbn());
+                intent.putExtra("paginas", obra.getPaginas());
+                intent.putExtra("image", obra.getImage());
+                intent.putExtra("tipo", obra.getType());
+                intent.putExtra("avarageRating", obra.getAvarageRating());
+                intent.putExtra("statusObra", obra.getStatus());
+                intent.putExtra("categorias", obra.getCategorias());
+                startActivity(intent);
+            }
+        });
     }
 
     private void loadData() {
+
+        favoritosPorUsuario.getfavoritosPorUsuario(userLogado.getId(), new favoritosPorUsuario.favoritosPorUsuarioListener() {
+            @Override
+            public void onfavoritosPorUsuarioReceived(List<favoritosDTO> favoritosPorUsuario) {
+                favLists.addAll(favoritosPorUsuario);
+            }
+        });
+
+
         ArrayList<obrasDTO> obrasFeedList = new ArrayList<>();
         for (int i = 0; i < obrasList.size(); i++) {
             obrasDTO obra = obrasList.get(i);
@@ -155,7 +224,7 @@ public class FragmentSearch extends Fragment {
             }
             obrasFeedList.add(obra);
         }
-        adapterContact = new ObraAdapter(obrasFeedList);
+        adapterContact = new ObraAdapter(obrasFeedList, favLists);
         rviBookSearch.setAdapter(adapterContact);
     }
 

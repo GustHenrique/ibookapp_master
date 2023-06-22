@@ -6,20 +6,28 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.ibookApp.APIs.AuthApiClient;
+import com.example.ibookApp.APIs.InsertComentariosApi;
 import com.example.ibookApp.APIs.comentariosPorLivroApi;
 import com.example.ibookApp.Adapters.ComentarioAdapter;
 import com.example.ibookApp.Adapters.ObraAdapter;
 import com.example.ibookApp.Adapters.SearchAdapter;
 import com.example.ibookApp.DTOs.ComentarioDTO;
+import com.example.ibookApp.DTOs.UsuarioDTO;
 import com.example.ibookApp.DTOs.obrasDTO;
 import com.example.ibookApp.R;
+import com.example.ibookApp.functions.UserSingleton;
 import com.example.ibookApp.functions.Utils;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,15 +37,17 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class telaDetalhesObra extends AppCompatActivity {
 
     private String obid, title, subtitle, synopsis, author, editora, dataPublicacao,dataFinalizacao, isbn, image,
-            tipo, statusObra, categorias;
+            tipo, statusObra, categorias, usuid, avarageRatingString;
     private int paginas;
     private float avarageRating;
     private TextView tvNome, tvAutor, tvSinopse, tvRate;
+    private EditText txtComentar;
     private RatingBar ratingBar;
     private Button btnHome, btnLogout, btnFavorito;
     private ImageView imgObra;
     private ComentarioAdapter comentarioAdapter;
     private RecyclerView rviComents;
+    private FloatingActionButton flaBtn;
     ArrayList<ComentarioDTO> comentariosList = new ArrayList<>();
 
     @Override
@@ -45,6 +55,8 @@ public class telaDetalhesObra extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.teladetalhesobra);
         Intent intent = getIntent();
+        UsuarioDTO userLogado = UserSingleton.getInstance().getUser();
+        usuid = userLogado.getId();
         obid = intent.getStringExtra("obid");
         title = intent.getStringExtra("title");
         subtitle = intent.getStringExtra("subtitle");
@@ -57,9 +69,11 @@ public class telaDetalhesObra extends AppCompatActivity {
         paginas = intent.getIntExtra("paginas", 0);
         image = intent.getStringExtra("image");
         tipo = intent.getStringExtra("tipo");
-        avarageRating = intent.getFloatExtra("avarageRating", 0.0f);
+        avarageRatingString = intent.getStringExtra("avarageRating");
         statusObra = intent.getStringExtra("statusObra");
         categorias = intent.getStringExtra("categorias");
+        flaBtn = findViewById(R.id.fabDetalheObra);
+        txtComentar = findViewById(R.id.txtComentarDetalheObra);
         btnHome = findViewById(R.id.btnBackHome);
         btnLogout = findViewById(R.id.btnLogoutDetalhesObra);
         tvNome = findViewById(R.id.txtTitleDetalheObra);
@@ -71,13 +85,15 @@ public class telaDetalhesObra extends AppCompatActivity {
         imgObra = findViewById(R.id.imgDetalheObra);
         rviComents = findViewById(R.id.rviComents);
 
+
         loadData();
-        comentariosPorLivroApi.getcomentariosPorLivro(obid, new comentariosPorLivroApi.comentariosPorLivroListener() {
+
+        carregarComentarios();
+
+        flaBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void oncomentariosPorLivroReceived(List<ComentarioDTO> comentariosPorLivro) {
-                comentariosList.addAll(comentariosPorLivro);
-                comentarioAdapter = new ComentarioAdapter(comentariosList);
-                rviComents.setAdapter(comentarioAdapter);
+            public void onClick(View v) {
+                comentar();
             }
         });
 
@@ -124,15 +140,44 @@ public class telaDetalhesObra extends AppCompatActivity {
         });
     }
 
+    public void comentar(){
+        if (txtComentar != null){
+            String comentario = txtComentar.getText().toString();
+            if (!comentario.isEmpty()){
+                InsertComentariosApi.InsertComentariosAsyncTask task = new InsertComentariosApi.InsertComentariosAsyncTask(usuid,obid,comentario, new InsertComentariosApi.InsertComentariosListener() {
+
+                    @Override
+                    public void onInsertComentariosReceived(boolean success) {
+
+                    }
+                });
+                task.execute();
+                txtComentar.setText("");
+                carregarComentarios();
+            }
+        }
+    }
+
+    public void carregarComentarios(){
+        comentariosPorLivroApi.getcomentariosPorLivro(obid, new comentariosPorLivroApi.comentariosPorLivroListener() {
+            @Override
+            public void oncomentariosPorLivroReceived(List<ComentarioDTO> comentariosPorLivro) {
+                comentariosList.addAll(comentariosPorLivro);
+                comentarioAdapter = new ComentarioAdapter(comentariosList);
+                int itemCount = comentarioAdapter.getItemCount();
+                int itemHeight = 150;
+                int recyclerViewHeight = itemCount * itemHeight;
+
+                ViewGroup.LayoutParams layoutParams = rviComents.getLayoutParams();
+                layoutParams.height = recyclerViewHeight;
+                rviComents.setLayoutParams(layoutParams);
+                rviComents.setAdapter(comentarioAdapter);
+            }
+        });
+    }
+
     public void enviarNota(float rating){
-        if (rating * 2 > 9.9){
-            int rate = 10;
-            tvRate.setText(String.valueOf(rate));
-        }
-        else{
-            tvRate.setText(String.valueOf(rating * 2));
-            ratingBar.setRating(rating);
-        }
+
     }
 
     public void loadData(){
@@ -154,8 +199,21 @@ public class telaDetalhesObra extends AppCompatActivity {
         if(author != null){
             tvAutor.setText(author);
         }
-        tvRate.setText(String.valueOf(avarageRating * 2));
-        ratingBar.setRating(avarageRating);
+
+        if (avarageRatingString != null && avarageRatingString != ""){
+            avarageRating = Float.parseFloat(avarageRatingString);
+            if (avarageRating * 2 > 9.9){
+                int rate = 10;
+                tvRate.setText(String.valueOf(rate));
+            }
+            else{
+                tvRate.setText(String.valueOf(avarageRating * 2));
+            }
+            ratingBar.setRating(avarageRating);
+        }
+        else{
+            ratingBar.setRating(2.5f);
+        }
 
         if(synopsis != null){
             tvSinopse.setText(synopsis);

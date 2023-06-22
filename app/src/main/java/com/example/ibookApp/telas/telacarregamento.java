@@ -8,9 +8,12 @@ import android.os.Handler;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import com.example.ibookApp.APIs.favoritosPorUsuario;
 import com.example.ibookApp.APIs.ibookApi;
+import com.example.ibookApp.DTOs.favoritosDTO;
 import com.example.ibookApp.DTOs.obrasDTO;
 import com.example.ibookApp.R;
+import com.example.ibookApp.functions.FavoritosListSingleton;
 import com.example.ibookApp.functions.ObrasListSingleton;
 
 import java.util.ArrayList;

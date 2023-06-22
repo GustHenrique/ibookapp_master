@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.ibookApp.DTOs.favoritosDTO;
 import com.example.ibookApp.DTOs.obrasDTO;
 import com.example.ibookApp.R;
 
@@ -23,9 +24,11 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
 
     private List<obrasDTO> originalItemList; // Lista original
     private List<obrasDTO> filteredItemList; // Lista filtrada (resultados da pesquisa)
+    private ArrayList<favoritosDTO> favoritosList;
     private OnItemClickListener listener;
-    public SearchAdapter(ArrayList<obrasDTO> itemList) {
+    public SearchAdapter(ArrayList<obrasDTO> itemList, ArrayList<favoritosDTO> favoritosList) {
         this.originalItemList = itemList;
+        this.favoritosList = favoritosList;
         this.filteredItemList = new ArrayList<>(originalItemList);
     }
 
@@ -45,6 +48,15 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         // Atualizar as visualizações do item do RecyclerView com os dados apropriados
         obrasDTO item = filteredItemList.get(position);
+        if (favoritosList != null && !favoritosList.isEmpty()) {
+            for (favoritosDTO objeto : favoritosList) {
+                if (item.getId().equals(objeto.getObid())) {
+                    holder.imgFavorite.setSelected(true);
+                    holder.imgFavorite.setBackgroundResource(R.drawable.ic_save_foreground);
+                    break;
+                }
+            }
+        }
         String imagePath = item.getImage();
         holder.textView.setText(item.getTitle());
         Glide.with(holder.itemView.getContext())
@@ -55,6 +67,19 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
             public void onClick(View v) {
                 if (listener != null) {
                     listener.onItemClick(holder.getAdapterPosition());
+                }
+            }
+        });
+
+        holder.imgFavorite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (holder.imgFavorite.isSelected()) {
+                    holder.imgFavorite.setSelected(false);
+                    holder.imgFavorite.setBackgroundResource(R.drawable.ic_unsave_foreground);
+                } else {
+                    holder.imgFavorite.setSelected(true);
+                    holder.imgFavorite.setBackgroundResource(R.drawable.ic_save_foreground);
                 }
             }
         });

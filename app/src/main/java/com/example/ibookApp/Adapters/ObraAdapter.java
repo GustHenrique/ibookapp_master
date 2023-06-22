@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.ibookApp.DTOs.favoritosDTO;
 import com.example.ibookApp.DTOs.obrasDTO;
 import com.example.ibookApp.R;
 
@@ -21,11 +22,13 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ObraAdapter extends RecyclerView.Adapter<ObraAdapter.ObraViewHolder> {
     private ArrayList<obrasDTO> obrasList;
+    private ArrayList<favoritosDTO> favoritosList;
     private OnItemClickListener listener; // Adicione esta linha
     private OnFavoriteClickListener favoriteClickListener;
 
-    public ObraAdapter(ArrayList<obrasDTO> obrasList) {
+    public ObraAdapter(ArrayList<obrasDTO> obrasList, ArrayList<favoritosDTO> favoritosList) {
         this.obrasList = obrasList;
+        this.favoritosList = favoritosList;
     }
 
     public void setOnFavoriteClickListener(OnFavoriteClickListener listener) {
@@ -45,6 +48,15 @@ public class ObraAdapter extends RecyclerView.Adapter<ObraAdapter.ObraViewHolder
 
     public void onBindViewHolder(ObraViewHolder holder, int position) {
         obrasDTO obra = obrasList.get(holder.getAdapterPosition());
+        if (favoritosList != null && !favoritosList.isEmpty()) {
+            for (favoritosDTO objeto : favoritosList) {
+                if (obra.getId().equals(objeto.getObid())) {
+                    holder.imgFavorite.setSelected(true);
+                    holder.imgFavorite.setBackgroundResource(R.drawable.ic_save_foreground);
+                    break;
+                }
+            }
+        }
         String imagePath = obra.getImage();
         Uri imageUri = Uri.parse(imagePath);
         Glide.with(holder.itemView.getContext())
@@ -74,15 +86,6 @@ public class ObraAdapter extends RecyclerView.Adapter<ObraAdapter.ObraViewHolder
                 }
             }
         });
-
-        /*holder.imgFavorite.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (listener != null) {
-                    listener.onItemClick(holder.getAdapterPosition());
-                }
-            }
-        });*/
     }
 
     @Override
@@ -102,8 +105,6 @@ public class ObraAdapter extends RecyclerView.Adapter<ObraAdapter.ObraViewHolder
             imgFavorite = itemView.findViewById(R.id.favoritebook);
         }
     }
-
-    // Adicione esta interface
     public interface OnItemClickListener {
         void onItemClick(int position);
     }
