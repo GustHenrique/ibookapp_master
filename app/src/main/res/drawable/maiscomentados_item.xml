@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/parentLayout"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:padding="7dp"
+    android:layout_marginRight="@dimen/_10sdp"
+    android:background="@drawable/maiscomentados">
+
+
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/bookImage"
+        android:layout_width="@dimen/_50sdp"
+        android:layout_height="@dimen/_50sdp"
+        android:src="@drawable/ic_book_foreground"
+        android:layout_alignParentTop="true"
+        app:civ_border_width="@dimen/_1sdp"
+        app:civ_border_color="@color/colorTextPrimary"
+        android:padding="@dimen/_5sdp"
+        android:layout_centerInParent="true"/>
+
+
+
+    <TextView
+        android:id="@+id/bookName"
+        android:layout_width="90dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/bookImage"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="@dimen/_5sdp"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:layout_marginRight="@dimen/_5sdp"
+        android:layout_marginBottom="@dimen/_5sdp"
+        android:text="Nome do livro"
+        android:textColor="@color/colorTextPrimary"
+        android:textSize="16dp" />
+</RelativeLayout>
