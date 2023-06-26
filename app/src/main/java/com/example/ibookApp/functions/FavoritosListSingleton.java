@@ -23,8 +23,21 @@ public class FavoritosListSingleton {
         return favList;
     }
 
-    public void adicionarObra(favoritosDTO obra) {
+    public void adicionarFav(favoritosDTO obra) {
         favList.add(obra);
+    }
+
+    public void removerFav(String usuid, String obid) {
+        favoritosDTO favoritoRemovido = null;
+        for (favoritosDTO favorito : favList) {
+            if (favorito.getUsuid().equals(usuid) && favorito.getObid().equals(obid)) {
+                favoritoRemovido = favorito;
+                break;
+            }
+        }
+        if (favoritoRemovido != null) {
+            favList.remove(favoritoRemovido);
+        }
     }
 
 }

@@ -434,8 +434,8 @@ public class FragmentEdit extends Fragment {
 
         @Override
         protected String doInBackground(Void... params) {
-            String accessKey = "AKIAXDEVVEMABWJ6Z4XT";
-            String secretKey = "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";
+            String accessKey = "AKIAXDEVVEMAF3Q4K5S3";
+            String secretKey = "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";
             String bucketName = "ibookimageusuarios";
             String objectKey = UUID.randomUUID().toString() + ".jpg";
             BasicAWSCredentials credentials = new BasicAWSCredentials(accessKey, secretKey);

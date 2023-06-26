@@ -12,9 +12,14 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.ibookApp.APIs.DesfavoritarApi;
+import com.example.ibookApp.APIs.FavoritarApi;
+import com.example.ibookApp.DTOs.UsuarioDTO;
 import com.example.ibookApp.DTOs.favoritosDTO;
 import com.example.ibookApp.DTOs.obrasDTO;
 import com.example.ibookApp.R;
+import com.example.ibookApp.functions.FavoritosListSingleton;
+import com.example.ibookApp.functions.UserSingleton;
 
 import java.util.ArrayList;
 
@@ -50,10 +55,13 @@ public class ObraAdapter extends RecyclerView.Adapter<ObraAdapter.ObraViewHolder
         obrasDTO obra = obrasList.get(holder.getAdapterPosition());
         if (favoritosList != null && !favoritosList.isEmpty()) {
             for (favoritosDTO objeto : favoritosList) {
-                if (obra.getId().equals(objeto.getObid())) {
+                if (objeto.getObid().equals(obra.getId())) {
                     holder.imgFavorite.setSelected(true);
                     holder.imgFavorite.setBackgroundResource(R.drawable.ic_save_foreground);
                     break;
+                }
+                else{
+                    holder.imgFavorite.setBackgroundResource(R.drawable.ic_unsave_foreground);
                 }
             }
         }
@@ -65,15 +73,51 @@ public class ObraAdapter extends RecyclerView.Adapter<ObraAdapter.ObraViewHolder
 
         holder.txtTitulo.setText(obra.getTitle());
 
+        UsuarioDTO userLogado = UserSingleton.getInstance().getUser();
         holder.imgFavorite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (holder.imgFavorite.isSelected()) {
-                    holder.imgFavorite.setSelected(false);
-                    holder.imgFavorite.setBackgroundResource(R.drawable.ic_unsave_foreground);
+                obrasDTO obra = obrasList.get(holder.getAdapterPosition());
+                boolean salvo = false;
+                if (favoritosList != null && !favoritosList.isEmpty()) {
+                    for (favoritosDTO objeto : favoritosList) {
+                        if (objeto.getObid().equals(obra.getId())) {
+                            salvo = true;
+                            break;
+                        }
+                        else{
+                            salvo = false;
+                        }
+                    }
+                }
+
+                if (salvo) {
+                    DesfavoritarApi.DesavoritarAsyncTask task = new DesfavoritarApi.DesavoritarAsyncTask(userLogado.getId(), obra.getId(), new DesfavoritarApi.DesfavoritarListener() {
+                        @Override
+                        public void onDeleteFavReceived(boolean success) {
+                            if (success) {
+                                FavoritosListSingleton.getInstance().removerFav(userLogado.getId(), obra.getId());
+                                holder.imgFavorite.setBackgroundResource(R.drawable.ic_unsave_foreground);
+                            } else {
+                                holder.imgFavorite.setBackgroundResource(R.drawable.ic_save_foreground);
+                            }
+                        }
+                    });
+                    task.execute();
                 } else {
-                    holder.imgFavorite.setSelected(true);
-                    holder.imgFavorite.setBackgroundResource(R.drawable.ic_save_foreground);
+                    FavoritarApi.FavoritarAsyncTask task = new FavoritarApi.FavoritarAsyncTask(userLogado.getId(), obra.getId(), new FavoritarApi.FavoritarListener() {
+                        @Override
+                        public void onInsertFavReceived(boolean success) {
+                            if (success) {
+                                favoritosDTO newFav = new favoritosDTO(null, userLogado.getId(), obra.getId());
+                                FavoritosListSingleton.getInstance().adicionarFav(newFav);
+                                holder.imgFavorite.setBackgroundResource(R.drawable.ic_save_foreground);
+                            } else {
+                                holder.imgFavorite.setBackgroundResource(R.drawable.ic_unsave_foreground);
+                            }
+                        }
+                    });
+                    task.execute();
                 }
             }
         });

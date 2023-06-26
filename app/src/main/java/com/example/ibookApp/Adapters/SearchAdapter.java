@@ -11,9 +11,15 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.ibookApp.APIs.AuthApiClient;
+import com.example.ibookApp.APIs.DesfavoritarApi;
+import com.example.ibookApp.APIs.FavoritarApi;
+import com.example.ibookApp.DTOs.UsuarioDTO;
 import com.example.ibookApp.DTOs.favoritosDTO;
 import com.example.ibookApp.DTOs.obrasDTO;
 import com.example.ibookApp.R;
+import com.example.ibookApp.functions.FavoritosListSingleton;
+import com.example.ibookApp.functions.UserSingleton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,21 +45,22 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // Inflar o layout do item do RecyclerView
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_contact_item, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        // Atualizar as visualizações do item do RecyclerView com os dados apropriados
         obrasDTO item = filteredItemList.get(position);
         if (favoritosList != null && !favoritosList.isEmpty()) {
             for (favoritosDTO objeto : favoritosList) {
-                if (item.getId().equals(objeto.getObid())) {
+                if (objeto.getObid().equals(item.getId())) {
                     holder.imgFavorite.setSelected(true);
                     holder.imgFavorite.setBackgroundResource(R.drawable.ic_save_foreground);
                     break;
+                }
+                else{
+                    holder.imgFavorite.setBackgroundResource(R.drawable.ic_unsave_foreground);
                 }
             }
         }
@@ -70,16 +77,51 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                 }
             }
         });
-
+        UsuarioDTO userLogado = UserSingleton.getInstance().getUser();
         holder.imgFavorite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (holder.imgFavorite.isSelected()) {
-                    holder.imgFavorite.setSelected(false);
-                    holder.imgFavorite.setBackgroundResource(R.drawable.ic_unsave_foreground);
+                obrasDTO obra = filteredItemList.get(holder.getAdapterPosition());
+                boolean salvo = false;
+                if (favoritosList != null && !favoritosList.isEmpty()) {
+                    for (favoritosDTO objeto : favoritosList) {
+                        if (objeto.getObid().equals(obra.getId())) {
+                            salvo = true;
+                            break;
+                        }
+                        else{
+                            salvo = false;
+                        }
+                    }
+                }
+
+                if (salvo) {
+                    DesfavoritarApi.DesavoritarAsyncTask task = new DesfavoritarApi.DesavoritarAsyncTask(userLogado.getId(), obra.getId(), new DesfavoritarApi.DesfavoritarListener() {
+                        @Override
+                        public void onDeleteFavReceived(boolean success) {
+                            if (success) {
+                                FavoritosListSingleton.getInstance().removerFav(userLogado.getId(), obra.getId());
+                                holder.imgFavorite.setBackgroundResource(R.drawable.ic_unsave_foreground);
+                            } else {
+                                holder.imgFavorite.setBackgroundResource(R.drawable.ic_save_foreground);
+                            }
+                        }
+                    });
+                    task.execute();
                 } else {
-                    holder.imgFavorite.setSelected(true);
-                    holder.imgFavorite.setBackgroundResource(R.drawable.ic_save_foreground);
+                    FavoritarApi.FavoritarAsyncTask task = new FavoritarApi.FavoritarAsyncTask(userLogado.getId(), obra.getId(), new FavoritarApi.FavoritarListener() {
+                        @Override
+                        public void onInsertFavReceived(boolean success) {
+                            if (success) {
+                                favoritosDTO newFav = new favoritosDTO(null, userLogado.getId(), obra.getId());
+                                FavoritosListSingleton.getInstance().adicionarFav(newFav);
+                                holder.imgFavorite.setBackgroundResource(R.drawable.ic_save_foreground);
+                            } else {
+                                holder.imgFavorite.setBackgroundResource(R.drawable.ic_unsave_foreground);
+                            }
+                        }
+                    });
+                    task.execute();
                 }
             }
         });

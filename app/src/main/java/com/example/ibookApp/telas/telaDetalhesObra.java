@@ -16,6 +16,8 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.ibookApp.APIs.AuthApiClient;
+import com.example.ibookApp.APIs.DesfavoritarApi;
+import com.example.ibookApp.APIs.FavoritarApi;
 import com.example.ibookApp.APIs.InsertComentariosApi;
 import com.example.ibookApp.APIs.comentariosPorLivroApi;
 import com.example.ibookApp.Adapters.ComentarioAdapter;
@@ -23,8 +25,10 @@ import com.example.ibookApp.Adapters.ObraAdapter;
 import com.example.ibookApp.Adapters.SearchAdapter;
 import com.example.ibookApp.DTOs.ComentarioDTO;
 import com.example.ibookApp.DTOs.UsuarioDTO;
+import com.example.ibookApp.DTOs.favoritosDTO;
 import com.example.ibookApp.DTOs.obrasDTO;
 import com.example.ibookApp.R;
+import com.example.ibookApp.functions.FavoritosListSingleton;
 import com.example.ibookApp.functions.UserSingleton;
 import com.example.ibookApp.functions.Utils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -49,6 +53,7 @@ public class telaDetalhesObra extends AppCompatActivity {
     private RecyclerView rviComents;
     private FloatingActionButton flaBtn;
     ArrayList<ComentarioDTO> comentariosList = new ArrayList<>();
+    ArrayList<favoritosDTO> favLists = FavoritosListSingleton.getInstance().getFavList();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,10 +89,7 @@ public class telaDetalhesObra extends AppCompatActivity {
         tvSinopse = findViewById(R.id.txtSinopseDetalheObra);
         imgObra = findViewById(R.id.imgDetalheObra);
         rviComents = findViewById(R.id.rviComents);
-
-
         loadData();
-
         carregarComentarios();
 
         flaBtn.setOnClickListener(new View.OnClickListener() {
@@ -129,15 +131,63 @@ public class telaDetalhesObra extends AppCompatActivity {
         btnFavorito.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (btnFavorito.isSelected()) {
-                    btnFavorito.setSelected(false);
-                    btnFavorito.setBackgroundResource(R.drawable.ic_unsave_foreground);
+                boolean salvo = false;
+                if (favLists != null && !favLists.isEmpty()) {
+                    for (favoritosDTO objeto : favLists) {
+                        if (objeto.getObid().equals(obid)) {
+                            salvo = true;
+                            break;
+                        }
+                        else{
+                            salvo = false;
+                        }
+                    }
+                }
+
+                if (salvo) {
+                    DesfavoritarApi.DesavoritarAsyncTask task = new DesfavoritarApi.DesavoritarAsyncTask(userLogado.getId(), obid, new DesfavoritarApi.DesfavoritarListener() {
+                        @Override
+                        public void onDeleteFavReceived(boolean success) {
+                            if (success) {
+                                FavoritosListSingleton.getInstance().removerFav(userLogado.getId(), obid);
+                                btnFavorito.setBackgroundResource(R.drawable.ic_unsave_foreground);
+                            } else {
+                                btnFavorito.setBackgroundResource(R.drawable.ic_save_foreground);
+                            }
+                        }
+                    });
+                    task.execute();
                 } else {
-                    btnFavorito.setSelected(true);
-                    btnFavorito.setBackgroundResource(R.drawable.ic_save_foreground);
+                    FavoritarApi.FavoritarAsyncTask task = new FavoritarApi.FavoritarAsyncTask(userLogado.getId(), obid, new FavoritarApi.FavoritarListener() {
+                        @Override
+                        public void onInsertFavReceived(boolean success) {
+                            if (success) {
+                                favoritosDTO newFav = new favoritosDTO(null, userLogado.getId(), obid);
+                                FavoritosListSingleton.getInstance().adicionarFav(newFav);
+                                btnFavorito.setBackgroundResource(R.drawable.ic_save_foreground);
+                            } else {
+                                btnFavorito.setBackgroundResource(R.drawable.ic_unsave_foreground);
+                            }
+                        }
+                    });
+                    task.execute();
                 }
             }
         });
+
+        if (favLists != null && !favLists.isEmpty()) {
+            for (favoritosDTO objeto : favLists) {
+                if (objeto.getObid().equals(obid)) {
+                    btnFavorito.setSelected(true);
+                    btnFavorito.setBackgroundResource(R.drawable.ic_save_foreground);
+                    break;
+                }
+                else{
+                    btnFavorito.setSelected(false);
+                    btnFavorito.setBackgroundResource(R.drawable.ic_unsave_foreground);
+                }
+            }
+        }
     }
 
     public void comentar(){
@@ -200,18 +250,18 @@ public class telaDetalhesObra extends AppCompatActivity {
             tvAutor.setText(author);
         }
 
-        if (avarageRatingString != null && avarageRatingString != ""){
+        if (avarageRatingString != null && !avarageRatingString.equals("null") && !avarageRatingString.isEmpty()) {
             avarageRating = Float.parseFloat(avarageRatingString);
-            if (avarageRating * 2 > 9.9){
+            if (avarageRating * 2 > 9.9) {
                 int rate = 10;
                 tvRate.setText(String.valueOf(rate));
-            }
-            else{
+            } else {
                 tvRate.setText(String.valueOf(avarageRating * 2));
             }
             ratingBar.setRating(avarageRating);
         }
         else{
+            tvRate.setText(String.valueOf(5));
             ratingBar.setRating(2.5f);
         }
 

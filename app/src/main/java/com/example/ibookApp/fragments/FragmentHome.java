@@ -111,7 +111,7 @@ public class FragmentHome extends Fragment {
             public void onfavoritosPorUsuarioReceived(List<favoritosDTO> favoritosPorUsuario) {
                 FavoritosListSingleton favoritosListSingleton = FavoritosListSingleton.getInstance();
                 for (favoritosDTO fav : favoritosPorUsuario) {
-                    favoritosListSingleton.adicionarObra(fav);
+                    favoritosListSingleton.adicionarFav(fav);
                 }
                 favLists = favoritosListSingleton.getInstance().getFavList();
                 loadData();
