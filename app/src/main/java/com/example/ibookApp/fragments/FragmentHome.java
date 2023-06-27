@@ -19,6 +19,7 @@ import android.widget.ImageView;
 
 import com.example.ibookApp.APIs.favoritosPorUsuario;
 import com.example.ibookApp.APIs.ibookApi;
+import com.example.ibookApp.APIs.ibookMaisComentadasApi;
 import com.example.ibookApp.Adapters.ObraMaisComentadasAdapter;
 import com.example.ibookApp.Adapters.SearchAdapter;
 import com.example.ibookApp.DTOs.UsuarioDTO;
@@ -28,6 +29,7 @@ import com.example.ibookApp.DTOs.obrasDTO;
 import com.example.ibookApp.R;
 import com.example.ibookApp.functions.FavoritosListSingleton;
 import com.example.ibookApp.functions.ObrasListSingleton;
+import com.example.ibookApp.functions.ObrasMaisComentadasListSingleton;
 import com.example.ibookApp.functions.UserSingleton;
 import com.example.ibookApp.functions.Utils;
 import com.example.ibookApp.telas.telaDetalhesObra;
@@ -88,7 +90,7 @@ public class FragmentHome extends Fragment {
     private ArrayList<obrasDTO> filteredObrasList;
     private SearchAdapter searchAdapter;
     ArrayList<obrasDTO> obrasList = ObrasListSingleton.getInstance().getObrasList();
-    ArrayList<obrasDTO> obrasMaisComentadasList = new ArrayList<>();
+    ArrayList<obrasDTO> obrasMaisComentadasList = ObrasMaisComentadasListSingleton.getInstance().getObrasList();
     UsuarioDTO userLogado = UserSingleton.getInstance().getUser();
     ArrayList<obrasDTO> obrasFeedList = new ArrayList<>();
     ArrayList<favoritosDTO> favLists = FavoritosListSingleton.getInstance().getFavList();
@@ -118,7 +120,7 @@ public class FragmentHome extends Fragment {
                 adapterContacts.setOnItemClickListener(new ObraAdapter.OnItemClickListener() {
                     @Override
                     public void onItemClick(int position) {
-                        obrasDTO obra = obrasFeedList.get(position);
+                        obrasDTO obra = obrasMaisComentadasList.get(position);
                         Intent intent = new Intent(getContext(), telaDetalhesObra.class);
 
                         intent.putExtra("obid", obra.getId());
@@ -208,6 +210,18 @@ public class FragmentHome extends Fragment {
                     });
                 }
 
+                if (obrasMaisComentadasList.size() == 0){
+                    ibookMaisComentadasApi.getBookList(new ibookMaisComentadasApi.ibookMaisListListener() {
+                        @Override
+                        public void onBookListReceived(List<obrasDTO> bookList) {
+                            ObrasMaisComentadasListSingleton obrasMaisComentadasListSingleton = ObrasMaisComentadasListSingleton.getInstance();
+                            for (obrasDTO obra : bookList) {
+                                obrasMaisComentadasListSingleton.adicionarObra(obra);
+                            }
+                        }
+                    });
+                }
+
                 if (favLists.size() == 0){
 
                 }
@@ -281,11 +295,9 @@ public class FragmentHome extends Fragment {
             obrasFeedList.add(obra);
         }
 
-        obrasMaisComentadasList = new ArrayList<>();
-        //List<obrasDTO> obrasMaisComentadas = obrasDAO.carregarObrasMaisComentadas();
-        int limiteMaisComentado = Math.min(obrasList.size(), 5);
+        int limiteMaisComentado = Math.min(obrasMaisComentadasList.size(), 5);
         for (int i = 0; i < limiteMaisComentado; i++) {
-            obrasDTO obraMaisComentadas = obrasList.get(i);
+            obrasDTO obraMaisComentadas = obrasMaisComentadasList.get(i);
             if (obraMaisComentadas.getType() == "MANGA"){
                 String novoTitulo = obraMaisComentadas.getTitle().replace("-", " ");
                 obraMaisComentadas.setTitle(novoTitulo);
@@ -294,7 +306,6 @@ public class FragmentHome extends Fragment {
                 String novoAuthor = obraMaisComentadas.getAuthor().substring(0, obraMaisComentadas.getAuthor().length() - 1).trim();
                 obraMaisComentadas.setAuthor(novoAuthor);
             }
-            obrasMaisComentadasList.add(obraMaisComentadas);
         }
 
         adapterContacts = new ObraMaisComentadasAdapter(obrasMaisComentadasList);

@@ -6,15 +6,11 @@ import static com.example.ibookApp.functions.Utils.bytesToString;
 import android.os.AsyncTask;
 
 import com.example.ibookApp.DTOs.UsuarioDTO;
-import com.example.ibookApp.DTOs.obrasDTO;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import com.example.ibookApp.functions.Constants;
+
 import com.example.ibookApp.functions.Utils;
 
 import okhttp3.OkHttpClient;
@@ -28,8 +24,6 @@ import okhttp3.FormBody;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;

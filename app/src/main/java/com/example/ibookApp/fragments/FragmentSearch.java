@@ -31,7 +31,6 @@ import com.example.ibookApp.telas.telaDetalhesObra;
 import com.example.ibookApp.telas.telalogin;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 /**

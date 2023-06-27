@@ -9,9 +9,6 @@ import com.example.ibookApp.DTOs.favoritosDTO;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.sql.Date;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 

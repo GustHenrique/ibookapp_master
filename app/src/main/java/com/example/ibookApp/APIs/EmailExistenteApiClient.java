@@ -1,30 +1,16 @@
 package com.example.ibookApp.APIs;
 
 import static com.example.ibookApp.functions.Constants.BASE_URL_API;
-import static com.example.ibookApp.functions.Utils.bytesToString;
 
 import android.os.AsyncTask;
 
 import com.example.ibookApp.DTOs.UsuarioDTO;
-import com.example.ibookApp.functions.Utils;
 
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-import javax.crypto.SecretKey;
-
-import okhttp3.FormBody;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 

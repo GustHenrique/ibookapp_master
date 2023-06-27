@@ -12,11 +12,6 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +24,10 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+
 import com.amazonaws.HttpMethod;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.regions.Region;
@@ -38,13 +37,11 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.example.ibookApp.APIs.InsertObrasApi;
-import com.example.ibookApp.APIs.InsertUsuarioApi;
 import com.example.ibookApp.APIs.ibookApi;
 import com.example.ibookApp.DTOs.obrasDTO;
 import com.example.ibookApp.R;
 import com.example.ibookApp.functions.ObrasListSingleton;
 import com.example.ibookApp.functions.Utils;
-import com.example.ibookApp.telas.telacadastro;
 import com.example.ibookApp.telas.telalogin;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;

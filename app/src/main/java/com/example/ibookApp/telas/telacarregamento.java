@@ -8,15 +8,13 @@ import android.os.Handler;
 import android.view.View;
 import android.widget.ProgressBar;
 
-import com.example.ibookApp.APIs.favoritosPorUsuario;
 import com.example.ibookApp.APIs.ibookApi;
-import com.example.ibookApp.DTOs.favoritosDTO;
+import com.example.ibookApp.APIs.ibookMaisComentadasApi;
 import com.example.ibookApp.DTOs.obrasDTO;
 import com.example.ibookApp.R;
-import com.example.ibookApp.functions.FavoritosListSingleton;
 import com.example.ibookApp.functions.ObrasListSingleton;
+import com.example.ibookApp.functions.ObrasMaisComentadasListSingleton;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class telacarregamento extends AppCompatActivity {
@@ -27,7 +25,7 @@ public class telacarregamento extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.telacarregamento);
 
-        mLoadingSpinner = (ProgressBar) findViewById(R.id.loading_spinner);
+        mLoadingSpinner = (ProgressBar) findViewById(R.id.loadingSpinner);
         mLoadingSpinner.setVisibility(View.VISIBLE);
         ibookApi.getBookList(new ibookApi.BookListListener() {
             @Override
@@ -35,6 +33,16 @@ public class telacarregamento extends AppCompatActivity {
                 ObrasListSingleton obrasSingleton = ObrasListSingleton.getInstance();
                 for (obrasDTO obra : bookList) {
                     obrasSingleton.adicionarObra(obra);
+                }
+            }
+        });
+
+        ibookMaisComentadasApi.getBookList(new ibookMaisComentadasApi.ibookMaisListListener() {
+            @Override
+            public void onBookListReceived(List<obrasDTO> bookList) {
+                ObrasMaisComentadasListSingleton obrasMaisComentadasListSingleton = ObrasMaisComentadasListSingleton.getInstance();
+                for (obrasDTO obra : bookList) {
+                    obrasMaisComentadasListSingleton.adicionarObra(obra);
                 }
             }
         });

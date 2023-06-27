@@ -1,6 +1,5 @@
 package com.example.ibookApp.Adapters;
 
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +10,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.ibookApp.APIs.AuthApiClient;
 import com.example.ibookApp.APIs.DesfavoritarApi;
 import com.example.ibookApp.APIs.FavoritarApi;
 import com.example.ibookApp.DTOs.UsuarioDTO;

@@ -36,7 +36,6 @@
         android:textSize="@dimen/_16sdp" />
 
 
-
     <Button
         android:id="@+id/favoritebook"
         android:layout_width="35dp"

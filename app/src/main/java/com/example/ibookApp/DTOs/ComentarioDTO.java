@@ -8,6 +8,8 @@ public class ComentarioDTO {
     private String usuid;
     private String obid;
 
+    private Date dataComentario;
+
     public Date getDataComentario() {
         return dataComentario;
     }
@@ -15,8 +17,6 @@ public class ComentarioDTO {
     public void setDataComentario(Date dataComentario) {
         this.dataComentario = dataComentario;
     }
-
-    private Date dataComentario;
 
     public ComentarioDTO(String cobid, String cobcomentario, String usuid, String obid, Date dataComentario) {
         this.cobid = cobid;
