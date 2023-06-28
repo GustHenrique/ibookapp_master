@@ -18,6 +18,11 @@ import com.example.ibookApp.DTOs.UsuarioDTO;
 import com.example.ibookApp.R;
 import com.example.ibookApp.functions.UserSingleton;
 import com.example.ibookApp.functions.Utils;
+import com.example.ibookApp.telas.EditarDados;
+import com.example.ibookApp.telas.LivrosCadastrados;
+import com.example.ibookApp.telas.LivrosFavoritos;
+import com.example.ibookApp.telas.MeusComentarios;
+import com.example.ibookApp.telas.telacadastro;
 import com.example.ibookApp.telas.telalogin;
 
 /**
@@ -63,7 +68,7 @@ public class FragmentProfile extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
-    Button btnLogout;
+    Button btnLogout, btnEditarDados, btnLivrosCadastrados, btnLivrosFavoritos, btnMeusComentarios;
     ImageView imgProfile;
     TextView txtNome;
     private Uri imageUri;
@@ -73,12 +78,15 @@ public class FragmentProfile extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
         btnLogout = (Button)rootView.findViewById(R.id.btnLogoutProfile);
+        btnEditarDados = (Button)rootView.findViewById(R.id.btneditdadosconta);
+        btnLivrosCadastrados = (Button)rootView.findViewById(R.id.btnLivrosCadastrados);
+        btnLivrosFavoritos = (Button)rootView.findViewById(R.id.btnLivrosFavoritos);
+        btnMeusComentarios = (Button)rootView.findViewById(R.id.btnMeusComentarios);
         txtNome = (TextView) rootView.findViewById(R.id.txtNomeUsuarioProfile);
         imgProfile = rootView.findViewById(R.id.imgProfile);
         UsuarioDTO userLogado = UserSingleton.getInstance().getUser();
         txtNome.setText("Olá " + userLogado.getNome() + "!");
         imageUri = Uri.parse(userLogado.getImagem());
-        String teste = imageUri.toString();
         if (!imageUri.equals(null) && !imageUri.toString().isEmpty()){
             Glide.with(getContext())
                     .load(imageUri)
@@ -87,6 +95,38 @@ public class FragmentProfile extends Fragment {
             imgProfile.setImageDrawable(null);
             imgProfile.setImageResource(R.drawable.ic_baseline_person_24);
         }
+
+        btnEditarDados.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent acessar = new Intent(getActivity(), EditarDados.class);
+                startActivity(acessar);
+            }
+        });
+
+        btnLivrosCadastrados.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent naoTemCadastro = new Intent(getContext(), LivrosCadastrados.class);
+                startActivity(naoTemCadastro);
+            }
+        });
+
+        btnLivrosFavoritos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent naoTemCadastro = new Intent(getContext(), LivrosFavoritos.class);
+                startActivity(naoTemCadastro);
+            }
+        });
+
+        btnMeusComentarios.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent naoTemCadastro = new Intent(getContext(), MeusComentarios.class);
+                startActivity(naoTemCadastro);
+            }
+        });
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

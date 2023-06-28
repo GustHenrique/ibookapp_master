@@ -17,9 +17,9 @@ public class obrasDTO {
     private String avarageRating;
     private String status;
     private String categorias;
+    private String usuid;
 
-
-    public obrasDTO(String id, String title, String subtitle, String synopsis, String author, String editora, String dataPublicacao, String dataFinalizacao, String isbn, String paginas, String image, String traducao, String type, String avarageRating, String status, String categorias) {
+    public obrasDTO(String id, String title, String subtitle, String synopsis, String author, String editora, String dataPublicacao, String dataFinalizacao, String isbn, String paginas, String image, String traducao, String type, String avarageRating, String status, String categorias,String usuid) {
         this.id = id;
         this.title = title;
         this.subtitle = subtitle;
@@ -36,10 +36,16 @@ public class obrasDTO {
         this.avarageRating = avarageRating;
         this.status = status;
         this.categorias = categorias;
+        this.usuid = usuid;
     }
 
+    public String getUsuid() {
+        return usuid;
+    }
 
-
+    public void setUsuid(String usuid) {
+        this.usuid = usuid;
+    }
     public String getId() {
         return id;
     }

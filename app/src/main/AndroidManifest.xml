@@ -16,6 +16,18 @@
         android:theme="@style/AppTheme.NoActionBar"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".telas.MeusComentarios"
+            android:exported="false" />
+        <activity
+            android:name=".telas.LivrosCadastrados"
+            android:exported="false" />
+        <activity
+            android:name=".telas.LivrosFavoritos"
+            android:exported="false" />
+        <activity
+            android:name=".telas.EditarDados"
+            android:exported="false" />
+        <activity
             android:name=".telas.telaDetalhesObra"
             android:exported="false" />
         <activity

@@ -4,7 +4,7 @@ import static com.example.ibookApp.functions.Constants.BASE_URL_API;
 
 import android.os.AsyncTask;
 
-import com.example.ibookApp.DTOs.AvaliacaoDTO;
+import com.example.ibookApp.DTOs.UsuarioDTO;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,43 +17,55 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
-public class AdicionarAvaliarObrasApi {
+public class AtualizarUsuarioApi {
     private static final String BASE_URL = BASE_URL_API;
 
-    public interface AdicionarAvaliarObrasAListener {
+    public interface AtualizarUsuarioObrasAListener {
         void onInsertObrasReceived();
     }
 
+    public static class AtualizarUsuarioObrasAsyncTask extends AsyncTask<Void, Void, Void> {
+        private UsuarioDTO usuarioDTO;
+        private AtualizarUsuarioApi.AtualizarUsuarioObrasAListener listener;
 
-    public static class AdicionarAvaliarObrasAsyncTask extends AsyncTask<Void, Void, Void> {
-        private String usuid, obid, avarageRating;
-        private AdicionarAvaliarObrasApi.AdicionarAvaliarObrasAListener listener;
-
-        public AdicionarAvaliarObrasAsyncTask(String usuid, String obid, String avarageRating, AdicionarAvaliarObrasApi.AdicionarAvaliarObrasAListener listener) {
-            this.obid = obid;
-            this.usuid = usuid;
-            this.avarageRating = avarageRating;
+        public AtualizarUsuarioObrasAsyncTask(UsuarioDTO usuario, AtualizarUsuarioApi.AtualizarUsuarioObrasAListener listener) {
+            this.usuarioDTO = usuario;
             this.listener = listener;
         }
 
         @Override
         protected Void doInBackground(Void... voids) {
             OkHttpClient client = new OkHttpClient();
-            HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + "Avaliacao/AdicionarAvaliacao").newBuilder();
+            HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + "Usuario/AtualizarUsuario").newBuilder();
 
             JSONObject jsonBody = new JSONObject();
             try {
-                jsonBody.put("usuid", usuid);
+                jsonBody.put("id", usuarioDTO.getId());
             } catch (JSONException e) {
                 throw new RuntimeException(e);
             }
             try {
-                jsonBody.put("obid", obid);
+                jsonBody.put("nome", usuarioDTO.getNome());
             } catch (JSONException e) {
                 throw new RuntimeException(e);
             }
             try {
-                jsonBody.put("avarageRating", avarageRating);
+                jsonBody.put("email", usuarioDTO.getEmail());
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
+            try {
+                jsonBody.put("senha", usuarioDTO.getSenha());
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
+            try {
+                jsonBody.put("imagem", usuarioDTO.getImagem());
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
+            try {
+                jsonBody.put("administrador", usuarioDTO.getAdministrador());
             } catch (JSONException e) {
                 throw new RuntimeException(e);
             }
@@ -63,7 +75,6 @@ public class AdicionarAvaliarObrasApi {
                     jsonBody.toString()
             );
 
-
             try {
                 Request request = new Request.Builder()
                         .url(urlBuilder.build())
@@ -72,7 +83,6 @@ public class AdicionarAvaliarObrasApi {
 
                 Response response = client.newCall(request).execute();
                 ResponseBody responseBody = response.body();
-
 
             } catch (Exception e) {
                 e.printStackTrace();

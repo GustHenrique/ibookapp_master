@@ -75,11 +75,11 @@ public class ComentarioAdapter extends RecyclerView.Adapter<ComentarioAdapter.Co
             }else if (diferencaEmDias == 1){
                 txtDataComentario.setText("ontem");
             }else if ((diferencaEmDias > 1 && diferencaEmDias < 7) || (diferencaEmDias > 7 && diferencaEmDias < 30)){
-                txtDataComentario.setText("Fazem " + diferencaEmDias + " dias");
+                txtDataComentario.setText("Há " + diferencaEmDias + " dias");
             }else if (diferencaEmDias == 7){
-                txtDataComentario.setText("Faz uma semana");
+                txtDataComentario.setText("Há semana");
             }else if (diferencaEmDias == 30){
-                txtDataComentario.setText("Faz um mês");
+                txtDataComentario.setText("Há mês");
             }
             else{
                 txtDataComentario.setText(comentario.getDataComentario().toString());

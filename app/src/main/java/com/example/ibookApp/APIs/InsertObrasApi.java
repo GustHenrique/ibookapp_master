@@ -4,6 +4,9 @@ import static com.example.ibookApp.functions.Constants.BASE_URL_API;
 
 import android.os.AsyncTask;
 
+import com.example.ibookApp.DTOs.UsuarioDTO;
+import com.example.ibookApp.functions.UserSingleton;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -71,7 +74,7 @@ public class InsertObrasApi {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
+                UsuarioDTO userLogado = UserSingleton.getInstance().getUser();
 
                 Integer pags = null;
                 Double rate = null;
@@ -97,6 +100,7 @@ public class InsertObrasApi {
                 jsonBody.put("avarageRating", rate);
                 jsonBody.put("statusObra", statusObra);
                 jsonBody.put("categorias", categorias);
+                jsonBody.put("usuid", userLogado.getId());
 
                 RequestBody requestBody = RequestBody.create(
                         okhttp3.MediaType.parse("application/json"),

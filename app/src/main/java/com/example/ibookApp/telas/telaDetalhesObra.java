@@ -64,7 +64,7 @@ public class telaDetalhesObra extends AppCompatActivity {
     private RecyclerView rviComents;
     private FloatingActionButton flaBtn;
     ArrayList<ComentarioDTO> comentariosList = new ArrayList<>();
-    obrasDTO obra = new obrasDTO(null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null);
+    obrasDTO obra = new obrasDTO(null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null, null);
     ArrayList<favoritosDTO> favLists = FavoritosListSingleton.getInstance().getFavList();
 
     @Override
@@ -102,7 +102,7 @@ public class telaDetalhesObra extends AppCompatActivity {
         imgObra = findViewById(R.id.imgDetalheObra);
         rviComents = findViewById(R.id.rviComents);
         btnAvaliarObra = findViewById(R.id.btnAvaliarObra);
-        obra = new obrasDTO(obid,title,subtitle,synopsis,author,editora,dataPublicacao,dataFinalizacao,isbn,String.valueOf(paginas),image,null,tipo,avarageRatingString,statusObra,categorias);
+        obra = new obrasDTO(obid,title,subtitle,synopsis,author,editora,dataPublicacao,dataFinalizacao,isbn,String.valueOf(paginas),image,null,tipo,avarageRatingString,statusObra,categorias, usuid);
         ObrasListSingleton obrasListSingleton = ObrasListSingleton.getInstance();
         ratingBar.setIsIndicator(true);
         loadData(1);
@@ -114,14 +114,12 @@ public class telaDetalhesObra extends AppCompatActivity {
                 comentar();
             }
         });
-
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 logout();
             }
         });
-
         ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {

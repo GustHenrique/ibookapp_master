@@ -51,10 +51,10 @@ public class ibookApi {
                 if (responseBody != null) {
                     String jsonString = responseBody.string();
                     JSONArray jsonArray = new JSONArray(jsonString);
-                    obrasDTO obrasDTO = new obrasDTO(null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null);
+                    obrasDTO obrasDTO = new obrasDTO(null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null);
                     if (jsonArray != null){
                         for (int i = 0; i < jsonArray.length(); i++) {
-                            obrasDTO = new obrasDTO(null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null);
+                            obrasDTO = new obrasDTO(null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null);
                             JSONObject jsonObject = jsonArray.getJSONObject(i);
                             obrasDTO.setId(jsonObject.getString("id"));
                             obrasDTO.setTitle(jsonObject.getString("title"));
@@ -72,6 +72,7 @@ public class ibookApi {
                             obrasDTO.setAvarageRating(jsonObject.getString("avarageRating"));
                             obrasDTO.setStatus(jsonObject.getString("statusObra"));
                             obrasDTO.setCategorias(jsonObject.getString("categorias"));
+                            obrasDTO.setUsuid(jsonObject.getString("usuid"));
                             obrasList.add(obrasDTO);
                         }
                     }

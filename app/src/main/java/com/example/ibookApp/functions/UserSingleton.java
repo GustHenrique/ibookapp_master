@@ -1,6 +1,7 @@
 package com.example.ibookApp.functions;
 
 import com.example.ibookApp.DTOs.UsuarioDTO;
+import com.example.ibookApp.DTOs.obrasDTO;
 
 public class UserSingleton {
     private static UserSingleton instance;
@@ -20,4 +21,5 @@ public class UserSingleton {
     public void setUser(UsuarioDTO user) {
         this.user = user;
     }
+
 }
