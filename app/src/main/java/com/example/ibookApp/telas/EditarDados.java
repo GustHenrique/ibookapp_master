@@ -259,6 +259,7 @@ public class EditarDados extends AppCompatActivity {
             if (finalPath == null || finalPath == ""){
                 finalPath = null;
             }
+            attUsuario.setImagem(finalPath);
             AtualizarUsuarioApi.AtualizarUsuarioObrasAsyncTask task = new AtualizarUsuarioApi.AtualizarUsuarioObrasAsyncTask(attUsuario, new AtualizarUsuarioApi.AtualizarUsuarioObrasAListener() {
                 @Override
                 public void onInsertObrasReceived() {
