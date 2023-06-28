@@ -77,7 +77,7 @@ public class FragmentProfile extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
-        btnLogout = (Button)rootView.findViewById(R.id.btnLogoutProfile);
+        btnLogout = (Button)rootView.findViewById(R.id.btnLogoutDetalhesObra);
         btnEditarDados = (Button)rootView.findViewById(R.id.btneditdadosconta);
         btnLivrosCadastrados = (Button)rootView.findViewById(R.id.btnLivrosCadastrados);
         btnLivrosFavoritos = (Button)rootView.findViewById(R.id.btnLivrosFavoritos);

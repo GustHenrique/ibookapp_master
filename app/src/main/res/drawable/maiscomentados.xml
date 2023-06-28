@@ -4,13 +4,20 @@
 
 
 
+
+
     <stroke
         android:width="1dp"
-        android:color="#2C2036" />
+        android:color="#00000000" />
 
 
 
-    <corners android:radius="30dp"/>
+
+
+    <corners android:radius="30dp"
+        android:color="#00000000" />
+
+
 
 
 
@@ -22,12 +29,18 @@
 
 
 
+
+
     </padding>
 
 
 
+
+
     <solid
-        android:color="#2C2036"/>
+        android:color="#00000000"/>
+
+
 
 
 

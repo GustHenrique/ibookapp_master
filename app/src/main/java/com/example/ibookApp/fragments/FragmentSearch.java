@@ -90,7 +90,7 @@ public class FragmentSearch extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_search, container, false);
         rviBookSearch = (RecyclerView)rootView.findViewById(R.id.rviBookSearch);
-        btnLogout = (Button)rootView.findViewById(R.id.btnLogoutSearch);
+        btnLogout = (Button)rootView.findViewById(R.id.btnLogoutDetalhesObra);
         rviBookSearch.setLayoutManager(new LinearLayoutManager(getContext()));
         filteredObrasList = new ArrayList<>(obrasList);
         searchEditText = (EditText) rootView.findViewById(R.id.edtSearchObra);

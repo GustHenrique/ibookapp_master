@@ -11,39 +11,60 @@
         android:id="@+id/linearSearch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center_horizontal|top"
         android:orientation="horizontal"
-        android:padding="@dimen/_7sdp"
-        android:gravity="center_horizontal">
-
-        <ImageView
-            android:id="@+id/logoiBookCadastro"
-            android:layout_width="31dp"
-            android:layout_height="30dp"
-            android:layout_gravity="center"
-            android:layout_marginRight="5dp"
-            android:layout_marginLeft="150dp"
-            android:scaleType="fitXY"
-            android:src="@mipmap/ibooklogo"
-            android:foregroundGravity="center_horizontal"/>
+        android:padding="@dimen/_7sdp">
 
         <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="iBook"
-            android:textSize="22.5dp"
-            android:textColor="@color/white"
-            android:layout_weight="1"
-            android:foregroundGravity="center_horizontal"/>
-
-        <Button
-            android:id="@+id/btnLogoutSearch"
             android:layout_width="30dp"
             android:layout_height="30dp"
+            android:layout_gravity="left|center_vertical"
+            android:layout_marginLeft="20dp"
+            android:background="@color/colorSecondary"/>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+
+
+            <ImageView
+                android:id="@+id/logoiBookCadastroDetalheObra"
+                android:layout_width="31dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:scaleType="fitXY"
+                android:src="@mipmap/ibooklogo" />
+
+
+
+            <TextView
+                android:id="@+id/textViewDetalheObra"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="iBook"
+                android:textColor="@color/white"
+                android:textSize="22.5dp" />
+
+
+
+        </LinearLayout>
+
+
+
+        <Button
+            android:id="@+id/btnLogoutDetalhesObra"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentEnd="true"
+            android:layout_gravity="right|center_vertical"
+            android:layout_marginRight="20dp"
             android:background="@drawable/ic_logut_foreground"
             android:textColor="@color/colorTextSecondary"
-            android:textColorHint="@color/white"
-            android:layout_gravity="left|center_vertical"/>
+            android:textColorHint="@color/white" />
     </LinearLayout>
 
     <View

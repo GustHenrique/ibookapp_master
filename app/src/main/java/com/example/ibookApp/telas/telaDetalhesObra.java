@@ -426,7 +426,7 @@ public class telaDetalhesObra extends AppCompatActivity {
                     double resultadoFinal = (percentual / 100) * escalaMaxima;
                     avarageRating = (float) resultadoFinal;
                     avarageRatingString = String.valueOf(avarageRating);
-                    if (avarageRatingString != null && !avarageRatingString.equals("null") && !avarageRatingString.isEmpty()) {
+                    if (avarageRatingString != null && !avarageRatingString.equals("null") && !avarageRatingString.isEmpty() && !avarageRatingString.equals("NaN")) {
                         avarageRating = Float.parseFloat(avarageRatingString);
                         if (avarageRating * 2 > 9.9) {
                             int rate = 10;
@@ -441,7 +441,7 @@ public class telaDetalhesObra extends AppCompatActivity {
             task.execute();
         }
         else{
-            if (avarageRatingString != null && !avarageRatingString.equals("null") && !avarageRatingString.isEmpty()) {
+            if (avarageRatingString != null && !avarageRatingString.equals("null") && !avarageRatingString.isEmpty() && !avarageRatingString.equals("NaN")) {
                 avarageRating = Float.parseFloat(avarageRatingString);
                 if (avarageRating * 2 > 9.9) {
                     int rate = 10;
@@ -477,8 +477,11 @@ public class telaDetalhesObra extends AppCompatActivity {
             ratingBar.setRating(2.5f);
         }
 
-        if(synopsis != null){
+        if(synopsis != null && !synopsis.equals("null") && !synopsis.isEmpty()){
             tvSinopse.setText(synopsis);
+        }
+        else{
+            tvSinopse.setText("Sem sinopse para a Obra.");
         }
     }
 

@@ -155,7 +155,7 @@ public class FragmentEdit extends Fragment {
         tvCadastroObraCategorias = (TextView)rootView.findViewById(R.id.txtCadastroObraCategorias);
         rbAvaliacao = (RatingBar)rootView.findViewById(R.id.rbCadastroObraAvaliacao);
         btnCadastrarObra = (Button)rootView.findViewById(R.id.btnCadastroObraCadastrar);
-        btnLogout = (Button)rootView.findViewById(R.id.btnLogoutEdit);
+        btnLogout = (Button)rootView.findViewById(R.id.btnLogoutDetalhesObra);
         tvCadastroObraCategorias.setKeyListener(null);
         selectedCategorias = new boolean[categoriaArray.length];
         tvTipo.setKeyListener(null);

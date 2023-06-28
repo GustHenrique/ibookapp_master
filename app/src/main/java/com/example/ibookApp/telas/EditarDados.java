@@ -78,7 +78,7 @@ public class EditarDados extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editar_dados);
-        btnLogout = findViewById(R.id.btnLogoutProfile);
+        btnLogout = findViewById(R.id.btnLogoutDetalhesObra);
         btnHome = findViewById(R.id.btnBackHome);
         txtNome = (TextView) findViewById(R.id.txtNomeUsuarioProfile);
         edtNome = findViewById(R.id.txtNomeCadastro);

@@ -8,46 +8,85 @@
     tools:context=".telas.telaDetalhesObra">
 
 
+
+
+
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center_horizontal|top"
         android:orientation="horizontal"
-        android:padding="@dimen/_7sdp"
-        android:gravity="top">
+        android:padding="@dimen/_7sdp">
+
+
+
+
+
+
 
         <Button
             android:id="@+id/btnBackHome"
             android:layout_width="30dp"
             android:layout_height="30dp"
+            android:layout_gravity="left|center_vertical"
+            android:layout_marginLeft="20dp"
             android:background="@drawable/ic_back_foreground"
             android:textColor="@color/colorTextSecondary"
-            android:textColorHint="@color/white"
-            android:layout_gravity="left|center_vertical"/>
+            android:textColorHint="@color/white" />
 
 
 
-        <ImageView
-            android:id="@+id/logoiBookCadastroDetalheObra"
-            android:layout_width="31dp"
-            android:layout_height="30dp"
-            android:layout_gravity="center"
-            android:layout_marginRight="5dp"
-            android:layout_marginLeft="150dp"
-            android:scaleType="fitXY"
-            android:src="@mipmap/ibooklogo"
-            android:foregroundGravity="center_horizontal"/>
 
 
 
-        <TextView
-            android:id="@+id/textViewDetalheObra"
-            android:layout_width="wrap_content"
+
+        <LinearLayout
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="iBook"
-            android:textSize="22.5dp"
-            android:textColor="@color/white"
-            android:layout_weight="1"
-            android:foregroundGravity="center_horizontal"/>
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+
+
+
+
+
+
+            <ImageView
+                android:id="@+id/logoiBookCadastroDetalheObra"
+                android:layout_width="31dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:scaleType="fitXY"
+                android:src="@mipmap/ibooklogo" />
+
+
+
+
+
+
+
+            <TextView
+                android:id="@+id/textViewDetalheObra"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="iBook"
+                android:textColor="@color/white"
+                android:textSize="22.5dp" />
+
+
+
+
+
+
+
+        </LinearLayout>
+
+
+
+
 
 
 
@@ -55,11 +94,17 @@
             android:id="@+id/btnLogoutDetalhesObra"
             android:layout_width="30dp"
             android:layout_height="30dp"
+            android:layout_alignParentEnd="true"
+            android:layout_gravity="right|center_vertical"
+            android:layout_marginRight="20dp"
             android:background="@drawable/ic_logut_foreground"
             android:textColor="@color/colorTextSecondary"
-            android:textColorHint="@color/white"
-            android:layout_gravity="left|center_vertical"/>
+            android:textColorHint="@color/white" />
     </LinearLayout>
+
+
+
+
 
 
 
@@ -71,6 +116,10 @@
         android:layout_marginTop="@dimen/_38sdp"
         android:background="@color/colorTextPrimary"
         tools:layout_editor_absoluteX="0dp" />
+
+
+
+
 
 
 
@@ -92,11 +141,19 @@
 
 
 
+
+
+
+
             <LinearLayout
                 android:id="@+id/ll1DetalheObra"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
+
+
+
+
 
 
 
@@ -114,12 +171,20 @@
 
 
 
+
+
+
+
                 <LinearLayout
                     android:id="@+id/ll2DetalheObra"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_14sdp"
                     android:orientation="vertical">
+
+
+
+
 
 
 
@@ -132,6 +197,10 @@
                         android:text="Nome da obra!"
                         android:textColor="@color/colorPrimary"
                         android:textSize="@dimen/_12sdp" />
+
+
+
+
 
 
 
@@ -149,6 +218,10 @@
 
 
 
+
+
+
+
             <LinearLayout
                 android:id="@+id/ll3DetalheObra"
                 android:layout_width="match_parent"
@@ -158,10 +231,18 @@
 
 
 
+
+
+
+
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
+
+
+
+
 
 
 
@@ -178,6 +259,10 @@
 
 
 
+
+
+
+
                     <RatingBar
                         android:id="@+id/rbCadastroObraAvaliacaoDetalheObra"
                         android:layout_width="wrap_content"
@@ -191,12 +276,24 @@
 
 
 
+
+
+
+
                 </LinearLayout>
+
+
+
+
 
                 <Space
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:layout_weight="1" />
+
+
+
+
 
                 <Button
                     android:id="@+id/favoritebookDetalheObra"
@@ -208,6 +305,10 @@
                     android:textColorHint="@color/white" />
             </LinearLayout>
 
+
+
+
+
             <TextView
                 android:id="@+id/lblSinopseDetalheObra"
                 android:layout_width="match_parent"
@@ -215,6 +316,10 @@
                 android:layout_marginBottom="0dp"
                 android:text="Sinopse"
                 android:textColor="@color/colorPrimary" />
+
+
+
+
 
             <TextView
                 android:id="@+id/txtSinopseDetalheObra"
@@ -228,12 +333,20 @@
 
 
 
+
+
+
+
             <RelativeLayout
                 android:id="@+id/ll4DetalheObra"
-                android:layout_width="370dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_marginTop="@dimen/_10sdp">
+
+
+
+
 
                 <TextView
                     android:id="@+id/lblComentariosDetalheObra"
@@ -247,6 +360,10 @@
                     android:textColor="@color/white"
                     android:textSize="@dimen/_12sdp" />
 
+
+
+
+
                 <TextView
                     android:id="@+id/lblEditDetalheObra"
                     style="@style/TextAppearance.AppCompat.Large"
@@ -259,6 +376,10 @@
                     android:padding="8dp"
                     android:textColor="@color/colorTextPrimary"
                     android:textSize="@dimen/_12sdp" />
+
+
+
+
 
                 <Button
                     android:id="@+id/btnAvaliarObra"
@@ -274,7 +395,15 @@
                     android:textColorHint="@color/white"
                     android:textSize="@dimen/_14sdp" />
 
+
+
+
+
             </RelativeLayout>
+
+
+
+
 
 
 
@@ -296,6 +425,10 @@
 
 
 
+
+
+
+
             <LinearLayout
                 android:id="@+id/secondLinearLayoutDetalheObra"
                 android:layout_below="@+id/firstLinearLayout"
@@ -308,6 +441,10 @@
 
 
 
+
+
+
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rviComents"
                     android:layout_width="match_parent"
@@ -317,6 +454,10 @@
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
+
+
+
+
 
 
 
@@ -333,6 +474,7 @@
         app:backgroundTint="@color/colorPrimary"
         app:pressedTranslationZ="@dimen/_10sdp"
         app:tint="@color/white" />
+
 
 
 

@@ -10,43 +10,54 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center_horizontal|top"
         android:orientation="horizontal"
-        android:padding="@dimen/_7sdp"
-        android:gravity="top">
+        android:padding="@dimen/_7sdp">
+
+
 
         <Button
             android:id="@+id/btnBackHome"
             android:layout_width="30dp"
             android:layout_height="30dp"
+            android:layout_gravity="left|center_vertical"
+            android:layout_marginLeft="20dp"
             android:background="@drawable/ic_back_foreground"
             android:textColor="@color/colorTextSecondary"
-            android:textColorHint="@color/white"
-            android:layout_gravity="left|center_vertical"/>
+            android:textColorHint="@color/white" />
 
 
 
-        <ImageView
-            android:id="@+id/logoiBookCadastroDetalheObra"
-            android:layout_width="31dp"
-            android:layout_height="30dp"
-            android:layout_gravity="center"
-            android:layout_marginRight="5dp"
-            android:layout_marginLeft="150dp"
-            android:scaleType="fitXY"
-            android:src="@mipmap/ibooklogo"
-            android:foregroundGravity="center_horizontal"/>
-
-
-
-        <TextView
-            android:id="@+id/textViewDetalheObra"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="iBook"
-            android:textSize="22.5dp"
-            android:textColor="@color/white"
-            android:layout_weight="1"
-            android:foregroundGravity="center_horizontal"/>
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+
+
+            <ImageView
+                android:id="@+id/logoiBookCadastroDetalheObra"
+                android:layout_width="31dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:scaleType="fitXY"
+                android:src="@mipmap/ibooklogo" />
+
+
+
+            <TextView
+                android:id="@+id/textViewDetalheObra"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="iBook"
+                android:textColor="@color/white"
+                android:textSize="22.5dp" />
+
+
+
+        </LinearLayout>
 
 
 
@@ -54,14 +65,13 @@
             android:id="@+id/btnLogoutDetalhesObra"
             android:layout_width="30dp"
             android:layout_height="30dp"
+            android:layout_alignParentEnd="true"
+            android:layout_gravity="right|center_vertical"
+            android:layout_marginRight="20dp"
             android:background="@drawable/ic_logut_foreground"
             android:textColor="@color/colorTextSecondary"
-            android:textColorHint="@color/white"
-            android:layout_gravity="left|center_vertical"/>
+            android:textColorHint="@color/white" />
     </LinearLayout>
-
-
-
 
     <View
         android:id="@+id/viewDetalheObra"
@@ -71,31 +81,78 @@
         android:background="@color/colorTextPrimary"
         tools:layout_editor_absoluteX="0dp" />
 
+    <TextView
+        android:id="@+id/lblAttPerfil"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_below="@+id/viewDetalheObra"
+        android:text="Livros Cadastrados"
+        android:textColor="@color/white"
+        android:padding="10dp"
+        android:textSize="30dp"/>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/viewDetalheObra"
-        android:padding="30dp"
+        android:layout_below="@+id/lblAttPerfil"
+        android:padding="10dp"
         android:layout_gravity="center">
 
-        <TextView
-            android:id="@+id/lblAttPerfil"
-            android:layout_width="wrap_content"
+        <EditText
+            android:id="@+id/txtSearchLivrosCadastrados"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:layout_weight="1"
-            android:text="Livros Cadastrados"
-            android:textColor="@color/white"
-            android:textSize="30dp" />
+            android:background="@drawable/background_search_field"
+            android:drawableEnd="@drawable/ic_baseline_search_24"
+            android:drawablePadding="@dimen/_5sdp"
+            android:hint="Pesquise uma Obra"
+            android:inputType="textFilter"
+            android:padding="10dp"
+            android:layout_marginBottom="10dp"
+            android:textColorHint="@color/white" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rviComents"
+            android:id="@+id/rviObrasCadastradas"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/lblAttPerfil"
+            android:layout_below="@+id/txtSearchLivrosCadastrados"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/row_contact_item" />
 
+        <TextView
+            android:id="@+id/txtSemLivro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txtSearchLivrosCadastrados"
+            android:text="Você Ainda não Tem um Livro Cadastrado!"
+            android:layout_centerInParent="true"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:visibility="gone"
+            android:textSize="@dimen/_14sdp"
+            android:textColor="@color/white"
+            />
+
+        <Button
+            android:id="@+id/btnCadastrarObraLivros"
+            android:layout_width="wrap_content"
+            android:layout_below="@+id/txtSemLivro"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:background="@drawable/background_button"
+            android:drawablePadding="@dimen/_5sdp"
+            android:hint="Cadastrar Meu Primeiro Livro!"
+            android:layout_centerInParent="true"
+            android:inputType="textLongMessage"
+            android:padding="@dimen/_5sdp"
+            android:textColor="@color/colorTextSecondary"
+            android:textColorHint="@color/white"
+            android:textSize="@dimen/_14sdp"
+            android:visibility="gone"
+            />
 
     </RelativeLayout>
 

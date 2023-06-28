@@ -57,7 +57,7 @@ public class DesfavoritarApi {
             try {
                 Request request = new Request.Builder()
                         .url(urlBuilder.build())
-                        .delete(requestBody)
+                        .post(requestBody)
                         .build();
 
                 Response response = client.newCall(request).execute();

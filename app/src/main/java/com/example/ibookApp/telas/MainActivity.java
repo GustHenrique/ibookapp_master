@@ -54,9 +54,5 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.replace(R.id.frame_layout, fragment);
         fragmentTransaction.commit();
     }
-/*    private void initNavigation(){
-        navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
-        navController = navHostFragment.getNavController();
-        NavigationUI.setupWithNavController(binding.bottomNavigationView, navController);
-    }*/
+
 }

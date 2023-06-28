@@ -99,7 +99,7 @@ public class FragmentHome extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_home, container, false);
-        btnLogout = (Button)rootView.findViewById(R.id.btnLogoutHome);
+        btnLogout = (Button)rootView.findViewById(R.id.btnLogoutDetalhesObra);
         rvibook = (RecyclerView)rootView.findViewById(R.id.rviBook);
         rvibookmaiscomentados = (RecyclerView)rootView.findViewById(R.id.recycler_view_horizontal);
         rvibook.setLayoutManager(new LinearLayoutManager(getContext()));

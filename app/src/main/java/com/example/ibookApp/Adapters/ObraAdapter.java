@@ -20,6 +20,7 @@ import com.example.ibookApp.functions.FavoritosListSingleton;
 import com.example.ibookApp.functions.UserSingleton;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -51,6 +52,7 @@ public class ObraAdapter extends RecyclerView.Adapter<ObraAdapter.ObraViewHolder
 
     public void onBindViewHolder(ObraViewHolder holder, int position) {
         obrasDTO obra = obrasList.get(holder.getAdapterPosition());
+        favoritosList =  FavoritosListSingleton.getInstance().getFavList();
         if (favoritosList != null && !favoritosList.isEmpty()) {
             for (favoritosDTO objeto : favoritosList) {
                 if (objeto.getObid().equals(obra.getId())) {
