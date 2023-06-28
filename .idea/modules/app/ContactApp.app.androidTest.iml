@@ -55,6 +55,8 @@
     <orderEntry type="library" scope="TEST" name="Gradle: com.amazonaws:aws-android-sdk-kms:2.16.4" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: com.amazonaws:aws-android-sdk-core:2.16.4" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: com.google.code.gson:gson:2.8.8" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: com.sun.mail:android-mail:1.6.6" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: com.sun.mail:android-activation:1.6.7" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: com.squareup.okio:okio:2.8.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.6.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1" level="project" />

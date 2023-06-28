@@ -8,6 +8,15 @@ import com.example.ibookApp.DTOs.UsuarioDTO;
 
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -18,7 +27,7 @@ public class EmailExistenteApiClient {
     private static final String BASE_URL = BASE_URL_API;
 
     public interface EmailExistenteListener {
-        void onEmailExistenteReceived(UsuarioDTO usuario);
+        void onEmailExistenteReceived(UsuarioDTO usuario) throws NoSuchAlgorithmException, InvalidKeySpecException, NoSuchPaddingException, UnsupportedEncodingException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException;
     }
 
     public static class EmailExistenteAsyncTask extends AsyncTask<Void, Void, UsuarioDTO> {
@@ -67,7 +76,23 @@ public class EmailExistenteApiClient {
         @Override
         protected void onPostExecute(UsuarioDTO usuario) {
             if (listener != null) {
-                listener.onEmailExistenteReceived(usuario);
+                try {
+                    listener.onEmailExistenteReceived(usuario);
+                } catch (NoSuchAlgorithmException e) {
+                    throw new RuntimeException(e);
+                } catch (InvalidKeySpecException e) {
+                    throw new RuntimeException(e);
+                } catch (NoSuchPaddingException e) {
+                    throw new RuntimeException(e);
+                } catch (UnsupportedEncodingException e) {
+                    throw new RuntimeException(e);
+                } catch (IllegalBlockSizeException e) {
+                    throw new RuntimeException(e);
+                } catch (BadPaddingException e) {
+                    throw new RuntimeException(e);
+                } catch (InvalidKeyException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
     }

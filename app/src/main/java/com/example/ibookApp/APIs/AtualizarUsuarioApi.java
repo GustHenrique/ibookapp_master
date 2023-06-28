@@ -9,6 +9,8 @@ import com.example.ibookApp.DTOs.UsuarioDTO;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import javax.mail.MessagingException;
+
 import okhttp3.FormBody;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
@@ -21,7 +23,7 @@ public class AtualizarUsuarioApi {
     private static final String BASE_URL = BASE_URL_API;
 
     public interface AtualizarUsuarioObrasAListener {
-        void onInsertObrasReceived();
+        void onInsertObrasReceived() throws MessagingException;
     }
 
     public static class AtualizarUsuarioObrasAsyncTask extends AsyncTask<Void, Void, Void> {
@@ -94,7 +96,11 @@ public class AtualizarUsuarioApi {
         @Override
         protected void onPostExecute(Void aVoid) {
             if (listener != null) {
-                listener.onInsertObrasReceived();
+                try {
+                    listener.onInsertObrasReceived();
+                } catch (MessagingException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
     }

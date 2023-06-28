@@ -50,34 +50,6 @@ public class Utils {
         return encodedString;
     }
 
-    public static void enviarEmail(String destinatario, String novaSenha) {
-        /*try {
-            Email email = new SimpleEmail();
-            email.setHostName("smtp.gmail.com");
-            email.setSmtpPort(587);
-            email.setAuthenticator(new DefaultAuthenticator("suporteibookoficial@gmail.com", "pid4ibook"));
-            email.setStartTLSEnabled(true);
-            email.setFrom("suporteibookoficial@gmail.com");
-            email.addTo(destinatario);
-            email.setSubject("Recuperação de senha iBook");
-            email.setMsg("Olá, <br> Sua nova senha de acesso ao App iBook é: " + novaSenha + ".");
-            email.send();
-        } catch (EmailException e) {
-            throw new RuntimeException(e);
-        }*/
-    }
-
-    public static String gerarSenha() {
-        Random random = new Random();
-        StringBuilder senha = new StringBuilder();
-
-        for (int i = 0; i < 8; i++) {
-            int index = random.nextInt(CHARACTERS.length());
-            senha.append(CHARACTERS.charAt(index));
-        }
-
-        return senha.toString();
-    }
     public static void logout(){
         UsuarioDTO usuario = null;
         UserSingleton.getInstance().setUser(usuario);
@@ -85,5 +57,9 @@ public class Utils {
     public static UsuarioDTO getUser(){
         return UserSingleton.getInstance().getUser();
     }
+
+
+
+
 
 }

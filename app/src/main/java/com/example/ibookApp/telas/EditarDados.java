@@ -126,10 +126,8 @@ public class EditarDados extends AppCompatActivity {
         btnHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentProfile fragmento = new FragmentProfile();
-                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                transaction.replace(android.R.id.content, fragmento);
-                transaction.commit();
+                Intent Acessar = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(Acessar);
             }
         });
         btnLogout.setOnClickListener(new View.OnClickListener() {
@@ -200,10 +198,8 @@ public class EditarDados extends AppCompatActivity {
                         @Override
                         public void onInsertObrasReceived() {
                             UserSingleton.getInstance().setUser(attUsuario);
-                            FragmentProfile fragmento = new FragmentProfile();
-                            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                            transaction.replace(android.R.id.content, fragmento);
-                            transaction.commit();
+                            Intent Acessar = new Intent(getApplicationContext(), MainActivity.class);
+                            startActivity(Acessar);
                         }
                     });
                     task.execute();
@@ -267,10 +263,8 @@ public class EditarDados extends AppCompatActivity {
                 }
             });
             task.execute();
-            FragmentProfile fragmento = new FragmentProfile();
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(android.R.id.content, fragmento);
-            transaction.commit();
+            Intent Acessar = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(Acessar);
         }
     }
 

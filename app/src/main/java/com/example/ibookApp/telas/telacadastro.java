@@ -32,7 +32,9 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.example.ibookApp.APIs.EmailExistenteApiClient;
 import com.example.ibookApp.APIs.InsertUsuarioApi;
+import com.example.ibookApp.DTOs.UsuarioDTO;
 import com.example.ibookApp.R;
 import com.example.ibookApp.functions.Utils;
 import com.theartofdev.edmodo.cropper.CropImage;
@@ -148,22 +150,26 @@ public class telacadastro extends AppCompatActivity {
             if (senha.contentEquals(confirmaSenha)) {
                 if (validarSenha(senha)) {
                     if (Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                        //verificarExistenciaEmail(email);
-                        if (!temEmailValidate){
-                            SecretKey secret = Utils.generateKey();
-                            byte[] encryptSenha = Utils.encryptMsg(senha, secret);
-                            senha = bytesToString(encryptSenha);
-                            String imageFilePath = null;
-                            if (imageUri != null){
-                                imageFilePath = imageUri.getPath();
+                        EmailExistenteApiClient.EmailExistenteAsyncTask task = new EmailExistenteApiClient.EmailExistenteAsyncTask(email, new EmailExistenteApiClient.EmailExistenteListener() {
+                            @Override
+                            public void onEmailExistenteReceived(UsuarioDTO usuario) throws NoSuchAlgorithmException, InvalidKeySpecException, NoSuchPaddingException, UnsupportedEncodingException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
+                                if (usuario != null) {
+                                    Toast.makeText(telacadastro.this, "Email já cadastrado!", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    SecretKey secret = Utils.generateKey();
+                                    byte[] encryptSenha = Utils.encryptMsg(senha, secret);
+                                    senha = bytesToString(encryptSenha);
+                                    String imageFilePath = null;
+                                    if (imageUri != null){
+                                        imageFilePath = imageUri.getPath();
+                                    }
+                                    UploadImageTask uploadTask = new UploadImageTask(imageFilePath);
+                                    uploadTask.execute();
+                                    Toast.makeText(telacadastro.this, "Usuário Cadastrado com Sucesso!", Toast.LENGTH_LONG);
+                                }
                             }
-                            UploadImageTask uploadTask = new UploadImageTask(imageFilePath);
-                            uploadTask.execute();
-                            Toast.makeText(telacadastro.this, "Usuário Cadastrado com Sucesso!", Toast.LENGTH_LONG);
-                        }
-                        else{
-                            Toast.makeText(telacadastro.this, "Email já cadastrado!", Toast.LENGTH_SHORT).show();
-                        }
+                        });
+                        task.execute();
                     } else {
                         Toast.makeText(this, "Formato do E-mail incorreto!", Toast.LENGTH_LONG).show();
                     }
@@ -179,7 +185,7 @@ public class telacadastro extends AppCompatActivity {
         }
     }
 
-    /*private void verificarExistenciaEmail(String email) {
+    private void verificarExistenciaEmail(String email) {
         EmailExistenteApiClient.EmailExistenteAsyncTask task = new EmailExistenteApiClient.EmailExistenteAsyncTask(email, new EmailExistenteApiClient.EmailExistenteListener() {
             @Override
             public void onEmailExistenteReceived(UsuarioDTO usuario) {
@@ -191,10 +197,9 @@ public class telacadastro extends AppCompatActivity {
                 }
             }
         });
-
         task.execute();
     }
-*/
+
     private class UploadImageTask extends AsyncTask<Void, Void, String> {
         private String imageFilePath;
 
