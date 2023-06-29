@@ -95,7 +95,7 @@ public class EditarDados extends AppCompatActivity {
         txtNome.setText("Olá " + userLogado.getNome() + "!");
         edtNome.setText(userLogado.getNome());
         String imagemPath = userLogado.getImagem();
-        if (imagemPath != null && !imagemPath.equals("null")) {
+        if (imagemPath != null && !imagemPath.equals("null") && !imagemPath.isEmpty()) {
             imageUri = Uri.parse(imagemPath);
             Glide.with(this)
                     .load(imageUri)

@@ -87,7 +87,7 @@ public class FragmentProfile extends Fragment {
         UsuarioDTO userLogado = UserSingleton.getInstance().getUser();
         txtNome.setText("Olá " + userLogado.getNome() + "!");
         String imagemPath = userLogado.getImagem();
-        if (imagemPath != null && !imagemPath.equals("null")) {
+        if (imagemPath != null && !imagemPath.equals("null") && !imagemPath.isEmpty()) {
             imageUri = Uri.parse(imagemPath);
             Glide.with(this)
                     .load(imageUri)
