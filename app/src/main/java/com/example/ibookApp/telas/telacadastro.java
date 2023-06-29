@@ -62,8 +62,8 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 
 public class telacadastro extends AppCompatActivity {
-    private String[] cameraPermission;
-    private String[] storagePermission;
+    private String[] cameraPermission = {Manifest.permission.CAMERA};
+    private String[] storagePermission = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
     private Uri imageUri;
     private static final int CAMERA_PERMISSION_CODE = 100;
     private static final int STORAGE_PERMISSION_CODE = 200;
