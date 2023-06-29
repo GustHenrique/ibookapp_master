@@ -64,8 +64,8 @@ import javax.crypto.SecretKey;
 
 public class EditarDados extends AppCompatActivity {
 
-    private String[] cameraPermission;
-    private String[] storagePermission;
+    private String[] cameraPermission = {Manifest.permission.CAMERA};
+    private String[] storagePermission = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
     private static final int CAMERA_PERMISSION_CODE = 100;
     private static final int STORAGE_PERMISSION_CODE = 200;
     private static final int IMAGE_FROM_GALLERY_CODE = 300;
@@ -424,6 +424,12 @@ public class EditarDados extends AppCompatActivity {
         ActivityCompat.requestPermissions(this, storagePermission, STORAGE_PERMISSION_CODE);
     }
 
+    public void logout() {
+        Utils.logout();
+        Intent acessar = new Intent(getApplicationContext(), telalogin.class);
+        startActivity(acessar);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -455,11 +461,5 @@ public class EditarDados extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Algo deu errado!", Toast.LENGTH_SHORT).show();
             }
         }
-    }
-
-    public void logout() {
-        Utils.logout();
-        Intent acessar = new Intent(getApplicationContext(), telalogin.class);
-        startActivity(acessar);
     }
 }
