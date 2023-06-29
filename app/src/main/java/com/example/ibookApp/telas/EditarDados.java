@@ -14,6 +14,7 @@ import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -34,6 +35,9 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 import com.example.ibookApp.APIs.AtualizarUsuarioApi;
 import com.example.ibookApp.DTOs.UsuarioDTO;
 import com.example.ibookApp.R;
@@ -44,6 +48,7 @@ import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.security.InvalidKeyException;
@@ -89,12 +94,14 @@ public class EditarDados extends AppCompatActivity {
         imgProfile = findViewById(R.id.imgProfile);
         txtNome.setText("Olá " + userLogado.getNome() + "!");
         edtNome.setText(userLogado.getNome());
-        imageUri = Uri.parse(userLogado.getImagem());
-        if (!imageUri.equals(null) && !imageUri.toString().isEmpty()) {
+        String imagemPath = userLogado.getImagem();
+        if (imagemPath != null && !imagemPath.equals("null")) {
+            imageUri = Uri.parse(imagemPath);
             Glide.with(this)
                     .load(imageUri)
                     .into(imgProfile);
-        } else {
+        }
+        else {
             imgProfile.setImageDrawable(null);
             imgProfile.setImageResource(R.drawable.ic_baseline_person_24);
         }
@@ -234,21 +241,56 @@ public class EditarDados extends AppCompatActivity {
             BasicAWSCredentials credentials = new BasicAWSCredentials(accessKey, secretKey);
             AmazonS3 s3client = new AmazonS3Client(credentials);
             s3client.setRegion(Region.getRegion(Regions.SA_EAST_1));
-            if (imageFilePath != null){
-                File imageFile = new File(imageFilePath);
-                s3client.putObject(new PutObjectRequest(bucketName, objectKey, imageFile));
-                Date expiration = new Date(System.currentTimeMillis() + 3600000);
-                URL imageUrl = s3client.generatePresignedUrl(new GeneratePresignedUrlRequest(bucketName, objectKey)
-                        .withMethod(HttpMethod.GET)
-                        .withExpiration(expiration));
 
-                String finalPath = imageUrl.toString();
-                return finalPath;
+            if (imageFilePath != null) {
+                File imageFile = new File(imageFilePath);
+
+                // Use o Glide para carregar a imagem e aplicar as opções de compressão
+                RequestOptions requestOptions = new RequestOptions()
+                        .override(Target.SIZE_ORIGINAL)
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .skipMemoryCache(true);
+
+                Bitmap compressedBitmap = null;
+                try {
+                    compressedBitmap = Glide.with(getApplicationContext())
+                            .asBitmap()
+                            .load(imageFile)
+                            .apply(requestOptions)
+                            .submit()
+                            .get();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                if (compressedBitmap != null) {
+                    // Salve a imagem comprimida em um novo arquivo temporário
+                    File compressedImageFile = new File(getCacheDir(), "compressed_image.jpg");
+                    FileOutputStream outputStream = null;
+                    try {
+                        outputStream = new FileOutputStream(compressedImageFile);
+                        compressedBitmap.compress(Bitmap.CompressFormat.JPEG, 80, outputStream);
+                        outputStream.close();
+
+                        // Faça o upload do novo arquivo comprimido
+                        s3client.putObject(new PutObjectRequest(bucketName, objectKey, compressedImageFile));
+
+                        Date expiration = new Date(System.currentTimeMillis() + 3600000);
+                        URL imageUrl = s3client.generatePresignedUrl(new GeneratePresignedUrlRequest(bucketName, objectKey)
+                                .withMethod(HttpMethod.GET)
+                                .withExpiration(expiration));
+
+                        String finalPath = imageUrl.toString();
+                        return finalPath;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
             }
-            else{
-                return null;
-            }
+
+            return null;
         }
+
 
         @Override
         protected void onPostExecute(String finalPath) {

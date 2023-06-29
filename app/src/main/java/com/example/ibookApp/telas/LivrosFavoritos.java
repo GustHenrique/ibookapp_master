@@ -54,6 +54,15 @@ public class LivrosFavoritos extends AppCompatActivity {
         btnHome = findViewById(R.id.btnBackHome);
 
         loadData();
+
+        btnCadastrarLivro.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent Acessar = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(Acessar);
+
+            }
+        });
         btnHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -131,7 +140,7 @@ public class LivrosFavoritos extends AppCompatActivity {
         adapterContact = new ObraAdapter(obrasListFav, favLists);
         rviObrasCadastradas.setAdapter(adapterContact);
 
-        if (obrasList.size() == 0){
+        if (obrasListFav.size() == 0){
             lblCadastrarLivro.setVisibility(View.VISIBLE);
             btnCadastrarLivro.setVisibility(View.VISIBLE);
         }

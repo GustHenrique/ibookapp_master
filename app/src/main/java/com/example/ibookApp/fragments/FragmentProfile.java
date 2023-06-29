@@ -86,12 +86,14 @@ public class FragmentProfile extends Fragment {
         imgProfile = rootView.findViewById(R.id.imgProfile);
         UsuarioDTO userLogado = UserSingleton.getInstance().getUser();
         txtNome.setText("Olá " + userLogado.getNome() + "!");
-        imageUri = Uri.parse(userLogado.getImagem());
-        if (!imageUri.equals(null) && !imageUri.toString().isEmpty()){
-            Glide.with(getContext())
+        String imagemPath = userLogado.getImagem();
+        if (imagemPath != null && !imagemPath.equals("null")) {
+            imageUri = Uri.parse(imagemPath);
+            Glide.with(this)
                     .load(imageUri)
                     .into(imgProfile);
-        }else{
+        }
+        else {
             imgProfile.setImageDrawable(null);
             imgProfile.setImageResource(R.drawable.ic_baseline_person_24);
         }

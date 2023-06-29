@@ -55,6 +55,15 @@ public class MeusComentarios extends AppCompatActivity {
         btnFazerPrimeiroComentario = findViewById(R.id.btnFazerPrimeiroComentario);
         lblSearchMeusComentarios = findViewById(R.id.txtSearchMeusComentarios);
         carregarComentarios();
+
+        btnFazerPrimeiroComentario.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent Acessar = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(Acessar);
+
+            }
+        });
         btnHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -115,6 +124,10 @@ public class MeusComentarios extends AppCompatActivity {
                 ordenarComentariosPorData(comentarioList);
                 myComentarioAdapter = new MyComentarioAdapter(comentarioList, obrasNames);
                 searchAdapter = new MyComentarioSearchAdapter(comentarioList, obrasNames);
+                if (comentarioList.size() == 0){
+                    txtSemComentario.setVisibility(View.VISIBLE);
+                    btnFazerPrimeiroComentario.setVisibility(View.VISIBLE);
+                }
                 rviMyComents.setAdapter(myComentarioAdapter);
                 myComentarioAdapter.setOnItemClickListener(new MyComentarioAdapter.OnItemClickListener() {
                     @Override
