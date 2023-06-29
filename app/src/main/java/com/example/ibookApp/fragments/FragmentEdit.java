@@ -6,9 +6,11 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -36,6 +38,10 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 import com.example.ibookApp.APIs.InsertObrasApi;
 import com.example.ibookApp.APIs.ibookApi;
 import com.example.ibookApp.DTOs.obrasDTO;
@@ -47,6 +53,7 @@ import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -373,8 +380,8 @@ public class FragmentEdit extends Fragment {
             if (imageUri != null){
                 imageFilePath = imageUri.getPath();
             }
-            UploadImageTask uploadTask = new UploadImageTask(imageFilePath);
-            uploadTask.execute();
+            UploadImageTask uploadImageTask = new UploadImageTask(getContext(), imageFilePath);
+            uploadImageTask.execute();
         }
     }
     public void inserirObra(String title, String subtitle, String synopsis, String author, String editora, String dataPublicacao, String dataFinalizacao, String isbn, String paginas, String image, String traducao, String tipo, String avarageRating, String statusObra, String categorias) {
@@ -425,8 +432,10 @@ public class FragmentEdit extends Fragment {
 
     private class UploadImageTask extends AsyncTask<Void, Void, String> {
         private String imageFilePath;
+        private Context context;
 
-        public UploadImageTask(String imageFilePath) {
+        public UploadImageTask(Context context, String imageFilePath) {
+            this.context = context;
             this.imageFilePath = imageFilePath;
         }
 
@@ -438,32 +447,67 @@ public class FragmentEdit extends Fragment {
             String objectKey = UUID.randomUUID().toString() + ".jpg";
             BasicAWSCredentials credentials = new BasicAWSCredentials(accessKey, secretKey);
             AmazonS3 s3client = new AmazonS3Client(credentials);
-            s3client.setRegion(Region.getRegion(Regions.SA_EAST_1)); // Substitua pela sua região
-            if (imageFilePath != null){
-                File imageFile = new File(imageFilePath); // Escolha um nome adequado para a imagem
-                s3client.putObject(new PutObjectRequest(bucketName, objectKey, imageFile));
-                Date expiration = new Date(System.currentTimeMillis() + 3600000);
-                URL imageUrl = s3client.generatePresignedUrl(new GeneratePresignedUrlRequest(bucketName, objectKey)
-                        .withMethod(HttpMethod.GET)
-                        .withExpiration(expiration));
+            s3client.setRegion(Region.getRegion(Regions.SA_EAST_1));
 
-                String finalPath = imageUrl.toString();
-                return finalPath;
+            if (imageFilePath != null) {
+                File imageFile = new File(imageFilePath);
+
+                // Use o Glide para carregar a imagem e aplicar as opções de compressão
+                RequestOptions requestOptions = new RequestOptions()
+                        .override(Target.SIZE_ORIGINAL)
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .skipMemoryCache(true);
+
+                Bitmap compressedBitmap = null;
+                try {
+                    compressedBitmap = Glide.with(context)
+                            .asBitmap()
+                            .load(imageFile)
+                            .apply(requestOptions)
+                            .submit()
+                            .get();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                if (compressedBitmap != null) {
+                    // Salve a imagem comprimida em um novo arquivo temporário
+                    File compressedImageFile = new File(context.getCacheDir(), "compressed_image.jpg");
+                    FileOutputStream outputStream = null;
+                    try {
+                        outputStream = new FileOutputStream(compressedImageFile);
+                        compressedBitmap.compress(Bitmap.CompressFormat.JPEG, 80, outputStream);
+                        outputStream.close();
+
+                        // Faça o upload do novo arquivo comprimido
+                        s3client.putObject(new PutObjectRequest(bucketName, objectKey, compressedImageFile));
+
+                        Date expiration = new Date(System.currentTimeMillis() + 3600000);
+                        URL imageUrl = s3client.generatePresignedUrl(new GeneratePresignedUrlRequest(bucketName, objectKey)
+                                .withMethod(HttpMethod.GET)
+                                .withExpiration(expiration));
+
+                        String finalPath = imageUrl.toString();
+                        return finalPath;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
             }
-            else{
-                return null;
-            }
+
+            return null;
         }
 
         @Override
         protected void onPostExecute(String finalPath) {
-            if (finalPath == null || finalPath == ""){
+            if (finalPath == null || finalPath.equals("")) {
                 finalPath = null;
             }
             inserirObra(titulo, subtitulo, sinopse, autor, editora, dataPublicacao, dataFinalizacao,
-                    isbn,paginas,finalPath,traducao,tipo,raiting.toString(),status,categorias);
+                    isbn, paginas, finalPath, traducao, tipo, raiting.toString(), status, categorias);
         }
     }
+
 
     public void logout(){
         Utils.logout();
