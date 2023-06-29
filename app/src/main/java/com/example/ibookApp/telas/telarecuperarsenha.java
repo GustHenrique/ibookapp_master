@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.ibookApp.APIs.AtualizarUsuarioApi;
 import com.example.ibookApp.APIs.EmailExistenteApiClient;
+import com.example.ibookApp.APIs.EnviarEmailApi;
 import com.example.ibookApp.DTOs.UsuarioDTO;
 import com.example.ibookApp.R;
 import com.example.ibookApp.functions.Utils;
@@ -114,55 +115,13 @@ public class telarecuperarsenha extends AppCompatActivity {
     }
 
     public void enviarEmail(String stringReceiverEmail,String newPass, String name) throws MessagingException {
-        try {
-            String stringSenderEmail = "suporteibookoficial@gmail.com";
-            String stringPasswordSenderEmail = "pid4ibook";
+        EnviarEmailApi.EnviarEmailObrasAsyncTask task = new EnviarEmailApi.EnviarEmailObrasAsyncTask(name, stringReceiverEmail, newPass, new EnviarEmailApi.EnviarEmailObrasAListener() {
+            @Override
+            public void onInsertObrasReceived() {
 
-            String stringHost = "smtp.gmail.com";
-
-            Properties properties = System.getProperties();
-
-            properties.put("mail.smtp.host", stringHost);
-            properties.put("mail.smtp.port", "465");
-            properties.put("mail.smtp.ssl.enable", "true");
-            properties.put("mail.smtp.auth", "true");
-
-            javax.mail.Session session = Session.getInstance(properties, new Authenticator() {
-                @Override
-                protected PasswordAuthentication getPasswordAuthentication() {
-                    return new PasswordAuthentication(stringSenderEmail, stringPasswordSenderEmail);
-                }
-            });
-
-            MimeMessage mimeMessage = new MimeMessage(session);
-            mimeMessage.addRecipient(Message.RecipientType.TO, new InternetAddress(stringReceiverEmail));
-
-            mimeMessage.setSubject("Recuperação de senha iBook");
-            mimeMessage.setText("Querido" + name + ",\n" +
-                    "\n" +
-                    "Você solicitou uma nova senha pelo aplicativo.\n" +
-                    "Sua nova senha é: "+ newPass+ "\n" +
-                    "\n" +
-                    "Atenciosamente,\n" +
-                    "Time iBook");
-
-            Thread thread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        Transport.send(mimeMessage);
-                    } catch (MessagingException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-            thread.start();
-
-        } catch (AddressException e) {
-            e.printStackTrace();
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        }
+            }
+        });
+        task.execute();
     }
 
 
