@@ -89,16 +89,18 @@ public class ComentarioAdapter extends RecyclerView.Adapter<ComentarioAdapter.Co
 
                 @Override
                 public void onUsuarioPorIdApiReceived(UsuarioDTO usuario) {
-                    txtNomePessoa.setText(usuario.getNome() + " - ");
-                    String imagePath = usuario.getImagem();
-                    if (imagePath != null && !imagePath.isEmpty()) {
-                        Glide.with(itemView.getContext())
-                                .load(imagePath)
-                                .into(personImage);
-                    } else {
-                        Glide.with(itemView.getContext())
-                                .load(R.drawable.baseline_person_black)
-                                .into(personImage);
+                    if (usuario != null){
+                        txtNomePessoa.setText(usuario.getNome() + " - ");
+                        String imagePath = usuario.getImagem();
+                        if (imagePath != null && !imagePath.isEmpty()) {
+                            Glide.with(itemView.getContext())
+                                    .load(imagePath)
+                                    .into(personImage);
+                        } else {
+                            Glide.with(itemView.getContext())
+                                    .load(R.drawable.baseline_person_black)
+                                    .into(personImage);
+                        }
                     }
                 }
             });

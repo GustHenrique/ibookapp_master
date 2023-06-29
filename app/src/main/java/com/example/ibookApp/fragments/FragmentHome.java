@@ -80,6 +80,7 @@ public class FragmentHome extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
+
     Button btnLogout, btnFavorite;
     ImageView imgTeste;
     private Uri imageUri;
@@ -232,7 +233,9 @@ public class FragmentHome extends Fragment {
                     }
                 });
             }
+
         });
+
 
         return rootView;
     }

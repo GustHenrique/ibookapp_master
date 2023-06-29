@@ -52,8 +52,6 @@
 
         </LinearLayout>
 
-
-
         <Button
             android:id="@+id/btnLogoutDetalhesObra"
             android:layout_width="30dp"
@@ -316,7 +314,8 @@
                 android:progressBackgroundTint="@color/ofuscateblack"
                 android:progressTint="@color/colorTextPrimary"
                 android:rating="2.5"
-                android:secondaryProgressTint="@color/colorSecondary" />
+                android:secondaryProgressTint="@color/colorSecondary"
+                android:visibility="gone"/>
 
             <Button
                 android:id="@+id/btnCadastroObraCadastrar"
@@ -326,6 +325,7 @@
                 android:drawablePadding="@dimen/_5sdp"
                 android:hint="Cadastrar"
                 android:padding="@dimen/_5sdp"
+                android:layout_marginTop="@dimen/_10sdp"
                 android:textColor="@color/colorTextSecondary"
                 android:textColorHint="@color/white"
                 android:textSize="@dimen/_14sdp" />

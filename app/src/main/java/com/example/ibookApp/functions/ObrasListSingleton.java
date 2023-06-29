@@ -39,6 +39,9 @@ public class ObrasListSingleton {
         }
     }
 
+    public void resetInstance() {
+        instance = null;
+    }
 
 }
 

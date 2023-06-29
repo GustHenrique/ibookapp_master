@@ -42,6 +42,7 @@ import com.example.ibookApp.functions.UserSingleton;
 import com.example.ibookApp.functions.Utils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -55,7 +56,7 @@ public class telaDetalhesObra extends AppCompatActivity {
             tipo, statusObra, categorias, usuid, avarageRatingString;
     private int paginas;
     private float avarageRating;
-    private TextView tvNome, tvAutor, tvSinopse, tvRate;
+    private TextView tvNome, tvAutor, tvSinopse, tvRate, txtQntdAvaliacoes;
     private EditText txtComentar;
     private RatingBar ratingBar;
     private Button btnHome, btnLogout, btnFavorito,btnAvaliarObra;
@@ -89,6 +90,7 @@ public class telaDetalhesObra extends AppCompatActivity {
         avarageRatingString = intent.getStringExtra("avarageRating");
         statusObra = intent.getStringExtra("statusObra");
         categorias = intent.getStringExtra("categorias");
+        txtQntdAvaliacoes = findViewById(R.id.txtQntdAvaliacoes);
         flaBtn = findViewById(R.id.fabDetalheObra);
         txtComentar = findViewById(R.id.txtComentarDetalheObra);
         btnHome = findViewById(R.id.btnBackHome);
@@ -267,6 +269,10 @@ public class telaDetalhesObra extends AppCompatActivity {
                                             ObrasListSingleton.getInstance().atualizarObra(obra);
                                             avarageRating = (float) resultadoFinal;
                                             avarageRatingString = String.valueOf(avarageRating);
+                                            String stringValue = txtQntdAvaliacoes.getText().toString();
+                                            stringValue = stringValue.replace("(", "").replace(")", "");
+                                            int number = Integer.parseInt(stringValue) + 1;
+                                            txtQntdAvaliacoes.setText("("+number+")");
                                             loadData(2);
                                         }
                                     });
@@ -385,6 +391,7 @@ public class telaDetalhesObra extends AppCompatActivity {
         comentariosPorLivroApi.getcomentariosPorLivro(obid, new comentariosPorLivroApi.comentariosPorLivroListener() {
             @Override
             public void oncomentariosPorLivroReceived(List<ComentarioDTO> comentariosPorLivro) {
+                comentariosList.clear();
                 comentariosList.addAll(comentariosPorLivro);
                 ordenarComentariosPorData(comentariosList);
                 comentarioAdapter = new ComentarioAdapter(comentariosList);
@@ -412,6 +419,9 @@ public class telaDetalhesObra extends AppCompatActivity {
                 @Override
                 public void onInsertObrasReceived(List<AvaliacaoDTO> avaliacaoList) {
                     listaAvaliacao.addAll(avaliacaoList);
+                    if (listaAvaliacao != null){
+                        txtQntdAvaliacoes.setText("("+listaAvaliacao.size()+")");
+                    }
                     int escalaMinima = 0;
                     int escalaMaxima = 5;
                     double soma = 0;
@@ -430,9 +440,12 @@ public class telaDetalhesObra extends AppCompatActivity {
                         avarageRating = Float.parseFloat(avarageRatingString);
                         if (avarageRating * 2 > 9.9) {
                             int rate = 10;
-                            tvRate.setText(String.valueOf(rate));
+                            DecimalFormat decimalFormat = new DecimalFormat("#.#");
+                            String resultado = decimalFormat.format(rate);
+                            tvRate.setText(resultado);
                         } else {
-                            tvRate.setText(String.valueOf(avarageRating * 2));
+                            DecimalFormat decimalFormat = new DecimalFormat("#.#");
+                            tvRate.setText(String.valueOf(decimalFormat.format(avarageRating * 2)));
                         }
                         ratingBar.setRating(avarageRating);
                     }
@@ -445,9 +458,12 @@ public class telaDetalhesObra extends AppCompatActivity {
                 avarageRating = Float.parseFloat(avarageRatingString);
                 if (avarageRating * 2 > 9.9) {
                     int rate = 10;
-                    tvRate.setText(String.valueOf(rate));
+                    DecimalFormat decimalFormat = new DecimalFormat("#.#");
+                    String resultado = decimalFormat.format(rate);
+                    tvRate.setText(resultado);
                 } else {
-                    tvRate.setText(String.valueOf(avarageRating * 2));
+                    DecimalFormat decimalFormat = new DecimalFormat("#.#");
+                    tvRate.setText(String.valueOf(decimalFormat.format(avarageRating * 2)));
                 }
                 ratingBar.setRating(avarageRating);
             }

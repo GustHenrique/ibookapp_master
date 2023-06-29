@@ -2,10 +2,13 @@ package com.example.ibookApp.telas;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -16,6 +19,7 @@ import com.example.ibookApp.APIs.ComentariosPorUsuarioApi;
 import com.example.ibookApp.APIs.comentariosPorLivroApi;
 import com.example.ibookApp.Adapters.ComentarioAdapter;
 import com.example.ibookApp.Adapters.MyComentarioAdapter;
+import com.example.ibookApp.Adapters.MyComentarioSearchAdapter;
 import com.example.ibookApp.Adapters.ObraAdapter;
 import com.example.ibookApp.DTOs.ComentarioDTO;
 import com.example.ibookApp.DTOs.obrasDTO;
@@ -37,6 +41,7 @@ public class MeusComentarios extends AppCompatActivity {
     private TextView txtSemComentario;
     private RecyclerView rviMyComents;
     private MyComentarioAdapter myComentarioAdapter;
+    private MyComentarioSearchAdapter searchAdapter;
     ArrayList<obrasDTO> obrasList = new ArrayList<>();
 
     @Override
@@ -63,6 +68,32 @@ public class MeusComentarios extends AppCompatActivity {
                 logout();
             }
         });
+
+        lblSearchMeusComentarios.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // Não é necessário implementar este método
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // Chamado quando o texto na barra de pesquisa é alterado
+                String searchText = s.toString();
+                // Chame a função de filtro passando o texto digitado
+                filterData(searchText);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // Não é necessário implementar este método
+            }
+        });
+    }
+
+    private void filterData(String searchText) {
+        rviMyComents.setLayoutManager(new LinearLayoutManager(this));
+        rviMyComents.setAdapter(searchAdapter);
+        searchAdapter.filterData(searchText);
     }
 
     public void carregarComentarios(){
@@ -83,6 +114,7 @@ public class MeusComentarios extends AppCompatActivity {
 
                 ordenarComentariosPorData(comentarioList);
                 myComentarioAdapter = new MyComentarioAdapter(comentarioList, obrasNames);
+                searchAdapter = new MyComentarioSearchAdapter(comentarioList, obrasNames);
                 rviMyComents.setAdapter(myComentarioAdapter);
                 myComentarioAdapter.setOnItemClickListener(new MyComentarioAdapter.OnItemClickListener() {
                     @Override

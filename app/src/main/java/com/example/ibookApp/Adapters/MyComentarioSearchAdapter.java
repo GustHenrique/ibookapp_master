@@ -15,24 +15,27 @@ import com.bumptech.glide.Glide;
 import com.example.ibookApp.APIs.UsuarioPorIdApiClient;
 import com.example.ibookApp.DTOs.ComentarioDTO;
 import com.example.ibookApp.DTOs.UsuarioDTO;
+import com.example.ibookApp.DTOs.favoritosDTO;
 import com.example.ibookApp.DTOs.obrasDTO;
 import com.example.ibookApp.R;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 
-public class MyComentarioAdapter extends RecyclerView.Adapter<MyComentarioAdapter.ComentarioViewHolder> {
+public class MyComentarioSearchAdapter extends RecyclerView.Adapter<MyComentarioSearchAdapter.ComentarioViewHolder> {
     private List<ComentarioDTO> comentariosList;
     private List<obrasDTO> obrasNames;
+    private List<ComentarioDTO> filteredList; // Lista filtrada (resultados da pesquisa)
 
     private OnItemClickListener listener;
     private obrasDTO obraDTO;
 
-    public MyComentarioAdapter(List<ComentarioDTO> comentariosList, List<obrasDTO> obrasNames) {
+    public MyComentarioSearchAdapter(List<ComentarioDTO> comentariosList, List<obrasDTO> obrasNames) {
         this.comentariosList = comentariosList;
         this.obrasNames = obrasNames;
+        this.filteredList = new ArrayList<>(comentariosList);
     }
 
     public void setOnItemClickListener(OnItemClickListener listener) {
@@ -49,12 +52,7 @@ public class MyComentarioAdapter extends RecyclerView.Adapter<MyComentarioAdapte
 
     @Override
     public void onBindViewHolder(@NonNull ComentarioViewHolder holder, int position) {
-        ComentarioDTO comentario = new ComentarioDTO(null, null, null, null, null);
-        comentario.setDataComentario(comentariosList.get(position).getDataComentario());
-        comentario.setCobcomentario(comentariosList.get(position).getCobcomentario());
-        comentario.setCobid(comentariosList.get(position).getCobid());
-        comentario.setUsuid(comentariosList.get(position).getUsuid());
-        comentario.setObid(comentariosList.get(position).getObid());
+        ComentarioDTO comentario = filteredList.get(position);
 
         holder.bind(comentario);
 
@@ -72,11 +70,37 @@ public class MyComentarioAdapter extends RecyclerView.Adapter<MyComentarioAdapte
 
     @Override
     public int getItemCount() {
-        return comentariosList.size();
+        return filteredList.size();
     }
 
     public interface OnItemClickListener {
         void onItemClick(int position, obrasDTO obraDTO);
+    }
+
+    public void filterData(String searchText) {
+        filteredList.clear();
+
+        if (searchText.isEmpty()) {
+            filteredList.addAll(comentariosList);
+        } else {
+            for (ComentarioDTO comentario : comentariosList) {
+                obrasDTO obra = getObraById(comentario.getObid());
+                if (obra != null && obra.getTitle().toLowerCase().contains(searchText.toLowerCase())) {
+                    filteredList.add(comentario);
+                }
+            }
+        }
+
+        notifyDataSetChanged();
+    }
+
+    private obrasDTO getObraById(String obid) {
+        for (obrasDTO obra : obrasNames) {
+            if (obid.equals(obra.getId())) {
+                return obra;
+            }
+        }
+        return null;
     }
 
     public class ComentarioViewHolder extends RecyclerView.ViewHolder {
@@ -111,27 +135,33 @@ public class MyComentarioAdapter extends RecyclerView.Adapter<MyComentarioAdapte
                 txtDataComentario.setText(comentario.getDataComentario().toString());
             }
 
-            for (obrasDTO obra : obrasNames) {
-                if (comentario.getObid().equals(obra.getId())) {
-                    nomeObra.setText(obra.getTitle());
-                    String imagePath = obra.getImage();
-                    if (imagePath != null && !imagePath.isEmpty()) {
-                        Glide.with(itemView.getContext())
-                                .load(imagePath)
-                                .into(personImage);
-                    } else {
-                        Glide.with(itemView.getContext())
-                                .load(R.drawable.baseline_person_black)
-                                .into(personImage);
-                    }
+            obrasDTO obra = getObraById(comentario.getObid());
+            if (obra != null) {
+                nomeObra.setText(obra.getTitle());
+                String imagePath = obra.getImage();
+                if (imagePath != null && !imagePath.isEmpty()) {
+                    Glide.with(itemView.getContext())
+                            .load(imagePath)
+                            .into(personImage);
+                } else {
+                    Glide.with(itemView.getContext())
+                            .load(R.drawable.baseline_person_black)
+                            .into(personImage);
                 }
+            } else {
+                nomeObra.setText("");
+                Glide.with(itemView.getContext())
+                        .load(R.drawable.baseline_person_black)
+                        .into(personImage);
             }
 
             UsuarioPorIdApiClient.UsuarioPorIdAsyncTask task = new UsuarioPorIdApiClient.UsuarioPorIdAsyncTask(comentario.getUsuid(), new UsuarioPorIdApiClient.UsuarioPorIdApiListener() {
                 @Override
                 public void onUsuarioPorIdApiReceived(UsuarioDTO usuario) {
-                    if (usuario != null){
+                    if (usuario != null && usuario.getNome() != null) {
                         txtNomePessoa.setText(usuario.getNome() + " - ");
+                    } else {
+                        txtNomePessoa.setText("");
                     }
                 }
             });
@@ -139,4 +169,3 @@ public class MyComentarioAdapter extends RecyclerView.Adapter<MyComentarioAdapte
         }
     }
 }
-

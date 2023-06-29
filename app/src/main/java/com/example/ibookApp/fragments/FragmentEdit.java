@@ -259,7 +259,7 @@ public class FragmentEdit extends Fragment {
                             Collections.sort(categoriasList);
                         }
                         else{
-                            categoriasList.remove(i);
+                            categoriasList.remove((Integer) i);
                         }
                     }
                 });
@@ -394,6 +394,7 @@ public class FragmentEdit extends Fragment {
         task.execute();
 
         ObrasListSingleton obrasSingleton = ObrasListSingleton.getInstance();
+        ObrasListSingleton.getInstance().resetInstance();
         tvTitulo.setText("");
         tvSubitulo.setText("");
         tvSinopse.setText("");

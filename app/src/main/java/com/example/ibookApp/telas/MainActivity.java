@@ -8,6 +8,8 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import com.example.ibookApp.R;
 import com.example.ibookApp.databinding.ActivityMainBinding;
@@ -48,6 +50,26 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+
+    @Override
+    public void onBackPressed() {
+        // Realize a ação desejada aqui
+
+        // Por exemplo, exiba um diálogo de confirmação para sair do aplicativo
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Confirmar saída");
+        builder.setMessage("Deseja sair do aplicativo?");
+        builder.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Ação ao confirmar a saída
+                finish(); // Finaliza a atividade atual
+            }
+        });
+        builder.setNegativeButton("Não", null);
+        builder.show();
+    }
+
     private void replaceFragment(Fragment fragment){
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
